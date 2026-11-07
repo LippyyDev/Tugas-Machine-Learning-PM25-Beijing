@@ -556,6 +556,27 @@ Aturan kerja bersama Claude:
 3. **Pertanyaan kritis lebih dulu daripada persetujuan.** Claude harus menandai potensi kebocoran, klaim tanpa dasar, dan pilihan metodologi yang lemah, serta merujuk pada literatur atau dokumentasi bila relevan.
 4. **Sumber dicantumkan.** Kode dari tutorial, Kaggle, atau GitHub harus ditulis sumbernya di *notebook*.
 5. Mengikuti struktur *notebook* 00 sampai 09 dan menetapkan `SEED = 42` serta mencatat versi pustaka.
+6. **Setiap perubahan langsung di-*commit* dan di-*push* ke GitHub** (branch `main`) dengan identitas LIP, sesuai prosedur Git di bawah. Tidak ada perubahan yang dibiarkan hanya di lokal.
+7. **Setiap perubahan pada suatu bagian pekerjaan dicatat di `Laporan/Deklarasi Penggunaan AI.md`** pada *commit* yang sama: tanggal, alat, bagian yang dikerjakan, dan bentuk bantuan. Berkas ini menjadi lampiran deklarasi di laporan akhir.
+
+### Prosedur Git (wajib setiap sesi)
+
+Identitas Git bawaan di lingkungan Claude adalah `Claude <noreply@anthropic.com>`, sehingga identitas LIP harus ditetapkan lebih dulu di setiap sesi atau klon baru. Jangan mengandalkan konfigurasi yang sudah ada.
+
+```bash
+git config user.name  "Muhammad Alif Qadri"
+git config user.email "alifqadry@gmail.com"
+```
+
+Urutan kerja untuk setiap perubahan:
+
+1. Ubah berkas, lalu perbarui `Laporan/Deklarasi Penggunaan AI.md` bila perubahan itu dibantu AI.
+2. `git add -A`, lalu `git commit` dengan pesan berbahasa Indonesia yang ringkas.
+3. **Verifikasi sebelum *push*:** `git log -1 --format='%an <%ae> | %cn <%ce>'` harus menampilkan `Muhammad Alif Qadri <alifqadry@gmail.com>` pada penulis dan *committer*. Jika berbeda, perbaiki dulu dan jangan di-*push*.
+4. `git push origin main`.
+5. Pesan *commit* **tidak** memuat baris `Co-Authored-By` atau tautan sesi Claude, supaya Claude tidak muncul sebagai kontributor di GitHub. Penggunaan AI dicatat di berkas deklarasi, bukan di metadata *commit*.
+
+Repo: `Tugas-Machine-Learning-PM25-Beijing` (akun `LippyyDev`).
 
 ### Gaya respons yang diinginkan LIP
 
