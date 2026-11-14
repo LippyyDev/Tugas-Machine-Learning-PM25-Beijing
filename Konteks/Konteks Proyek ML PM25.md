@@ -507,12 +507,12 @@ Bagian ini adalah catatan kerja. Semua butir di sini perlu diputuskan LIP sendir
 
 | No | Keputusan | Mengapa penting |
 |---|---|---|
-| 1 | **Horizon peramalan** (misalnya 1 jam, 6 jam, atau 24 jam ke depan) | Menentukan fitur mana yang sah. Panduan tidak menetapkannya. Profil awal menunjukkan *naive* sangat kuat pada 1 jam (RMSE median sekitar 19) dan hampir tidak informatif pada 24 jam (sekitar 90), sehingga pilihan horizon mengubah makna perbandingan dengan *baseline*. **Prioritas pertama untuk diputuskan.** |
+| 1 | **Horizon peramalan** (misalnya 1 jam, 6 jam, atau 24 jam ke depan). **DITETAPKAN oleh LIP, 14 Nov 2026: 24 jam.** Alasan: kebutuhan pengguna (waktu untuk membatasi paparan), bukan kekuatan *baseline* | Menentukan fitur mana yang sah. Panduan tidak menetapkannya. Profil awal menunjukkan *naive* sangat kuat pada 1 jam (RMSE median sekitar 19) dan hampir tidak informatif pada 24 jam (sekitar 90), sehingga pilihan horizon mengubah makna perbandingan dengan *baseline*. Sudah diputuskan. Jika dosen meminta horizon lain, bagian yang bergantung padanya diulang. |
 | 2 | **Daftar fitur yang diizinkan** | Polutan lain (PM10, NO2, CO, dan seterusnya) pada waktu yang sama dengan target berkorelasi kuat dan baru "tersedia" bersamaan dengan target. Hanya boleh dipakai dalam bentuk *lag* yang sesuai horizon. Ini sumber kebocoran paling halus dan masuk ke komponen 20%. |
 | 3 | **Penanganan nilai hilang yang kausal** | Interpolasi linear memakai nilai masa depan, jadi bocor. Alternatif aman: *forward fill*, atau imputer yang dipelajari dari *fold* latih di dalam *pipeline*. Pilihan harus dijustifikasi. |
-| 4 | **Makna "uji di stasiun lain"** | Opsi A: latih di satu stasiun, uji di stasiun lain. Opsi B: latih gabungan beberapa stasiun, uji pada stasiun yang tidak ikut dilatih. Opsi C: keduanya, sebagai analisis pergeseran distribusi di Tahap 7. Sebaiknya dikonfirmasi ke dosen. |
-| 5 | **Stasiun utama** untuk pengembangan model | Biasanya satu stasiun dipakai untuk latih dan validasi, stasiun lain khusus untuk uji ketahanan. Kandidat uji "stasiun lain" yang paling berbeda: Dingling dan Huairou. |
-| 6 | **Perlakuan nilai ekstrem PM2.5** (1 baris bernilai 999, 3 baris di atas 900, 933 baris di atas 500) | Dibuang, dibatasi, atau dipertahankan sebagai episode nyata. Harus dijustifikasi karena memengaruhi RMSE. |
+| 4 | **Makna "uji di stasiun lain". DITETAPKAN oleh LIP, 14 Nov 2026: opsi A** | Opsi A: latih di satu stasiun, uji di stasiun lain. Opsi B: latih gabungan beberapa stasiun, uji pada stasiun yang tidak ikut dilatih. Opsi C: keduanya, sebagai analisis pergeseran distribusi di Tahap 7. Dasar: uji indikatif pada 80% data awal (regresi linear, lag, horizon 24 jam) menunjukkan A, B, dan latih sendiri hampir sama, jadi A dipilih karena paling sederhana. Uji di stasiun lain memakai periode 20% terakhir yang sama dan dibuka satu kali. Makna dari dosen belum dikonfirmasi. |
+| 5 | **Stasiun utama** untuk pengembangan model. **DITETAPKAN oleh LIP, 14 Nov 2026: Tiantan** | Dasar (80% data awal, rata-rata 12 stasiun 80,2): Tiantan rata-rata 82,2, nilai hilang 2,1%, 605 jam di atas 300. Pilihan didasarkan kelengkapan dan keterwakilan, bukan skor model. Stasiun uji belum ditetapkan, kandidat: Dingling (rata-rata 67,0), Huairou (71,0, nilai hilang 3,1%), Dongsi (85,7). Dingling dan Huairou rata-ratanya rendah, tetapi tidak terbukti paling sulit. |
+| 6 | **Perlakuan nilai ekstrem PM2.5** (1 baris bernilai 999, 3 baris di atas 900, 933 baris di atas 500). **DITETAPKAN oleh LIP, 14 Nov 2026: dipertahankan** | Dasar (80% data awal): 999 hanya muncul 1 kali, di tengah episode serempak di banyak stasiun, belum ada bukti batas alat. Ditinjau ulang jika EDA menemukan 999 yang berulang. |
 | 7 | **Ukuran periode uji** | Panduan: 20% terakhir secara kronologis. |
 
 ### 10.2 Padanan komponen panduan ke topik PM2.5
@@ -592,7 +592,7 @@ Repo: `Tugas-Machine-Learning-PM25-Beijing` (akun `LippyyDev`).
 
 | Tahap | Status | Catatan |
 |---|---|---|
-| 1. Rumusan masalah dan metrik | Belum | |
+| 1. Rumusan masalah dan metrik | Selesai sebagian | Proposal ada di `Proposal/`. Ditetapkan 14 Nov 2026: horizon 24 jam, uji stasiun lain opsi A, nilai 999 dipertahankan, stasiun utama Tiantan. Belum: persetujuan dosen, konversi PDF dan cek panjang 1 sampai 2 halaman, cek manual kuartil referensi [1] dan [2], referensi baru 3 (laporan akhir minimal 5). Ringkasan hasil per tahap ada di `Proposal/Ringkasan Hasil Per Tahapan.md` |
 | 2. EDA dan praproses | Belum | |
 | 3. Skema validasi | Belum | |
 | 4. *Baseline* | Belum | |
