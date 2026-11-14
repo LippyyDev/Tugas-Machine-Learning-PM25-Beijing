@@ -21,8 +21,8 @@ Berdasarkan latar belakang tersebut, masalah yang dikaji pada proyek ini adalah 
 ## 4. Metrik dan Rencana Model
 
 - **Metrik utama** adalah RMSE, karena galat besar paling merugikan dan PM2.5 memiliki episode konsentrasi tinggi. MAE menjadi pendamping, ditambah RMSE pada rentang konsentrasi tinggi untuk memeriksa *underestimation*. Hasil CV dilaporkan sebagai rata-rata ± simpangan baku.
-- ***Baseline*** adalah *naive forecast*, yaitu nilai PM2.5 terakhir yang teramati, disesuaikan dengan horizon 24 jam. Sebagai pembanding tambahan dapat dipakai regresi linear dengan fitur *lag*.
-- **Model lanjutan** (minimal dua) adalah *random forest* dan *gradient boosting* (`HistGradientBoostingRegressor`) pada fitur tabular *lag* dan kalender, dengan *tuning* sistematis lewat CV berurutan waktu. Model *deep learning* seperti pada [1] menjadi rujukan pembanding konseptual, bukan target implementasi.
+- ***Baseline*** adalah *naive forecast*, yaitu nilai PM2.5 terakhir yang teramati, disesuaikan dengan horizon 24 jam.
+- **Model lanjutan** (minimal dua) dan pembanding tambahan: belum ditentukan.
 - **Diagnosis dan analisis** mencakup *learning curve* dengan CV berurutan waktu, galat per jam, musim, stasiun, dan rentang konsentrasi, serta pembahasan etis tentang siapa yang dirugikan oleh ramalan yang terlalu rendah dan bagaimana model sebaiknya dipakai sebagai alat bantu manusia.
 
 ## 5. Keputusan Terbuka untuk Dikonfirmasi ke Dosen
