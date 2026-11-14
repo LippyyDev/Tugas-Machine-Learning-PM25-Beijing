@@ -21,14 +21,15 @@ Berdasarkan latar belakang tersebut, masalah yang dikaji pada proyek ini adalah 
 ## 4. Metrik dan Rencana Model
 
 - **Metrik utama** adalah RMSE, karena galat besar paling merugikan dan PM2.5 memiliki episode konsentrasi tinggi. MAE menjadi pendamping, ditambah RMSE pada rentang konsentrasi tinggi untuk memeriksa *underestimation*. Hasil CV dilaporkan sebagai rata-rata ± simpangan baku.
+- **Nilai ekstrem PM2.5 (termasuk 999)** dipertahankan, tidak dibuang dan tidak dipotong. Pada 80% data awal, nilai 999 hanya muncul satu kali dan terjadi di tengah episode polusi berat yang serempak di banyak stasiun, sehingga belum ada bukti bahwa nilai itu merupakan batas alat ukur. Membuang episode tinggi juga akan menghilangkan bagian yang paling ingin diukur, yaitu ramalan yang terlalu rendah saat konsentrasi tinggi.
 - **Horizon peramalan** ditetapkan 24 jam ke depan. Alasannya kebutuhan pengguna: warga memerlukan waktu untuk memutuskan pembatasan paparan, sedangkan peringatan satu jam sebelumnya terlalu singkat. Panduan tidak menetapkan horizon, dan pilihan ini bukan didasarkan pada kekuatan *baseline*.
 - ***Baseline*** adalah *naive forecast*, yaitu nilai PM2.5 terakhir yang teramati, disesuaikan dengan horizon 24 jam.
 - **Model lanjutan** (minimal dua) dan pembanding tambahan: belum ditentukan.
 - **Diagnosis dan analisis** mencakup *learning curve* dengan CV berurutan waktu, galat per jam, musim, tahun, stasiun, dan rentang konsentrasi, serta pembahasan etis tentang siapa yang dirugikan oleh ramalan yang terlalu rendah dan bagaimana model sebaiknya dipakai sebagai alat bantu manusia.
 
-## 5. Keputusan Terbuka untuk Dikonfirmasi ke Dosen
+## 5. Keputusan Terbuka
 
-- **Nilai ekstrem PM2.5 (termasuk 999).** Belum diketahui apakah nilai itu batas alat ukur atau episode nyata. Perlakuannya (dipertahankan, dibatasi, atau dibuang) akan diputuskan setelah EDA dan dijustifikasi, karena memengaruhi RMSE.
+- **Stasiun utama dan stasiun uji.** Belum dipilih. Pemilihan didasarkan pada kelengkapan data dan keterwakilan (rata-rata mendekati rata-rata seluruh stasiun), bukan pada skor model, dan dilakukan setelah EDA pada 80% data awal.
 
 ## Daftar Pustaka
 
