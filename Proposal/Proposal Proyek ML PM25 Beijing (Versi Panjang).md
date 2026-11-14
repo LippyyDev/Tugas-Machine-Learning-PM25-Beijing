@@ -21,13 +21,13 @@ Berdasarkan latar belakang tersebut, masalah yang dikaji pada proyek ini adalah 
 ## 4. Metrik dan Rencana Model
 
 - **Metrik utama** adalah RMSE, karena galat besar paling merugikan dan PM2.5 memiliki episode konsentrasi tinggi. MAE menjadi pendamping, ditambah RMSE pada rentang konsentrasi tinggi untuk memeriksa *underestimation*. Hasil CV dilaporkan sebagai rata-rata ± simpangan baku.
+- **Horizon peramalan** ditetapkan 24 jam ke depan. Alasannya kebutuhan pengguna: warga memerlukan waktu untuk memutuskan pembatasan paparan, sedangkan peringatan satu jam sebelumnya terlalu singkat. Panduan tidak menetapkan horizon, dan pilihan ini bukan didasarkan pada kekuatan *baseline*.
 - ***Baseline*** adalah *naive forecast*, yaitu nilai PM2.5 terakhir yang teramati, disesuaikan dengan horizon 24 jam.
 - **Model lanjutan** (minimal dua) dan pembanding tambahan: belum ditentukan.
 - **Diagnosis dan analisis** mencakup *learning curve* dengan CV berurutan waktu, galat per jam, musim, stasiun, dan rentang konsentrasi, serta pembahasan etis tentang siapa yang dirugikan oleh ramalan yang terlalu rendah dan bagaimana model sebaiknya dipakai sebagai alat bantu manusia.
 
 ## 5. Keputusan Terbuka untuk Dikonfirmasi ke Dosen
 
-- **Horizon peramalan.** Diusulkan 24 jam ke depan. Pilihan ini menentukan seberapa kuat *baseline*, sehingga harus dipertahankan dengan alasan keputusan pengguna, bukan dipilih agar model tampak unggul.
 - **Makna "uji di stasiun lain".** Model dilatih di satu stasiun lalu diuji di stasiun lain, atau dilatih gabungan lalu diuji di stasiun yang tidak ikut dilatih.
 - **Nilai ekstrem PM2.5 (termasuk 999).** Belum diketahui apakah nilai itu batas alat ukur atau episode nyata. Perlakuannya (dipertahankan, dibatasi, atau dibuang) akan diputuskan setelah EDA dan dijustifikasi, karena memengaruhi RMSE.
 
