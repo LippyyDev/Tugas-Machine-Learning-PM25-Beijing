@@ -16,7 +16,7 @@ Berdasarkan latar belakang tersebut, masalah yang dikaji pada proyek ini adalah 
 
 1. **Nilai hilang pada sensor.** Panjang dan pola celah akan diprofilkan lebih dulu pada tahap EDA. Imputasi harus bersifat kausal dan berada di dalam *pipeline*, sehingga hanya belajar dari data latih pada setiap *fold*. Interpolasi dua arah tidak akan dipakai karena memanfaatkan nilai sesudah celah. Pengaruh pilihan imputasi terhadap hasil prediksi pada data kualitas udara telah dikaji pada [3], dan di proyek ini akan diuji sebagai perbandingan terkontrol, misalnya *forward fill* terbatas melawan imputer yang dipelajari per *fold*.
 2. **Validasi berurutan waktu.** Data diurutkan menurut waktu. Data uji adalah 20% periode paling akhir yang tidak diacak, dan baru dibuka satu kali di akhir pekerjaan. Pemilihan model dan *tuning* memakai `TimeSeriesSplit` pada 80% data awal. Seluruh fitur hanya berasal dari waktu sampai jam prediksi (*lag*, rata-rata bergulir dari masa lalu, kalender, dan cuaca), sedangkan polutan lain pada jam target tidak dipakai. Alasan metodologis ini sejalan dengan panduan evaluasi peramalan yang menyoroti kebocoran lewat pembagian data dan praproses [2].
-3. **Pergeseran distribusi antar stasiun.** Model dilatih dan divalidasi pada satu stasiun utama, lalu model akhir diuji pada beberapa stasiun lain yang tidak ikut dipakai untuk memilih model. Uji di stasiun lain memakai periode 20% terakhir yang sama dengan data uji stasiun utama, agar tidak ada kebocoran waktu, dan dibuka satu kali di akhir. Stasiun utama dan stasiun uji dipilih setelah EDA, dengan stasiun uji yang beragam. Hasilnya dibandingkan dengan uji pada stasiun yang sama untuk melihat besar penurunan kinerjanya. Pergeseran antar musim dan tahun juga diperiksa sebagai pembanding.
+3. **Pergeseran distribusi antar stasiun.** Model dilatih dan divalidasi pada satu stasiun utama, lalu model akhir diuji pada beberapa stasiun lain yang tidak ikut dipakai untuk memilih model. Uji di stasiun lain memakai periode 20% terakhir yang sama dengan data uji stasiun utama, agar tidak ada kebocoran waktu, dan dibuka satu kali di akhir. Stasiun utama adalah Tiantan, dipilih karena rata-ratanya dekat dengan rata-rata 12 stasiun (82,2 terhadap 80,2), nilai hilangnya rendah (2,1%), dan memuat cukup banyak episode konsentrasi tinggi, berdasarkan pemeriksaan pada 80% data awal. Stasiun uji dipilih beragam dan dikunci sebelum skor model apa pun dilihat; kandidatnya Dingling, Huairou, dan Dongsi. Hasilnya dibandingkan dengan uji pada stasiun yang sama untuk melihat besar penurunan kinerjanya. Pergeseran antar musim dan tahun juga diperiksa sebagai pembanding.
 
 ## 4. Metrik dan Rencana Model
 
@@ -26,10 +26,6 @@ Berdasarkan latar belakang tersebut, masalah yang dikaji pada proyek ini adalah 
 - ***Baseline*** adalah *naive forecast*, yaitu nilai PM2.5 terakhir yang teramati, disesuaikan dengan horizon 24 jam.
 - **Model lanjutan** (minimal dua) dan pembanding tambahan: belum ditentukan.
 - **Diagnosis dan analisis** mencakup *learning curve* dengan CV berurutan waktu, galat per jam, musim, tahun, stasiun, dan rentang konsentrasi, serta pembahasan etis tentang siapa yang dirugikan oleh ramalan yang terlalu rendah dan bagaimana model sebaiknya dipakai sebagai alat bantu manusia.
-
-## 5. Keputusan Terbuka
-
-- **Stasiun utama dan stasiun uji.** Belum dipilih. Pemilihan didasarkan pada kelengkapan data dan keterwakilan (rata-rata mendekati rata-rata seluruh stasiun), bukan pada skor model, dan dilakukan setelah EDA pada 80% data awal.
 
 ## Daftar Pustaka
 
