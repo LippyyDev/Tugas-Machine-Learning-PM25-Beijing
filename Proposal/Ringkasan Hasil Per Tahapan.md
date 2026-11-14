@@ -4,7 +4,7 @@ Berisi inti hasil tiap tahap, diperbarui setiap satu tahap selesai. Rincian leng
 
 | Tahap | Status |
 |---|---|
-| 1. Proposal dan rumusan masalah | Draf selesai, menunggu konfirmasi dosen |
+| 1. Proposal dan rumusan masalah | Selesai sebagian (draf selesai, menunggu konfirmasi dosen) |
 | 2. EDA dan praproses | Belum dikerjakan |
 | 3. Skema validasi | Belum dikerjakan |
 | 4. *Baseline* | Belum dikerjakan |
