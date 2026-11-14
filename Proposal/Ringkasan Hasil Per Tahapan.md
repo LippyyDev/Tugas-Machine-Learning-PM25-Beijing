@@ -19,6 +19,6 @@ Berisi inti hasil tiap tahap, diperbarui setiap satu tahap selesai. Rincian leng
 - **Metrik utama:** RMSE, karena galat besar paling merugikan, terutama ramalan terlalu rendah saat konsentrasi tinggi. Pendamping: MAE.
 - **Validasi:** data diurutkan menurut waktu, 20% terakhir sebagai data uji (dibuka satu kali), `TimeSeriesSplit` pada 80% awal.
 - ***Baseline*:** *naive forecast*. Model lanjutan dan pembanding tambahan belum ditentukan.
-- **Tiga tantangan:** nilai hilang (imputasi kausal di dalam *pipeline*), validasi berurutan waktu (tanpa kebocoran), pergeseran distribusi (uji di stasiun lain).
-- **Keputusan terbuka:** makna "uji di stasiun lain", perlakuan nilai ekstrem 999. Horizon sudah ditetapkan 24 jam (alasan: waktu bagi warga untuk membatasi paparan).
+- **Tiga tantangan:** nilai hilang (imputasi kausal di dalam *pipeline*), validasi berurutan waktu (tanpa kebocoran), pergeseran distribusi (latih dan validasi di satu stasiun utama, uji model akhir di stasiun lain pada periode uji yang sama).
+- **Keputusan terbuka:** perlakuan nilai ekstrem 999, dan pemilihan stasiun utama serta stasiun uji. Sudah ditetapkan: horizon 24 jam (alasan: waktu bagi warga untuk membatasi paparan) dan skema uji stasiun lain berupa latih di satu stasiun lalu uji di stasiun lain.
 - **Referensi:** [1] Cui dkk. 2023; [2] Hewamalage dkk. 2023; [3] Hua dkk. 2024 (detail ada di versi panjang).

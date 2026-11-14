@@ -16,7 +16,7 @@ Berdasarkan latar belakang tersebut, masalah yang dikaji pada proyek ini adalah 
 
 1. **Nilai hilang pada sensor.** Panjang dan pola celah akan diprofilkan lebih dulu pada tahap EDA. Imputasi harus bersifat kausal dan berada di dalam *pipeline*, sehingga hanya belajar dari data latih pada setiap *fold*. Interpolasi dua arah tidak akan dipakai karena memanfaatkan nilai sesudah celah. Pengaruh pilihan imputasi terhadap hasil prediksi pada data kualitas udara telah dikaji pada [3], dan di proyek ini akan diuji sebagai perbandingan terkontrol, misalnya *forward fill* terbatas melawan imputer yang dipelajari per *fold*.
 2. **Validasi berurutan waktu.** Data diurutkan menurut waktu. Data uji adalah 20% periode paling akhir yang tidak diacak, dan baru dibuka satu kali di akhir pekerjaan. Pemilihan model dan *tuning* memakai `TimeSeriesSplit` pada 80% data awal. Seluruh fitur hanya berasal dari waktu sampai jam prediksi (*lag*, rata-rata bergulir dari masa lalu, kalender, dan cuaca), sedangkan polutan lain pada jam target tidak dipakai. Alasan metodologis ini sejalan dengan panduan evaluasi peramalan yang menyoroti kebocoran lewat pembagian data dan praproses [2].
-3. **Pergeseran distribusi antar stasiun.** Model dikembangkan pada satu stasiun utama, lalu diuji pada stasiun lain yang tidak ikut dipakai untuk memilih model. Dingling dan Huairou menjadi kandidat stasiun uji berdasarkan pengecekan awal yang masih harus direproduksi di *notebook*. Hasilnya akan dibandingkan dengan uji pada stasiun yang sama untuk melihat besar penurunan kinerjanya.
+3. **Pergeseran distribusi antar stasiun.** Model dilatih dan divalidasi pada satu stasiun utama, lalu model akhir diuji pada beberapa stasiun lain yang tidak ikut dipakai untuk memilih model. Uji di stasiun lain memakai periode 20% terakhir yang sama dengan data uji stasiun utama, agar tidak ada kebocoran waktu, dan dibuka satu kali di akhir. Stasiun utama dan stasiun uji dipilih setelah EDA, dengan stasiun uji yang beragam. Hasilnya dibandingkan dengan uji pada stasiun yang sama untuk melihat besar penurunan kinerjanya. Pergeseran antar musim dan tahun juga diperiksa sebagai pembanding.
 
 ## 4. Metrik dan Rencana Model
 
@@ -24,11 +24,10 @@ Berdasarkan latar belakang tersebut, masalah yang dikaji pada proyek ini adalah 
 - **Horizon peramalan** ditetapkan 24 jam ke depan. Alasannya kebutuhan pengguna: warga memerlukan waktu untuk memutuskan pembatasan paparan, sedangkan peringatan satu jam sebelumnya terlalu singkat. Panduan tidak menetapkan horizon, dan pilihan ini bukan didasarkan pada kekuatan *baseline*.
 - ***Baseline*** adalah *naive forecast*, yaitu nilai PM2.5 terakhir yang teramati, disesuaikan dengan horizon 24 jam.
 - **Model lanjutan** (minimal dua) dan pembanding tambahan: belum ditentukan.
-- **Diagnosis dan analisis** mencakup *learning curve* dengan CV berurutan waktu, galat per jam, musim, stasiun, dan rentang konsentrasi, serta pembahasan etis tentang siapa yang dirugikan oleh ramalan yang terlalu rendah dan bagaimana model sebaiknya dipakai sebagai alat bantu manusia.
+- **Diagnosis dan analisis** mencakup *learning curve* dengan CV berurutan waktu, galat per jam, musim, tahun, stasiun, dan rentang konsentrasi, serta pembahasan etis tentang siapa yang dirugikan oleh ramalan yang terlalu rendah dan bagaimana model sebaiknya dipakai sebagai alat bantu manusia.
 
 ## 5. Keputusan Terbuka untuk Dikonfirmasi ke Dosen
 
-- **Makna "uji di stasiun lain".** Model dilatih di satu stasiun lalu diuji di stasiun lain, atau dilatih gabungan lalu diuji di stasiun yang tidak ikut dilatih.
 - **Nilai ekstrem PM2.5 (termasuk 999).** Belum diketahui apakah nilai itu batas alat ukur atau episode nyata. Perlakuannya (dipertahankan, dibatasi, atau dibuang) akan diputuskan setelah EDA dan dijustifikasi, karena memengaruhi RMSE.
 
 ## Daftar Pustaka
