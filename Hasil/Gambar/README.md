@@ -1,6 +1,6 @@
 # Gambar
 
-Sembilan grafik EDA tahap 2 (data latih Tiantan, kecuali nomor 08 dan 09 yang membandingkan stasiun). Awalan `t2_` menandai tahap 2, nomor mengikuti urutan di *notebook*.
+Sepuluh grafik: sembilan EDA tahap 2 (data latih Tiantan, kecuali nomor 08 dan 09 yang membandingkan stasiun). Awalan `t2_` menandai tahap 2 dan `t4_` tahap 4, nomor mengikuti urutan di *notebook*.
 
 | Berkas | Isi |
 |---|---|
@@ -13,3 +13,4 @@ Sembilan grafik EDA tahap 2 (data latih Tiantan, kecuali nomor 08 dan 09 yang me
 | `t2_07_autokorelasi.png` | Autokorelasi PM2.5 |
 | `t2_08_rata_rata_per_stasiun.png` | Rata-rata PM2.5 per stasiun |
 | `t2_09_bulanan_antarstasiun.png` | Rata-rata bulanan antarstasiun |
+| `t4_01_baseline_rmse_per_fold.png` | RMSE *naive forecast* dan regresi linear di tiap *fold* validasi data latih |

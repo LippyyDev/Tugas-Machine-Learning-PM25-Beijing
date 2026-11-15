@@ -35,12 +35,12 @@ Fitur hasil tahap 2 untuk stasiun Tiantan, siap dipakai pada tahap berikutnya. D
 
 - **Hanya data sampai jam *t*.** Tidak ada interpolasi dan tidak ada nilai dari masa depan pada fitur.
 - **Celah kebocoran sudah ditutup.** Baris latih yang targetnya jatuh di periode uji (24 jam terakhir sebelum batas) sudah dibuang.
-- **Nilai kosong pada fitur belum diimputasi seluruhnya.** Celah sampai 3 jam diisi nilai terakhir (*forward fill*), sisanya dibiarkan kosong. Pada berkas latih, 16 dari 29 fitur masih memiliki sel kosong, tertinggi `SO2` 2,27%. Kolom `target` tidak ada yang kosong karena baris dengan target hilang sudah dibuang. Sisa nilai kosong diisi median di dalam *pipeline* pada setiap *fold*, jangan dihitung dari seluruh berkas.
+- **Nilai kosong pada fitur belum diimputasi.** Tidak ada pengisian (tanpa *forward fill*, keputusan 15 Nov 2026). Pada berkas latih, 23 dari 29 fitur memiliki sel kosong, tertinggi `CO` 3,20%. Kolom `target` tidak ada yang kosong karena baris dengan target hilang sudah dibuang. Sisa nilai kosong diisi median di dalam *pipeline* pada setiap *fold*, jangan dihitung dari seluruh berkas.
 - **`fitur_uji_Tiantan.csv` hanya disimpan.** Berkas ini dibuka satu kali pada evaluasi final. Jangan dipakai untuk memilih fitur, model, atau *hyperparameter*.
-- **Batas *forward fill* 3 jam masih [Usulan]** dan belum diputuskan penulis. Jika diubah, berkas ini dibuat ulang.
-- **Hanya Tiantan.** Fitur untuk stasiun uji dibuat dengan fungsi `buat_fitur` yang sama di *notebook*, setelah stasiun ujinya ditetapkan.
+- **Tanpa *forward fill*.** Bila keputusan ini diubah, berkas ini dibuat ulang dengan menjalankan *notebook*.
+- **Hanya Tiantan.** Stasiun uji ditetapkan Dingling. Fiturnya dibuat dengan fungsi `buat_fitur` yang sama di *notebook* saat tahap 7.
 
 ## Catatan
 
 - Statistik pada berkas latih dihitung langsung dari berkas di folder ini.
-- Berkas ini dan `Hasil/Gambar` serta `Hasil/Tabel` berasal dari eksekusi *notebook* yang sama (Colab, 15 Nov 2026).
+- Berkas ini dan `Hasil/Gambar` serta `Hasil/Tabel` berasal dari eksekusi *notebook* yang sama (dijalankan ulang 15 Nov 2026 setelah keputusan tanpa *forward fill*).
