@@ -12,7 +12,7 @@ Proyek individu mata kuliah Pembelajaran Mesin, S2 Teknik Informatika, Universit
 
 | Folder | Isi |
 |---|---|
-| `Data` | `Data Mentah`: 12 CSV, satu per stasiun (`Aotizhongxin.csv`, `Changping.csv`, dan seterusnya) |
+| `Data` | `Data Mentah`: 12 CSV, satu per stasiun (`Aotizhongxin.csv`, `Changping.csv`, dan seterusnya). `Data Olahan`: fitur hasil tahap 2 (`fitur_latih_Tiantan.csv`, `fitur_uji_Tiantan.csv`) |
 | `Notebook` | *Notebook* utama (struktur bagian 00 sampai 09 sesuai panduan) dan *notebook* tahap 2 (EDA dan praproses) |
 | `Proposal` | Proposal PDF 1 sampai 2 halaman |
 | `Laporan` | Laporan akhir PDF 8 sampai 12 halaman, deklarasi penggunaan AI, dan ringkasan hasil per tahapan |

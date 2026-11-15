@@ -27,6 +27,8 @@ Berisi inti hasil tiap tahap, diperbarui setiap satu tahap selesai. Rincian leng
 
 Semua angka berasal dari eksekusi `Notebook/Tahap 2 EDA dan Praproses.ipynb` pada stasiun Tiantan dan **hanya memakai data latih**, kecuali disebut lain. Hasil eksekusi di Colab (15 Nov 2026) sudah dicocokkan dengan eksekusi awal: ukuran kedua berkas fitur, dua tabel ringkasan, dan hitungan panjang celah sama.
 
+Keluaran *notebook*: sembilan grafik di `Hasil/Gambar/`, dua tabel di `Hasil/Tabel/`, dan fitur siap pakai (latih dan uji, Tiantan) di `Data/Data Olahan/`. Berkas fitur uji hanya disimpan, tidak dibuka untuk analisis.
+
 - **Pembagian waktu:** data uji dimulai 2016-05-12 19:00 (20% jam terakhir), disisihkan sebelum eksplorasi dan tidak dibuka. Data latih seluruh stasiun 336.612 baris (80%).
 - **Sebaran PM2.5:** median 59, rata-rata 82,2, miring ke kanan (*skewness* 1,91). Galat besar saat episode polusi tinggi akan mendominasi RMSE.
 - **Nilai ekstrem (12 stasiun, data latih):** 659 jam di atas 500, 32 jam di atas 700, 3 jam di atas 900, 1 jam bernilai tepat 999. Pada jam-jam di atas 700, median 10 dari 12 stasiun ikut di atas 300, jadi lonjakan itu terjadi serempak dan sejalan dengan keputusan mempertahankan nilai ekstrem. Belum ada bukti batas alat ukur.
