@@ -59,7 +59,7 @@ Proyek meniru alur kerja peneliti: merumuskan masalah, memahami data, merancang 
 
 ### Struktur repositori
 
-Repo: `Tugas-Machine-Learning-PM25-Beijing`. Folder: `Data` (`Data Mentah`, `Data Olahan`), `Notebook`, `Proposal`, `Laporan`, `Presentasi`, `Hasil` (`Gambar`, `Tabel`), `Konteks`. Penamaan memakai huruf kapital di awal kata dengan spasi. *Notebook* tahap 2 ada di `Notebook/Tahap 2 EDA dan Praproses.ipynb`. Ringkasan hasil per tahap ada di `Laporan/Ringkasan Hasil Per Tahapan.md`. Keluaran *notebook* tahap 2: grafik di `Hasil/Gambar/`, tabel di `Hasil/Tabel/`, fitur Tiantan (latih dan uji) di `Data/Data Olahan/`.
+Repo: `Tugas-Machine-Learning-PM25-Beijing`. Folder: `Data` (`Data Mentah`, `Data Olahan`), `Notebook`, `Proposal`, `Laporan`, `Presentasi`, `Hasil` (`Gambar`, `Tabel`), `Konteks`. Penamaan: folder dan dokumen memakai huruf kapital di awal kata dengan spasi, sedangkan berkas keluaran *notebook* memakai huruf kecil dengan garis bawah dan awalan tahap (`t2_`, `t4_`, dan seterusnya). Berkas fitur di `Data/Data Olahan/` dipakai semua tahap sehingga tanpa awalan. *Notebook* tahap 2 ada di `Notebook/Tahap 2 EDA dan Praproses.ipynb`. Ringkasan hasil per tahap ada di `Laporan/Ringkasan Hasil Per Tahapan.md`. Keluaran *notebook* tahap 2: grafik di `Hasil/Gambar/`, tabel di `Hasil/Tabel/`, fitur Tiantan (latih dan uji) di `Data/Data Olahan/`.
 
 ### Sumber dan berkas dataset
 
@@ -593,7 +593,7 @@ Repo: `Tugas-Machine-Learning-PM25-Beijing` (akun `LippyyDev`).
 | Tahap | Status | Catatan |
 |---|---|---|
 | 1. Rumusan masalah dan metrik | Selesai sebagian | Proposal ada di `Proposal/`. Ditetapkan 14 Nov 2026: horizon 24 jam, uji stasiun lain opsi A, nilai 999 dipertahankan, stasiun utama Tiantan. Belum: persetujuan dosen, konversi PDF dan cek panjang 1 sampai 2 halaman, cek manual kuartil referensi [1] dan [2], referensi baru 3 (laporan akhir minimal 5). Ringkasan hasil per tahap ada di `Laporan/Ringkasan Hasil Per Tahapan.md` |
-| 2. EDA dan praproses | Selesai sebagian | `Notebook/Tahap 2 EDA dan Praproses.ipynb` sudah dijalankan di Colab (15 Nov 2026) pada data latih Tiantan, hasil ringkas ada di `Laporan/Ringkasan Hasil Per Tahapan.md`. Belum: batas *forward fill* 3 jam (masih [Usulan]), stasiun uji, pemindahan isi ke *notebook* utama, dan penyesuaian jalur data agar *notebook* bisa dijalankan dari folder `Notebook/` tanpa mengunduh ulang repo |
+| 2. EDA dan praproses | Selesai sebagian | `Notebook/Tahap 2 EDA dan Praproses.ipynb` sudah dijalankan di Colab (15 Nov 2026) pada data latih Tiantan, lalu dijalankan ulang setelah keluarannya diarahkan ke `Hasil/` dan `Data/Data Olahan/` (fitur dan tabel identik byte demi byte), hasil ringkas ada di `Laporan/Ringkasan Hasil Per Tahapan.md`. Belum: batas *forward fill* 3 jam (masih [Usulan]), stasiun uji, dan penyusunan *notebook* akhir (belum diputuskan: *notebook* baru atau perluasan *notebook* tahap 2) |
 | 3. Skema validasi | Belum | Pengecekan urutan *fold* `TimeSeriesSplit` sudah ada di bagian 03 *notebook* tahap 2 |
 | 4. *Baseline* | Belum | |
 | Pertemuan 13 (progres) | Belum | Maksimal 5 slide |
