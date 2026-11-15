@@ -6,7 +6,7 @@ Berisi inti hasil tiap tahap, diperbarui setiap satu tahap selesai. Rincian leng
 |---|---|
 | 1. Proposal dan rumusan masalah | Selesai sebagian (draf selesai, menunggu konfirmasi dosen) |
 | 2. EDA dan praproses | Selesai (perbandingan *forward fill* belum ada di *notebook*) |
-| 3. Skema validasi | Selesai (skema, pengecekan otomatis, alasan, dan keterbatasan ada di *notebook* bagian 03). Pembuktian data uji dibuka satu kali baru teruji di tahap 7 |
+| 3. Skema validasi | Selesai (skema, pengecekan otomatis, alasan, dan keterbatasan ada di *notebook* bagian 03). Penjaga pembukaan data uji ada di bagian 03.3 dan protokol [Usulan, menunggu persetujuan] di `Protokol Evaluasi Data Uji.md`. Penjaga hanya mencegah pembukaan ganda yang tidak disengaja, dan baru teruji saat data uji dibuka. Literatur pendukung: lihat `Proposal/Catatan Verifikasi Referensi.md` (aturan `gap` sama dengan horizon belum punya sumber *peer review* yang terbaca) |
 | 4. *Baseline* | Selesai sebagian (hasil validasi ada, belum dibahas dengan dosen) |
 | 5. Model lanjutan dan *tuning* | Belum dikerjakan |
 | 6. Evaluasi dan diagnosis | Belum dikerjakan |

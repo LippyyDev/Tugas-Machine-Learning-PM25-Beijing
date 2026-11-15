@@ -27,3 +27,39 @@ Dikeluarkan karena tidak memenuhi syarat: Albelali dan Ahmed (arXiv 2512.06932, 
 1. Kuartil [1] dan [2] langsung di scimagojr.com (sebut tahun cek di laporan).
 2. Teks lengkap [1] sebelum mengutip hasil atau temuannya.
 3. Kebutuhan laporan akhir: minimal 5 referensi, 3 di antaranya artikel 5 tahun terakhir. Proposal ini baru memuat 3, sisanya dapat diambil dari kandidat di atas setelah diverifikasi, ditambah teori dasar berlabel [Teori Dasar] jika perlu.
+
+## Literatur untuk skema validasi dan kebocoran data (dicek 15 November 2026)
+
+Tujuan: mencari dukungan literatur untuk keputusan di bagian 03 notebook (pemisahan kronologis, `TimeSeriesSplit` dengan `gap=24`, praproses di dalam *pipeline* per *fold*, data uji dibuka satu kali). Hasil pencarian dibaca lewat halaman PMC, penerbit, arXiv, dan dokumentasi *scikit-learn*. Tidak ada angka dari literatur yang dipakai.
+
+| No | Referensi | Verifikasi metadata | Indeks dan kuartil | Akses | Peran | Status |
+|---|---|---|---|---|---|---|
+| [2] (diperbarui) | Hewamalage, Ackermann, Bergmeir, 2023, *Data Mining and Knowledge Discovery* 37(2), 788–832. DOI 10.1007/s10618-022-00894-5 | Halaman PDF penerbit dan PMC (PMC9718476) cocok. Bagian kesimpulan versi arXiv 2203.10716 menyatakan kebocoran data perlu dihindari secara eksplisit pada evaluasi *rolling origin* dan pada praproses seperti penghalusan, dekomposisi, dan normalisasi | Kuartil belum dicek langsung di scimagojr.com. Agregator (Editage) menyebut Q1, agregator lain (Peeref) menyebut CiteScore Q1 dan JCR 2023 Q2. Tidak seragam | [Open Access] | [Penelitian Terbaru] | Sebagian (kuartil) |
+| [4] | Kapoor, Narayanan, 2023, *Patterns* 4(9), 100804. DOI 10.1016/j.patter.2023.100804 | Cocok di PMC (PMC10499856), arsip NSF PAR, dan arXiv 2207.07048. Isi yang dibaca: taksonomi delapan jenis kebocoran, ulasan yang menemukan kebocoran pada sedikitnya 294 makalah di 17 bidang, dan usulan *model info sheet* | Agregator (resurchify, mengutip SCImago) menyebut Q1 kategori *Decision Sciences (miscellaneous)*, SJR 1,527, data 2025. Peeref menyebut CiteScore Q2. Belum dicek langsung di scimagojr.com | [Open Access] (CC BY) | [Penelitian Terbaru] | Sebagian (kuartil) |
+| [5] | Lones, 2024, "Avoiding common machine learning pitfalls", *Patterns* 5(10), 101046. DOI 10.1016/j.patter.2024.101046 | Cocok di PDF PMC dan halaman arXiv 2108.02497 (tautan DOI terkait). Jenis artikel: *tutorial*, bukan studi empiris. Bagian tentang ketergantungan temporal pada deret waktu dan penggunaan data uji yang tepat dibaca dari versi arXiv (nomor versi tidak dipastikan), bukan dari versi *Patterns* | Sama dengan [4] (jurnal yang sama), belum dicek langsung | [Open Access] (CC BY NC) | [Penelitian Terbaru] | Sebagian (kuartil, dan isi versi terbit belum dibaca penuh) |
+| [Dokumentasi] | *scikit-learn*, dokumentasi `TimeSeriesSplit` (`gap`) | Halaman resmi dibuka 15 Nov 2026. `gap` didefinisikan sebagai jumlah sampel yang dikeluarkan dari ujung tiap himpunan latih sebelum himpunan uji. Ada sejak versi 0.24 | Bukan artikel berindeks | Terbuka | [Teori Dasar] | Terverifikasi |
+
+### Yang didukung dan tidak didukung literatur ini
+
+Didukung:
+- Kebocoran lewat praproses (normalisasi, penghalusan) harus dicegah pada evaluasi deret waktu ([2]). Ini sejalan dengan imputer dan *scaler* yang dipasang di dalam *pipeline* per *fold*.
+- Kebocoran data adalah kegagalan metodologi yang luas dan menghasilkan hasil terlalu optimistis ([4]).
+- Fungsi parameter `gap` pada `TimeSeriesSplit` (dokumentasi).
+
+Tidak didukung oleh sumber yang berhasil dibaca:
+- Aturan `gap` sama dengan horizon peramalan. Pernyataan itu hanya saya temukan di dokumentasi sebuah paket perangkat lunak pihak ketiga (`temporalcv`), yang bukan sumber *peer review*, dan paket itu mengutip Bergmeir dan Benítez (2012) tanpa saya periksa. Jadi pembenaran `gap=24` di notebook tetap berupa penalaran (target = PM2.5 jam t+24) ditambah `assert` yang memeriksa jaraknya, bukan kutipan literatur.
+- Aturan "data uji dibuka satu kali" sebagai kutipan langsung. Judul bagian tentang data uji ada di daftar isi [5], tetapi isi bagian itu belum saya baca dari versi terbit.
+
+### Kandidat yang tidak dipakai
+
+| Referensi | Alasan |
+|---|---|
+| Cerqueira, Torgo, Mozetic, 2020, *Machine Learning* (DOI 10.1007/S10994-020-05910-7) | Abstrak menyatakan validasi silang berblok dapat dipakai pada deret waktu stasioner. PM2.5 bermusim, jadi klaim itu tidak otomatis berlaku, dan hasil untuk deret tidak stasioner belum dibaca. Tahun 2020 di luar syarat 5 tahun, jadi hanya bisa dipakai sebagai [Teori Dasar] bila dosen menyetujui. Volume dan halaman belum dicatat |
+| Bergmeir dan Benítez, 2012, *Information Sciences* 191, 192–213 | Hanya terlihat lewat dokumentasi paket pihak ketiga. Belum diverifikasi lewat penerbit. Tahun 2012, hanya layak sebagai [Teori Dasar] |
+| Albelali dan Ahmed, arXiv 2512.06932 | *Preprint*, tetap dikeluarkan (alasan sama dengan catatan di atas) |
+
+### Tambahan yang harus dicek manual oleh LIP
+
+1. Kuartil [4] dan [5] (*Patterns*) di scimagojr.com. Perhatikan bahwa kuartil SJR dan CiteScore bisa berbeda; sebutkan satu sumber dan tahun cek.
+2. Isi bagian "Don't ignore temporal dependencies in time series data" dan bagian data uji pada versi *Patterns* [5].
+3. Jumlah referensi laporan akhir: dengan [4] dan [5] terverifikasi metadata, daftar sekarang 5 butir (1 sampai 5) ditambah dokumentasi *scikit-learn*, tetapi [1], [2], [4], [5] masih bersyarat pada cek kuartil.
