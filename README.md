@@ -23,12 +23,12 @@ Proyek individu mata kuliah Pembelajaran Mesin, S2 Teknik Informatika, Universit
 ## Cara menjalankan
 
 1. Pasang Python 3.10 atau lebih baru dengan `numpy`, `pandas`, `scikit-learn`, `matplotlib`, dan `jupyter`.
-2. Buka `Notebook/Proyek ML PM25 Beijing.ipynb`.
-3. Pilih *Restart & Run All*. Sel pemuatan data membaca ke-12 CSV di `Data/Data Mentah`.
+2. Buka `Notebook/Tahap 2 EDA dan Praproses.ipynb`.
+3. Pilih *Restart & Run All*.
 
 `SEED = 42` ditetapkan di sel pertama, dan versi pustaka dicetak di sana.
 
-*Notebook* tahap 2 (`Notebook/Tahap 2 EDA dan Praproses.ipynb`) membaca data dari folder Google Drive pemilik jika ada, dan jika tidak ada mengunduh repositori ini secara otomatis. Hasil ringkasnya ada di `Laporan/Ringkasan Hasil Per Tahapan.md`.
+*Notebook* tahap 2 membaca data dari folder Google Drive pemilik jika ada, dan jika tidak ada mengunduh repositori ini secara otomatis. Hasil ringkasnya ada di `Laporan/Ringkasan Hasil Per Tahapan.md`.
 
 ## Catatan
 
