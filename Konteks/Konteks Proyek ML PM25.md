@@ -59,7 +59,7 @@ Proyek meniru alur kerja peneliti: merumuskan masalah, memahami data, merancang 
 
 ### Struktur repositori
 
-Repo: `Tugas-Machine-Learning-PM25-Beijing`. Folder: `Data` (`Data Mentah`), `Notebook`, `Proposal`, `Laporan`, `Presentasi`, `Hasil` (`Gambar`, `Tabel`), `Konteks`. Penamaan memakai huruf kapital di awal kata dengan spasi. Kerangka *notebook* ada di `Notebook/Proyek ML PM25 Beijing.ipynb`.
+Repo: `Tugas-Machine-Learning-PM25-Beijing`. Folder: `Data` (`Data Mentah`), `Notebook`, `Proposal`, `Laporan`, `Presentasi`, `Hasil` (`Gambar`, `Tabel`), `Konteks`. Penamaan memakai huruf kapital di awal kata dengan spasi. Kerangka *notebook* ada di `Notebook/Proyek ML PM25 Beijing.ipynb`. *Notebook* tahap 2 ada di `Notebook/Tahap 2 EDA dan Praproses.ipynb`. Ringkasan hasil per tahap ada di `Laporan/Ringkasan Hasil Per Tahapan.md`.
 
 ### Sumber dan berkas dataset
 
@@ -115,7 +115,7 @@ df = df.sort_values(["station", "datetime"]).reset_index(drop=True)
 - Korelasi PM2.5 dengan PM10 pada jam yang sama = 0,88. Polutan lain pada jam yang sama hanya boleh dipakai sebagai *lag*.
 - RMSE *naive forecast* pada 20% periode terakhir, per stasiun (minimum, median, maksimum): horizon 1 jam 16,3, 19,4, 23,4; horizon 24 jam 73,2, 89,9, 97,9. Pada horizon 24 jam, *naive* mendekati simpangan baku data sehingga hampir tidak informatif. Pada 1 jam, *naive* sangat kuat. Horizon yang dipilih menentukan seberapa bermakna perbandingan dengan *baseline*.
 
-Semua angka di atas adalah profil awal dan harus direproduksi di *notebook* (bagian 02) sebelum dikutip di laporan.
+Semua angka di atas adalah profil awal dan harus direproduksi di *notebook* (bagian 02) sebelum dikutip di laporan. Angka profil ini dihitung dari seluruh data, sedangkan angka di *notebook* tahap 2 hanya dari data latih (sebelum 2016-05-12 19:00), jadi keduanya tidak boleh dicampur. Yang dikutip di laporan adalah angka dari *notebook*.
 
 ---
 
@@ -509,7 +509,7 @@ Bagian ini adalah catatan kerja. Semua butir di sini perlu diputuskan LIP sendir
 |---|---|---|
 | 1 | **Horizon peramalan** (misalnya 1 jam, 6 jam, atau 24 jam ke depan). **DITETAPKAN oleh LIP, 14 Nov 2026: 24 jam.** Alasan: kebutuhan pengguna (waktu untuk membatasi paparan), bukan kekuatan *baseline* | Menentukan fitur mana yang sah. Panduan tidak menetapkannya. Profil awal menunjukkan *naive* sangat kuat pada 1 jam (RMSE median sekitar 19) dan hampir tidak informatif pada 24 jam (sekitar 90), sehingga pilihan horizon mengubah makna perbandingan dengan *baseline*. Sudah diputuskan. Jika dosen meminta horizon lain, bagian yang bergantung padanya diulang. |
 | 2 | **Daftar fitur yang diizinkan** | Polutan lain (PM10, NO2, CO, dan seterusnya) pada waktu yang sama dengan target berkorelasi kuat dan baru "tersedia" bersamaan dengan target. Hanya boleh dipakai dalam bentuk *lag* yang sesuai horizon. Ini sumber kebocoran paling halus dan masuk ke komponen 20%. |
-| 3 | **Penanganan nilai hilang yang kausal** | Interpolasi linear memakai nilai masa depan, jadi bocor. Alternatif aman: *forward fill*, atau imputer yang dipelajari dari *fold* latih di dalam *pipeline*. Pilihan harus dijustifikasi. |
+| 3 | **Penanganan nilai hilang yang kausal** | Interpolasi linear memakai nilai masa depan, jadi bocor. Alternatif aman: *forward fill*, atau imputer yang dipelajari dari *fold* latih di dalam *pipeline*. Pilihan harus dijustifikasi. **[Usulan, belum diputuskan LIP]** dari *notebook* tahap 2: target yang hilang dibuang, fitur diisi nilai terakhir paling lama 3 jam, sisanya imputer median di dalam *pipeline* per *fold*. Dasar: pada data latih Tiantan, celah sampai 3 jam mencakup 91% celah tetapi 65% jam yang hilang. |
 | 4 | **Makna "uji di stasiun lain". DITETAPKAN oleh LIP, 14 Nov 2026: opsi A** | Opsi A: latih di satu stasiun, uji di stasiun lain. Opsi B: latih gabungan beberapa stasiun, uji pada stasiun yang tidak ikut dilatih. Opsi C: keduanya, sebagai analisis pergeseran distribusi di Tahap 7. Dasar: uji indikatif pada 80% data awal (regresi linear, lag, horizon 24 jam) menunjukkan A, B, dan latih sendiri hampir sama, jadi A dipilih karena paling sederhana. Uji di stasiun lain memakai periode 20% terakhir yang sama dan dibuka satu kali. Makna dari dosen belum dikonfirmasi. |
 | 5 | **Stasiun utama** untuk pengembangan model. **DITETAPKAN oleh LIP, 14 Nov 2026: Tiantan** | Dasar (80% data awal, rata-rata 12 stasiun 80,2): Tiantan rata-rata 82,2, nilai hilang 2,1%, 605 jam di atas 300. Pilihan didasarkan kelengkapan dan keterwakilan, bukan skor model. Stasiun uji belum ditetapkan, kandidat: Dingling (rata-rata 67,0), Huairou (71,0, nilai hilang 3,1%), Dongsi (85,7). Dingling dan Huairou rata-ratanya rendah, tetapi tidak terbukti paling sulit. |
 | 6 | **Perlakuan nilai ekstrem PM2.5** (1 baris bernilai 999, 3 baris di atas 900, 933 baris di atas 500). **DITETAPKAN oleh LIP, 14 Nov 2026: dipertahankan** | Dasar (80% data awal): 999 hanya muncul 1 kali, di tengah episode serempak di banyak stasiun, belum ada bukti batas alat. Ditinjau ulang jika EDA menemukan 999 yang berulang. |
@@ -592,9 +592,9 @@ Repo: `Tugas-Machine-Learning-PM25-Beijing` (akun `LippyyDev`).
 
 | Tahap | Status | Catatan |
 |---|---|---|
-| 1. Rumusan masalah dan metrik | Selesai sebagian | Proposal ada di `Proposal/`. Ditetapkan 14 Nov 2026: horizon 24 jam, uji stasiun lain opsi A, nilai 999 dipertahankan, stasiun utama Tiantan. Belum: persetujuan dosen, konversi PDF dan cek panjang 1 sampai 2 halaman, cek manual kuartil referensi [1] dan [2], referensi baru 3 (laporan akhir minimal 5). Ringkasan hasil per tahap ada di `Proposal/Ringkasan Hasil Per Tahapan.md` |
-| 2. EDA dan praproses | Belum | |
-| 3. Skema validasi | Belum | |
+| 1. Rumusan masalah dan metrik | Selesai sebagian | Proposal ada di `Proposal/`. Ditetapkan 14 Nov 2026: horizon 24 jam, uji stasiun lain opsi A, nilai 999 dipertahankan, stasiun utama Tiantan. Belum: persetujuan dosen, konversi PDF dan cek panjang 1 sampai 2 halaman, cek manual kuartil referensi [1] dan [2], referensi baru 3 (laporan akhir minimal 5). Ringkasan hasil per tahap ada di `Laporan/Ringkasan Hasil Per Tahapan.md` |
+| 2. EDA dan praproses | Selesai sebagian | `Notebook/Tahap 2 EDA dan Praproses.ipynb` sudah dijalankan di Colab (15 Nov 2026) pada data latih Tiantan, hasil ringkas ada di `Laporan/Ringkasan Hasil Per Tahapan.md`. Belum: batas *forward fill* 3 jam (masih [Usulan]), stasiun uji, pemindahan isi ke *notebook* utama, dan penyesuaian jalur data agar *notebook* bisa dijalankan dari folder `Notebook/` tanpa mengunduh ulang repo |
+| 3. Skema validasi | Belum | Pengecekan urutan *fold* `TimeSeriesSplit` sudah ada di bagian 03 *notebook* tahap 2 |
 | 4. *Baseline* | Belum | |
 | Pertemuan 13 (progres) | Belum | Maksimal 5 slide |
 | 5. Model lanjutan dan *tuning* | Belum | |

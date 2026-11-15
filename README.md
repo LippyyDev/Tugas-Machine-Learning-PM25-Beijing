@@ -13,9 +13,9 @@ Proyek individu mata kuliah Pembelajaran Mesin, S2 Teknik Informatika, Universit
 | Folder | Isi |
 |---|---|
 | `Data` | `Data Mentah`: 12 CSV, satu per stasiun (`Aotizhongxin.csv`, `Changping.csv`, dan seterusnya) |
-| `Notebook` | *Notebook* utama (struktur bagian 00 sampai 09 sesuai panduan) |
+| `Notebook` | *Notebook* utama (struktur bagian 00 sampai 09 sesuai panduan) dan *notebook* tahap 2 (EDA dan praproses) |
 | `Proposal` | Proposal PDF 1 sampai 2 halaman |
-| `Laporan` | Laporan akhir PDF 8 sampai 12 halaman dan deklarasi penggunaan AI |
+| `Laporan` | Laporan akhir PDF 8 sampai 12 halaman, deklarasi penggunaan AI, dan ringkasan hasil per tahapan |
 | `Presentasi` | Slide progres (Pertemuan 13) dan slide akhir (Pertemuan 15) |
 | `Hasil` | Gambar dan tabel keluaran (`Gambar`, `Tabel`) |
 | `Konteks` | Ringkasan panduan tugas, panduan dosen (PDF), dan catatan kerja |
@@ -27,6 +27,8 @@ Proyek individu mata kuliah Pembelajaran Mesin, S2 Teknik Informatika, Universit
 3. Pilih *Restart & Run All*. Sel pemuatan data membaca ke-12 CSV di `Data/Data Mentah`.
 
 `SEED = 42` ditetapkan di sel pertama, dan versi pustaka dicetak di sana.
+
+*Notebook* tahap 2 (`Notebook/Tahap 2 EDA dan Praproses.ipynb`) membaca data dari folder Google Drive pemilik jika ada, dan jika tidak ada mengunduh repositori ini secara otomatis. Hasil ringkasnya ada di `Laporan/Ringkasan Hasil Per Tahapan.md`.
 
 ## Catatan
 

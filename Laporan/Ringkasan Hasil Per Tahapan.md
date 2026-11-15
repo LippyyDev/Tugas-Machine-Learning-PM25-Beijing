@@ -1,6 +1,6 @@
 # Ringkasan Hasil Per Tahapan: Peramalan PM2.5 Beijing
 
-Berisi inti hasil tiap tahap, diperbarui setiap satu tahap selesai. Rincian lengkap tahap 1 ada di `Proposal Proyek ML PM25 Beijing (Versi Panjang).md`.
+Berisi inti hasil tiap tahap, diperbarui setiap satu tahap selesai. Rincian lengkap tahap 1 ada di `Proposal/Proposal Proyek ML PM25 Beijing (Versi Panjang).md`.
 
 | Tahap | Status |
 |---|---|
