@@ -93,10 +93,6 @@ Tahap 1 dikerjakan sebelum membuka data. Panduan meminta tiga pertanyaan dijawab
 | Kesalahan mana yang paling merugikan? | Galat besar, terutama ramalan yang terlalu rendah saat polusi tinggi |
 | Bagaimana mengukurnya? | **RMSE** sebagai metrik utama, karena menghukum galat besar lebih berat. MAE sebagai pendamping |
 
-Template satu kalimat dari panduan, diisi untuk proyek ini: "Model ini membantu warga dan otoritas kesehatan lingkungan untuk membatasi paparan polusi dengan memprediksi PM2.5 24 jam ke depan dari riwayat PM2.5, polutan lain, dan cuaca. Kesalahan paling mahal adalah galat besar, sehingga metrik utama adalah RMSE."
-
-Keluaran: proposal tertulis dengan lima referensi.
-
 ### Tahap 2. Eksplorasi dan praproses
 
 Mengenali data, lalu mengubahnya menjadi tabel masukan (fitur) dan target untuk model.
