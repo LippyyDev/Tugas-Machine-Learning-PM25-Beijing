@@ -14,6 +14,8 @@ Berisi inti hasil tiap tahap, diperbarui setiap satu tahap selesai. Rincian leng
 
 ## Revisi desain evaluasi (16 Nov 2026)
 
+![Pembagian data: 9 stasiun latih, 3 stasiun ditahan, uji 20% periode terakhir](../Hasil/Gambar/t3_pembagian_data.png)
+
 Keputusan LIP 16 Nov 2026 menggantikan skema "latih di Tiantan, uji di Dingling" (opsi A) dengan desain berikut. Status: [Usulan], belum dikonfirmasi dosen. Panduan dosen hanya menetapkan uji = 20% periode terakhir dan tantangan "uji model di stasiun lain".
 
 - **Desain:** 9 stasiun latih dan 3 stasiun ditahan. Waktu 80% awal untuk latih, 20% akhir untuk uji, dengan satu stempel waktu batas untuk semua stasiun. Uji final dibuka satu kali pada 20% akhir dari 12 stasiun, dilaporkan terpisah untuk 9 stasiun latih dan 3 stasiun ditahan.

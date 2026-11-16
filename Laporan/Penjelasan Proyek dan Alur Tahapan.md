@@ -36,6 +36,17 @@ Nilai kosong ditandai `NA`. `PM2.5` kosong pada 2,08% baris, dan kolom lain 0,08
 
 ### Stasiun latih dan stasiun ditahan
 
+![Pembagian data: 9 stasiun latih, 3 stasiun ditahan, uji 20% periode terakhir](../Hasil/Gambar/t3_pembagian_data.png)
+
+Cara membaca gambar: luas kotak sebanding dengan jumlah baris. Baris atas adalah 9 stasiun latih, baris bawah adalah 3 stasiun ditahan. Kolom kiri adalah 80% waktu awal, kolom kanan adalah 20% waktu akhir.
+
+| Kotak | Isi | Porsi baris | Peran |
+|---|---|---|---|
+| 9 stasiun, 80% awal | Latih | 60% | Melatih model, memilih model, dan *tuning* dengan `TimeSeriesSplit` |
+| 9 stasiun, 20% akhir | Uji | 15% | Menguji peramalan masa depan di stasiun yang sudah dikenal |
+| 3 stasiun, 80% awal | Tidak dipakai | 20% | Sengaja dibuang agar 3 stasiun tetap asing bagi model |
+| 3 stasiun, 20% akhir | Uji | 5% | Menguji stasiun baru sekaligus masa depan |
+
 Dari 12 stasiun, **9 dipakai untuk melatih model** dan **3 ditahan**: model tidak pernah melihat data 3 stasiun itu. Data waktu dibagi sama untuk semua stasiun: 80% awal untuk latih dan 20% akhir untuk uji. Ini keputusan penulis (16 Nov 2026), belum dikonfirmasi dosen. Aturan dosen hanya menetapkan uji = 20% periode terakhir dan adanya uji di stasiun lain.
 
 Uji akhir dilakukan pada 20% periode terakhir dari semua 12 stasiun, dilaporkan terpisah: (1) 9 stasiun latih, untuk melihat apakah model bagus meramal masa depan, dan (2) 3 stasiun ditahan, untuk melihat apakah model masih bagus di stasiun yang belum pernah dilihat. Selisih galat keduanya menunjukkan pergeseran distribusi. Tiga stasiun ditahan belum ditetapkan. Rencananya dipilih satu yang jauh, satu sedang, dan satu dekat dari stasiun latih berdasarkan data latih saja. Tiantan dan Dingling dipakai pada tahap awal sebagai percobaan (pilot), dan hasilnya dihitung ulang untuk desain ini.
