@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Slide 3 · Tahap 2 · Eksplorasi dan praproses</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+/* ───────── Token ───────── */
+:root{
+  --bg:#050507;
+  --panel:#0a0b0f;
+  --line:rgba(255,255,255,.13);
+  --line2:rgba(255,255,255,.07);
+  --text:#f1f2f6;
+  --body:#c4c7d4;
+  --mute:#80849a;
+  --accent:#7db4ff;
+  --accent-bright:#c4dcff;
+  --amber:#ffc266;
+  --sans:'Space Grotesk','Segoe UI',system-ui,sans-serif;
+  --mono:'JetBrains Mono','Cascadia Mono',Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;background:#050507;overflow:hidden;font-family:var(--sans);color:var(--text)}
+
+/* ───────── Panggung 1920×1080 ───────── */
+#stage{
+  position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;overflow:hidden;
+  background:
+    radial-gradient(1100px 600px at 18% -8%,rgba(110,140,220,.13),transparent 70%),
+    radial-gradient(900px 600px at 100% 100%,rgba(90,110,180,.07),transparent 70%),
+    radial-gradient(rgba(255,255,255,.055) 1px,transparent 1.2px) 0 0/32px 32px,
+    var(--bg);
+}
+
+/* ───────── Header ───────── */
+.header{position:absolute;left:96px;right:96px;top:52px;height:76px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line2)}
+.brand{display:flex;align-items:center;gap:20px}
+.brand img{height:60px;width:auto;display:block}
+.brand b{display:block;font-size:28px;font-weight:600;letter-spacing:-.01em}
+.brand span{display:block;font-size:19px;color:var(--mute);margin-top:2px}
+.tag{font-family:var(--mono);font-size:16px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.kicker{position:absolute;left:96px;top:152px}
+.kicker h1{font-size:56px;line-height:1.1;font-weight:700;letter-spacing:-.03em;color:var(--text)}
+
+/* ───────── Kolom teks ───────── */
+.copy{position:absolute;left:96px;top:322px;width:740px;height:620px;display:flex;flex-direction:column;justify-content:flex-start;gap:18px}
+.blk{opacity:0;transform:translateY(14px);max-height:0;overflow:hidden;margin-top:0;transition:opacity .6s ease,transform .6s ease,max-height .7s ease,margin-top .7s ease;position:relative}
+.blk.show{opacity:1;transform:none;max-height:460px;margin-top:26px}
+.blk.show:first-child{margin-top:0}
+.blk .lbl{font-family:var(--mono);font-size:15px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);margin-bottom:10px;display:block;transition:color .4s}
+.blk p{font-size:30px;line-height:1.45;color:var(--body);font-weight:400;transition:font-size .5s ease,color .5s ease}
+.blk b{color:var(--text);font-weight:600}
+.blk em{font-style:italic;color:var(--text)}
+.blk.active .lbl{color:var(--accent)}
+.blk.active p{color:#e4e6ee}
+.blk.seen{opacity:.5}
+.blk.seen p{font-size:23px}
+.blk .more{display:inline;opacity:0;transition:opacity .7s ease .15s}
+.blk .more.show{opacity:1}
+
+/* ───────── Panel grafik ───────── */
+.panel{position:absolute;left:880px;top:236px;width:944px;height:716px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.005));}
+.panel::before,.panel::after,.panel .c1,.panel .c2{content:"";position:absolute;width:16px;height:16px;border:2px solid var(--accent);opacity:.9}
+.panel::before{left:-2px;top:-2px;border-right:0;border-bottom:0}
+.panel::after{right:-2px;top:-2px;border-left:0;border-bottom:0}
+.panel .c1{left:-2px;bottom:-2px;border-right:0;border-top:0}
+.panel .c2{right:-2px;bottom:-2px;border-left:0;border-top:0}
+.phead{height:76px;border-bottom:1px solid var(--line2);display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+.fig{font-family:var(--mono);font-size:15px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
+.fig b{color:var(--text);font-weight:500}
+.readout{text-align:right;transition:opacity .25s ease}
+.readout.swap{opacity:0}
+.readout small{display:block;font-family:var(--mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.readout strong{display:block;font-family:var(--mono);font-size:32px;font-weight:500;color:var(--text);line-height:1.1;margin-top:2px;font-variant-numeric:tabular-nums}
+.readout strong .u{font-size:17px;color:var(--mute);margin-left:6px}
+.readout strong .ok{font-size:16px;letter-spacing:.14em;color:#06121f;background:var(--accent);padding:3px 9px;border-radius:3px;margin-left:12px;vertical-align:middle}
+.readout strong .q{font-size:16px;letter-spacing:.1em;color:var(--amber);margin-left:12px}
+
+svg#g{display:block;width:100%;height:auto;aspect-ratio:960/520;margin-top:0}
+.pfoot{position:absolute;left:0;right:0;bottom:0;height:112px;border-top:1px solid var(--line2);padding:0 28px;display:flex;align-items:center}
+.pf{position:absolute;left:28px;right:28px;top:50%;transform:translateY(-50%);opacity:0;transition:opacity .45s ease;pointer-events:none}
+.pf.show{opacity:1}
+.legend{display:flex;gap:34px;align-items:center;font-size:21px;color:var(--body)}
+.legend span{display:flex;align-items:center;gap:12px}
+.legend .d{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.7)}
+.legend .l{width:30px;height:0;border-top:2px solid rgba(255,255,255,.5)}
+.legend .n{font-family:var(--mono);font-size:15px;border:1px solid var(--line);border-radius:3px;padding:2px 8px;background:#07080b}
+.cap{font-size:23px;line-height:1.45;color:var(--body)}
+.cap b{color:var(--text);font-weight:600}
+.cay{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px}
+.cay div{border:1px solid var(--line);background:#07080b;padding:7px 16px 8px;border-radius:3px}
+.cay small{display:block;font-family:var(--mono);font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.cay strong{display:block;font-family:var(--mono);font-weight:500;font-size:24px;color:var(--amber);margin-top:2px}
+.cay-note{font-size:13px;font-family:var(--mono);letter-spacing:.1em;color:var(--mute);text-transform:uppercase;margin-bottom:8px}
+
+/* ───────── Footer ───────── */
+.footer{position:absolute;left:96px;right:96px;bottom:44px;height:62px;display:flex;align-items:flex-end;justify-content:space-between}
+.prog{display:flex;gap:8px;width:1000px}
+.seg{position:relative}
+.seg .bar{height:3px;background:rgba(255,255,255,.14);position:relative;overflow:hidden}
+.seg .bar i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--accent);transition:width .6s ease}
+.seg span{display:block;margin-top:9px;font-family:var(--mono);font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#4b4e60;white-space:nowrap}
+.seg.cur span{color:var(--accent)}
+.ctrl{display:flex;align-items:center;gap:12px}
+.cnt{font-family:var(--mono);font-size:17px;letter-spacing:.12em;color:var(--mute);margin-right:10px;min-width:70px;text-align:right}
+.btn{font-family:var(--mono);font-size:17px;letter-spacing:.1em;text-transform:uppercase;color:var(--text);background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:3px;height:50px;padding:0 22px;cursor:pointer;transition:background .2s,border-color .2s,color .2s}
+.btn:hover:not(:disabled){background:rgba(125,180,255,.12);border-color:var(--accent);color:var(--accent-bright)}
+.btn.pri{border-color:rgba(125,180,255,.55);background:rgba(125,180,255,.1)}
+.btn:disabled{opacity:.3;cursor:default}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.hint{position:absolute;right:96px;bottom:12px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:#4b4e60;text-transform:uppercase}
+
+/* ───────── Dock navigasi (pop up, muncul saat kursor di bawah) ───────── */
+.prog{width:100%}
+#dock{position:absolute;left:50%;bottom:78px;transform:translate(-50%,28px);opacity:0;pointer-events:none;z-index:10;
+  display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 16px 9px;
+  background:#0a0b0f;border:1px solid rgba(255,255,255,.2);border-radius:6px;box-shadow:0 18px 50px rgba(0,0,0,.6);
+  transition:opacity .35s ease,transform .35s ease}
+#dock.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+#dock .hint{position:static}
+
+#dock .btn{font-size:14px;height:36px;padding:0 16px;letter-spacing:.08em}
+#dock .cnt{font-size:14px;min-width:54px;margin-right:6px}
+#dock .ctrl{gap:8px}
+#dock .hint{font-size:11px}
+.edge-hint{position:fixed;top:0;bottom:0;width:7vw;pointer-events:none;opacity:0;transition:opacity .25s ease;z-index:5}
+.edge-hint.l{left:0;background:linear-gradient(90deg,rgba(125,180,255,.14),transparent)}
+.edge-hint.r{right:0;background:linear-gradient(270deg,rgba(125,180,255,.14),transparent)}
+.edge-hint.on{opacity:1}
+
+
+
+.blk.old{opacity:0;max-height:0;margin-top:0;transform:translateY(-10px)}
+.prog{width:100%}
+.src{position:absolute;right:96px;top:176px;font-family:var(--mono);font-size:15px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.blk code,.cap code{font-family:var(--mono);font-size:.82em;color:var(--accent-bright);background:rgba(125,180,255,.1);padding:1px 7px;border-radius:3px}
+svg.vz{display:block;width:100%;height:526px}
+.vwrap{position:absolute;left:0;right:0;top:76px;height:526px}
+.view{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .5s ease}
+.view.on{opacity:1;pointer-events:auto}
+.tt{position:absolute;pointer-events:none;font-family:var(--mono);font-size:15px;background:#07080b;border:1px solid var(--accent);color:var(--text);padding:7px 12px;border-radius:3px;white-space:nowrap;opacity:0;transition:opacity .15s ease;z-index:6}
+.tt.on{opacity:1}
+.tt small{display:block;font-size:12px;letter-spacing:.1em;color:var(--mute);text-transform:uppercase}
+.sw{display:flex;gap:0;border:1px solid var(--line);border-radius:3px;overflow:hidden}
+.sw button{font-family:var(--mono);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);background:rgba(255,255,255,.02);border:0;border-right:1px solid var(--line);padding:9px 16px;cursor:pointer;transition:background .2s,color .2s}
+.sw button:last-child{border-right:0}
+.sw button:hover{color:var(--text)}
+.sw button.on{background:rgba(125,180,255,.16);color:var(--accent-bright)}
+
+.kicker{top:152px}
+.dgrid{position:absolute;left:44px;right:62px;top:70px}
+.stats{display:grid;grid-template-columns:1fr 34px 1fr 34px 1fr;align-items:center}
+.stats .op{font-family:var(--mono);font-size:26px;color:var(--mute);text-align:center}
+.sbox{border:1px solid var(--line);background:#07080b;padding:14px 18px 16px;border-radius:4px;opacity:0;transform:translateY(14px);transition:opacity .6s ease var(--d,0ms),transform .6s ease var(--d,0ms)}
+.sbox small{display:block;font-family:var(--mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.sbox strong{display:block;font-family:var(--mono);font-weight:500;font-size:40px;color:var(--text);margin-top:6px;font-variant-numeric:tabular-nums}
+.sbox.hl{border-color:rgba(125,180,255,.55);background:linear-gradient(180deg,rgba(125,180,255,.12),rgba(125,180,255,.02))}
+.sbox.hl strong{color:var(--accent-bright)}
+.cols{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px}
+.col{border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.005));border-radius:4px;padding:14px 16px 16px;opacity:0;transform:translateY(14px);transition:opacity .6s ease var(--d,0ms),transform .6s ease var(--d,0ms)}
+.col h4{font-family:var(--mono);font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:400;margin-bottom:12px}
+.col h4 span{color:var(--mute);margin-left:8px}
+.col .cl{display:flex;flex-wrap:wrap;gap:8px}
+.cc{font-family:var(--mono);font-size:15px;color:var(--body);border:1px solid var(--line);background:#07080b;padding:5px 11px;border-radius:3px}
+.cc.tg{color:#1c1305;background:var(--amber);border-color:var(--amber);font-weight:500}
+.note{margin-top:14px;font-size:17px;color:var(--mute);line-height:1.4;opacity:0;transition:opacity .6s ease .6s}
+.on .sbox,.on .col,.on .note{opacity:1;transform:none}
+.tabs{position:absolute;left:74px;top:14px;z-index:4}
+.eda{position:absolute;left:0;right:0;top:56px;bottom:0}
+.lk{opacity:0;transition:opacity .5s ease}
+.lk.on{opacity:1}
+svg .bar{transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(0);transition:transform .8s cubic-bezier(.3,.7,.2,1) var(--d,0ms)}
+svg.go .bar{transform:scaleY(1)}
+.bar-h{cursor:default}
+
+</style>
+<link rel="stylesheet" href="ASET/tema.css">
+<script src="ASET/tema.js"></script>
+</head>
+<body>
+<div class="edge-hint l" id="eh-l"></div><div class="edge-hint r" id="eh-r"></div>
+<div id="stage">
+  <div class="header">
+    <div class="brand"><img src="ASET/LOGO-UNHAS.png" alt="Logo Universitas Hasanuddin">
+      <div><b>Universitas Hasanuddin</b><span>Magister Teknik Informatika</span></div></div>
+    <div class="tag">Proyek Individu Pembelajaran Mesin</div>
+  </div>
+
+  <div class="kicker"><h1>Eksplorasi dan Praproses</h1></div>
+  <div class="src">Dasar: Penjelasan Proyek bagian 2 dan Tahap 2, hasil eksekusi notebook</div>
+
+  <div class="copy">
+    <div class="blk" id="b1"><span class="lbl">01 · Datanya</span>
+      <p><b>12 stasiun</b> pemantau, masing-masing 35.064 jam (Maret 2013 sampai Februari 2017). Total <b>420.768 baris</b> dan 18 kolom: waktu, polutan, dan cuaca.</p></div>
+    <div class="blk" id="b2"><span class="lbl">02 · Satu baris latihan</span>
+      <p><b>Fitur</b> adalah semua yang sudah terukur sampai jam t. <b>Target</b> adalah PM2.5 pada jam t+24. Ada <b>29 fitur</b>.</p></div>
+    <div class="blk" id="b3"><span class="lbl">03 · Aturan terpenting</span>
+      <p>Fitur <b>tidak boleh</b> memakai data sesudah jam t. Bila dilanggar, skor tampak bagus tetapi model tidak bisa dipakai sungguhan. Itulah <em>kebocoran data</em>.</p></div>
+    <div class="blk" id="b4"><span class="lbl">04 · Temuan eksplorasi</span>
+      <p>PM2.5 <b>miring ke kanan</b>: median 57, rata-rata 81. Jam yang sangat tinggi menarik rata-rata dan akan mendominasi RMSE.</p></div>
+    <div class="blk" id="b5"><span class="lbl">05 · Nilai hilang</span>
+      <p>PM2.5 kosong pada <b>2,16%</b> jam. Pengisian 0 sampai 24 jam selisihnya setara derau, maka dipilih <b>tanpa <em>forward fill</em></b>.</p></div>
+    <div class="blk" id="b6"><span class="lbl">06 · Hasil</span>
+      <p><b>246.798</b> baris latih dari 9 stasiun dengan 29 fitur. <b>82.151</b> baris uji disimpan dan tidak dibuka.</p></div>
+  </div>
+
+  <div class="panel">
+    <i class="c1"></i><i class="c2"></i>
+    <div class="phead">
+      <div class="fig" id="fig"></div>
+      <div class="readout" id="readout"><small id="ro-l"></small><strong id="ro-v"></strong></div>
+    </div>
+    <div class="vwrap">
+      <div class="view" id="v-data"><div class="dgrid" id="dgrid">
+        <div class="stats">
+          <div class="sbox" style="--d:0ms"><small>Stasiun</small><strong>12</strong></div><div class="op">×</div>
+          <div class="sbox" style="--d:140ms"><small>Jam per stasiun</small><strong>35.064</strong></div><div class="op">=</div>
+          <div class="sbox hl" style="--d:280ms"><small>Baris data</small><strong>420.768</strong></div>
+        </div>
+        <div class="cols">
+          <div class="col" style="--d:420ms"><h4>Waktu dan tempat<span>6</span></h4><div class="cl"><span class="cc">No</span><span class="cc">year</span><span class="cc">month</span><span class="cc">day</span><span class="cc">hour</span><span class="cc">station</span></div></div>
+          <div class="col" style="--d:560ms"><h4>Polutan<span>6</span></h4><div class="cl"><span class="cc tg">PM2.5</span><span class="cc">PM10</span><span class="cc">SO2</span><span class="cc">NO2</span><span class="cc">CO</span><span class="cc">O3</span></div></div>
+          <div class="col" style="--d:700ms"><h4>Cuaca<span>6</span></h4><div class="cl"><span class="cc">TEMP</span><span class="cc">PRES</span><span class="cc">DEWP</span><span class="cc">RAIN</span><span class="cc">WSPM</span><span class="cc">wd</span></div></div>
+        </div>
+        <div class="note">Kuning: kolom yang diramal (<code>PM2.5</code>). Nilai kosong tertulis <code>NA</code>. Arah angin <code>wd</code> berupa 16 kategori teks.</div>
+      </div></div>
+      <div class="view" id="v-row">
+        <svg class="vz" id="svg-row" viewBox="0 0 942 526"></svg>
+        <div class="sw" id="lk" style="position:absolute;left:74px;top:456px;opacity:0;pointer-events:none;transition:opacity .4s ease"><button data-m="aman" class="on">Aman: hanya jam t ke kiri</button><button data-m="bocor">Bocor: pakai jam t+1</button></div>
+      </div>
+      <div class="view" id="v-eda">
+        <div class="sw tabs" id="tabs"><button data-t="sebaran" class="on">Sebaran</button><button data-t="bulan">Per bulan</button><button data-t="jam">Per jam</button></div>
+        <svg class="vz" id="svg-eda" viewBox="0 0 942 526" style="position:absolute;left:0;top:0"></svg>
+      </div>
+      <div class="view" id="v-gap"><svg class="vz" id="svg-gap" viewBox="0 0 942 526"></svg></div>
+      <div class="view" id="v-flow"><svg class="vz" id="svg-flow" viewBox="0 0 942 526"></svg></div>
+    </div>
+    <div class="tt" id="tt"></div>
+    <div class="pfoot"><div class="pf" id="pf-cap"><div class="cap" id="cap"></div></div></div>
+  </div>
+  <div class="footer"><div class="prog" id="prog"></div></div>
+  <div id="dock"><div class="ctrl">
+      <span class="cnt" id="cnt"></span>
+      <button class="btn" id="prev">Sebelumnya</button><button class="btn" id="reset">Reset</button><button class="btn pri" id="next">Berikutnya</button>
+    </div><div class="hint">← → navigasi · R reset · F layar penuh · I indeks</div></div>
+</div>
+
+<script>
+const PREV_SLIDE="SLIDE2.html", NEXT_SLIDE="SLIDE4.html", SLIDE_NO=3;
+
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const SVGNS = 'http://www.w3.org/2000/svg';
+const mk = (tag,attrs={},parent)=>{const e=document.createElementNS(SVGNS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;};
+const fmt = n => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+const fd = (v,n=1) => v.toFixed(n).replace('.',',');
+let timers=[], ticker=null, runId=0;
+const later=(fn,ms)=>{timers.push(setTimeout(fn,ms));};
+function clearRuns(){timers.forEach(clearTimeout);timers=[];if(ticker){clearInterval(ticker);ticker=null;}runId++;}
+function readout(label,html){
+  const r=$('#readout'); if(!r)return; r.classList.add('swap');
+  setTimeout(()=>{ $('#ro-l').textContent=label; $('#ro-v').innerHTML=html; r.classList.remove('swap'); },200);
+}
+function readoutNow(label,html){ if(!$('#readout'))return; $('#ro-l').textContent=label; $('#ro-v').innerHTML=html; }
+function caption(html){ const c=$('#cap'); if(!c)return; c.innerHTML=html; $$('.pf').forEach(p=>p.classList.toggle('show',p.id==='pf-cap')); }
+function showFoot(id){ $$('.pf').forEach(p=>p.classList.toggle('show',p.id==='pf-'+id)); }
+/* blok teks bertahap: yang aktif terang, dua sebelumnya redup, yang lebih lama disembunyikan */
+function blocks(active){
+  $$('.copy .blk').forEach((el,i)=>{
+    el.classList.toggle('show',i<=active && i>=active-2);
+    el.classList.toggle('active',i===active);
+    el.classList.toggle('seen',i<active && i>=active-2);
+    el.classList.toggle('old',i<active-2);
+  });
+}
+/* titik layar ke koordinat SVG */
+function svgPt(svg,ev){const p=svg.createSVGPoint();p.x=ev.clientX;p.y=ev.clientY;return p.matrixTransform(svg.getScreenCTM().inverse());}
+
+
+/* ═════════ Deret waktu nyata: 14 hari (336 jam) PM2.5 Tiantan, 11 sampai 24 Nov 2013, data latih ═════════ */
+const EX=[24, 12, 15, 11, 16, 5, 12, 16, 16, 13, 10, 12, 22, 24, 34, 34, 34, 46, 56, 68, 83, 79, 79, 75, 87, 98, 97, 101, 107, 104, 94, 92, 72, 65, 50, 36, 18, 11, 27, 24, 24, 23, 22, 22, 33, 69, 88, 81, 89, 99, 93, 91, 97, 108, 113, 109, 114, 122, 122, 157, 86, 215, 228, 230, 220, 226, 221, 225, 232, 248, 239, 241, 222, 203, 169, 69, 52, 30, 17, 13, 16, 16, 21, 18, 22, 22, 20, 21, 53, 69, 55, 56, 70, 91, 85, 83, 73, 85, 81, 97, 115, 133, 141, 146, 136, 132, 157, 91, 63, 63, 99, 118, 88, 87, 73, 80, 81, 97, 113, 112, 129, 139, 138, 137, 135, 87, 46, 42, 32, 24, 15, 12, 5, 5, 12, 9, 6, 3, 6, 7, 11, 5, 10, 10, 8, 16, 15, 14, 4, 7, 27, 26, 7, 6, 7, 5, 3, 3, 9, 11, 4, 4, 7, 7, 11, 9, 6, 13, 18, 19, 6, 14, 6, 8, 3, 3, 9, 10, 13, 10, 7, 9, 8, 7, 6, 6, 9, 14, 11, 9, 6, 9, 6, 8, 8, 6, 8, 9, 7, 6, 13, 15, 18, 13, 19, 18, 25, 26, 48, 74, 62, 71, 73, 79, 73, 81, 91, 92, 107, 127, 119, 80, 65, 42, 48, 72, 52, 21, 28, 25, 18, 14, 17, 55, 25, 70, 81, 90, 102, 104, 108, 105, 109, 130, 148, 123, 80, 62, 67, 78, 56, 54, 43, 54, 54, 34, 51, 90, 137, 132, 150, 191, 214, 219, 213, 213, 194, 157, 156, 126, 98, 68, 46, 48, 47, 55, 65, 64, 100, 197, 159, 177, 168, 177, 267, 303, 316, 321, 331, 338, 347, 331, 277, 285, 277, 225, 183, 146, 140, 120, 121, 132, 177, 188, 206, 229, 229, 233, 233, 234, 256, 239, 226, 228, 222, 217, 149, 99, 46, 31, 31, 32, 35, 39, 44, 50, 47, 55, 59, 53, 52, 47, 45, 25, 23, 17];
+const EX_START=new Date(2013,10,11,0,0);
+const CX0=74, CX1=872, CY0=64, CY1=372, YMAX=360;
+const DXH=(CX1-CX0)/(EX.length-1);
+const xs=i=>CX0+i*DXH, ys=v=>CY1-v/YMAX*(CY1-CY0);
+const T_MIN=48, T_MAX=EX.length-25;           // jam t harus punya jam t+24
+const MON=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+const jamStr=i=>{const d=new Date(EX_START.getTime()+i*3600e3);return d.getDate()+' '+MON[d.getMonth()]+', '+String(d.getHours()).padStart(2,'0')+'.00';};
+function drawAxes(g){
+  for(const v of [0,100,200,300]){
+    mk('line',{x1:CX0,x2:CX1,y1:ys(v),y2:ys(v),stroke:v===0?'rgba(255,255,255,.28)':'rgba(255,255,255,.07)','stroke-width':1},g);
+    const t=mk('text',{x:CX0-12,y:ys(v)+1,'text-anchor':'end','dominant-baseline':'central',fill:'#80849a','font-size':14,'font-family':'JetBrains Mono,Consolas,monospace'},g);t.textContent=v;
+  }
+  const u=mk('text',{x:CX0-12,y:CY0-26,'text-anchor':'start',fill:'#80849a','font-size':13,'font-family':'JetBrains Mono,Consolas,monospace',},g);u.textContent='µg/m³';
+  for(let i=0;i<EX.length;i+=48){
+    const d=new Date(EX_START.getTime()+i*3600e3);
+    const t=mk('text',{x:xs(i),y:CY1+22,'text-anchor':'middle',fill:'#80849a','font-size':13,'font-family':'JetBrains Mono,Consolas,monospace'},g);t.textContent=d.getDate()+' '+MON[d.getMonth()];
+    mk('line',{x1:xs(i),x2:xs(i),y1:CY1,y2:CY1+6,stroke:'rgba(255,255,255,.28)'},g);
+  }
+}
+const linePath=(a,b)=>{let d='';for(let i=a;i<=b;i++)d+=(i===a?'M':'L')+xs(i).toFixed(1)+' '+ys(EX[i]).toFixed(1);return d;};
+const areaPath=(a,b)=>linePath(a,b)+'L'+xs(b).toFixed(1)+' '+CY1+'L'+xs(a).toFixed(1)+' '+CY1+'Z';
+
+const HIST={"tepi": [0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 320, 340, 360, 380, 400], "jumlah": [57039, 39525, 30467, 25708, 21014, 16244, 12664, 9752, 7620, 5724, 4488, 3807, 2962, 2386, 1814, 1430, 1063, 728, 589, 1990], "lebih_dari_400": 1550}, BULAN=[88, 94, 95, 73, 67, 73, 73, 57, 65, 96, 94, 99], JAM=[89, 88, 86, 84, 81, 78, 76, 75, 77, 78, 79, 79, 78, 77, 77, 75, 75, 76, 78, 83, 88, 90, 90, 89], RING=null;
+const MONO='JetBrains Mono,Consolas,monospace', SANS='Space Grotesk,Segoe UI,sans-serif';
+const tx=(g,t,a,s=14,fill='#80849a',ex={})=>{const e=mk('text',Object.assign({x:a[0],y:a[1],fill,'font-size':s,'font-family':MONO},ex),g);e.textContent=t;return e;};
+const tt=$('#tt');
+function tip(html,ev){ const r=$('.panel').getBoundingClientRect(); const sc=r.width/944; tt.innerHTML=html; tt.classList.add('on');
+  tt.style.left=((ev.clientX-r.left)/sc+14)+'px'; tt.style.top=((ev.clientY-r.top)/sc-12)+'px'; }
+const tipOff=()=>tt.classList.remove('on');
+let tIdx=106, leak=false;
+
+/* ═════════ View baris latihan: fitur di kiri jam t, target di jam t+24 ═════════ */
+const sv=$('#svg-row'); const defs=mk('defs',{},sv);
+const gr=mk('linearGradient',{id:'gA',x1:0,y1:0,x2:0,y2:1},defs); mk('stop',{offset:'0%','stop-color':'#7db4ff','stop-opacity':.22},gr); mk('stop',{offset:'100%','stop-color':'#7db4ff','stop-opacity':0},gr);
+const pat=mk('pattern',{id:'hatch',width:12,height:12,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'},defs); mk('line',{x1:0,y1:0,x2:0,y2:12,stroke:'rgba(255,194,102,.4)','stroke-width':2},pat);
+const past=mk('rect',{y:CY0-6,height:CY1-CY0+6,fill:'rgba(125,180,255,.06)'},sv);
+const fz=mk('rect',{y:CY0-6,height:CY1-CY0+6,fill:'url(#hatch)'},sv); fz.style.transition='opacity .5s ease';
+drawAxes(mk('g',{},sv));
+mk('path',{d:areaPath(0,EX.length-1),fill:'url(#gA)'},sv);
+mk('path',{d:linePath(0,EX.length-1),fill:'none',stroke:'#c4dcff','stroke-width':2,'stroke-linejoin':'round'},sv);
+const labPast=tx(sv,'FITUR: SUDAH TERUKUR',[CX0+10,CY0+8],13,'#7db4ff',{'letter-spacing':'.12em'});
+const labFut=tx(sv,'',[0,CY0+8],13,'#ffc266',{'letter-spacing':'.12em','text-anchor':'end'});
+const gLag=mk('g',{},sv); const LAGS=[1,2,3,6,12,24,48]; const lagDots=LAGS.map(()=>mk('circle',{r:5,fill:'#0f1c31',stroke:'#7db4ff','stroke-width':2.2},gLag));
+const tLine=mk('line',{y1:CY0-6,y2:CY1,stroke:'#f1f2f6','stroke-width':1.5,'stroke-dasharray':'5 6'},sv);
+const tDot=mk('circle',{r:7.5,fill:'#0a0b10',stroke:'#f1f2f6','stroke-width':2.5},sv);
+const tLab=tx(sv,'JAM T',[0,CY0-20],14,'#f1f2f6',{'text-anchor':'middle','letter-spacing':'.12em'});
+
+const fRing=mk('circle',{r:10,fill:'rgba(255,194,102,.14)',stroke:'#ffc266','stroke-width':2.5},sv);
+const fLab=tx(sv,'TARGET',[0,0],14,'#ffc266',{'text-anchor':'middle','letter-spacing':'.12em','stroke':'#0a0b0f','stroke-width':5,'paint-order':'stroke'});
+const leakDot=mk('circle',{r:8,fill:'rgba(255,194,102,.25)',stroke:'#ffc266','stroke-width':2.5},sv);
+const leakLab=tx(sv,'JAM T+1',[0,0],13,'#ffc266',{'text-anchor':'middle','letter-spacing':'.1em','stroke':'#0a0b0f','stroke-width':5,'paint-order':'stroke'});
+const leakMsg=tx(sv,'',[CX0,CY1+60],15,'#ffc266');
+// batang komposisi 29 fitur
+const COMP=[[11,['kondisi jam t']],[7,['lag PM2.5']],[3,['rata-rata','bergulir']],[2,['arah','angin']],[6,['kalender']]];
+const gC=mk('g',{},sv); const BX=CX0, BW=CX1-CX0, BY=428; let acc=0; const compEls=[];
+const OP=[.85,.68,.52,.4,.3];
+COMP.forEach(([n,name],i)=>{ const w=BW*n/29, x=BX+BW*acc/29; acc+=n;
+  const r=mk('rect',{x:x+1,y:BY,width:Math.max(0,w-2),height:34,fill:'#7db4ff','fill-opacity':OP[i]},gC);
+  tx(gC,n,[x+w/2,BY+23],19,'#06121f',{'text-anchor':'middle','font-weight':500});
+  name.forEach((ln,j)=>tx(gC,ln,[x+w/2,BY+56+j*15],12,'#c4c7d4',{'text-anchor':'middle'})); });
+tx(gC,'29 FITUR',[BX,BY-12],13,'#80849a',{'letter-spacing':'.14em'});
+gC.style.transition='opacity .5s ease';
+const hit=mk('rect',{x:CX0,y:CY0-30,width:CX1-CX0,height:CY1-CY0+60,fill:'transparent',style:'cursor:ew-resize'},sv);
+let mode=1;   // 1 = baris latihan, 2 = aturan
+function placeT(){
+  const x=xs(tIdx), y=ys(EX[tIdx]), x2=xs(tIdx+24), y2=ys(EX[tIdx+24]);
+  tLine.setAttribute('x1',x); tLine.setAttribute('x2',x); tDot.setAttribute('cx',x); tDot.setAttribute('cy',y);
+  tLab.setAttribute('x',x); tLab.textContent='JAM T · '+jamStr(tIdx).toUpperCase();
+  past.setAttribute('x',CX0); past.setAttribute('width',x-CX0);
+  fz.setAttribute('x',x); fz.setAttribute('width',CX1-x); fz.style.opacity=mode===2?1:0;
+  labFut.setAttribute('x',CX1-10); labFut.textContent=mode===2?'BELUM ADA SAAT RAMALAN DIBUAT':'';
+  LAGS.forEach((k,i)=>{lagDots[i].setAttribute('cx',xs(tIdx-k)); lagDots[i].setAttribute('cy',ys(EX[tIdx-k]));});
+  fRing.setAttribute('cx',x2); fRing.setAttribute('cy',y2); fLab.setAttribute('x',x2); fLab.setAttribute('y',y2-22);
+  const lk=mode===2&&leak;
+  leakDot.setAttribute('cx',xs(tIdx+1)); leakDot.setAttribute('cy',ys(EX[tIdx+1])); leakDot.style.opacity=lk?1:0;
+  leakLab.setAttribute('x',xs(tIdx+1)); leakLab.setAttribute('y',ys(EX[tIdx+1])+(EX[tIdx+1]>EX[tIdx]?-16:30)); leakLab.style.opacity=lk?1:0;
+  if(mode===2){ leakMsg.textContent=lk?'BOCOR: jam t+1 belum ada saat ramalan dibuat. Skor semu.':'AMAN: semua fitur berasal dari jam t ke kiri.'; leakMsg.setAttribute('fill',lk?'#ffc266':'#7db4ff'); }
+  else leakMsg.textContent='';
+  [leakDot,leakLab].forEach(e=>e.style.transition='opacity .3s ease');
+}
+let drag=false;
+const setFromEv=ev=>{const p=svgPt(sv,ev);tIdx=Math.max(T_MIN,Math.min(T_MAX,Math.round((p.x-CX0)/DXH)));placeT();};
+hit.addEventListener('pointerdown',e=>{drag=true;hit.setPointerCapture(e.pointerId);setFromEv(e);});
+hit.addEventListener('pointermove',e=>{if(drag)setFromEv(e);});
+hit.addEventListener('pointerup',()=>{drag=false;}); hit.addEventListener('pointercancel',()=>{drag=false;});
+$$('#lk button').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();leak=b.dataset.m==='bocor';$$('#lk button').forEach(x=>x.classList.toggle('on',x===b));placeT();}));
+
+/* ═════════ View EDA: sebaran, bulan, jam ═════════ */
+const se=$('#svg-eda'); const EG={sebaran:mk('g',{},se),bulan:mk('g',{},se),jam:mk('g',{},se)};
+const EX0=74, EX1=872, EY1=400, EY0=70;
+function axisY(g,max,ticks,fmtv){ ticks.forEach(v=>{ const y=EY1-v/max*(EY1-EY0);
+  mk('line',{x1:EX0,x2:EX1,y1:y,y2:y,stroke:v===0?'rgba(255,255,255,.28)':'rgba(255,255,255,.07)'},g);
+  tx(g,fmtv(v),[EX0-12,y+1],14,'#80849a',{'text-anchor':'end','dominant-baseline':'central'}); }); }
+// sebaran
+(function(){ const g=EG.sebaran, N=HIST.jumlah.length+1, bw=(EX1-EX0)/N; const cnt=HIST.jumlah.concat([HIST.lebih_dari_400]); const max=Math.ceil(Math.max(...cnt)/10000)*10000;
+  axisY(g,max,[0,10000,20000,30000,40000,50000].filter(v=>v<=max),v=>v===0?'0':(v/1000)+' rb');
+  tx(g,'JUMLAH JAM-STASIUN',[EX1,EY0-26],13,'#80849a',{'letter-spacing':'.1em','text-anchor':'end'});
+  cnt.forEach((c,i)=>{ const h=c/max*(EY1-EY0), x=EX0+i*bw; const tail=i===cnt.length-1;
+    const r=mk('rect',{class:'bar bar-h',x:x+2,y:EY1-h,width:bw-4,height:h,fill:tail?'#ffc266':'#7db4ff','fill-opacity':tail?.9:.7},g); r.style.setProperty('--d',(i*25)+'ms');
+    const lo=tail?400:HIST.tepi[i], hi=tail?null:HIST.tepi[i+1];
+    const hit=mk('rect',{x:x,y:EY0,width:bw,height:EY1-EY0,fill:'transparent'},g);
+    hit.addEventListener('mousemove',ev=>tip('<small>PM2.5 '+(tail?'400 atau lebih':lo+' sampai '+hi)+'</small>'+fmt(c)+' jam-stasiun',ev)); hit.addEventListener('mouseleave',tipOff); });
+  [0,100,200,300,400].forEach(v=>tx(g,v===400?'400+':v,[EX0+v/20*bw,EY1+24],14,'#80849a',{'text-anchor':'middle'}));
+  tx(g,'PM2.5 (µg/m³)',[EX1,EY1+50],13,'#80849a',{'text-anchor':'end','letter-spacing':'.1em'});
+  const xv=v=>EX0+v/20*bw;
+  [[57,'MEDIAN 57','#f1f2f6',EY0+4],[81.1,'RATA-RATA '+fd(81.1),'#ffc266',EY0+30]].forEach(([v,l,c,yy])=>{
+    mk('line',{x1:xv(v),x2:xv(v),y1:yy+8,y2:EY1,stroke:c,'stroke-width':1.6,'stroke-dasharray':'5 5'},g);
+    tx(g,l,[xv(v)+8,yy+16],14,c,{'letter-spacing':'.08em'}); });
+})();
+// bulan
+(function(){ const g=EG.bulan, N=12, bw=(EX1-EX0)/N, max=120, M=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+  axisY(g,max,[0,40,80,120],v=>v); tx(g,'RATA-RATA PM2.5 (µg/m³)',[EX1,EY0-26],13,'#80849a',{'letter-spacing':'.1em','text-anchor':'end'});
+  const hi=BULAN.indexOf(Math.max(...BULAN)), lo=BULAN.indexOf(Math.min(...BULAN));
+  BULAN.forEach((v,i)=>{ const h=v/max*(EY1-EY0), x=EX0+i*bw; const col=i===hi?'#ffc266':(i===lo?'#c4dcff':'#7db4ff');
+    const r=mk('rect',{class:'bar',x:x+7,y:EY1-h,width:bw-14,height:h,fill:col,'fill-opacity':(i===hi||i===lo)?.95:.55},g); r.style.setProperty('--d',(i*50)+'ms');
+    tx(g,M[i],[x+bw/2,EY1+24],14,'#80849a',{'text-anchor':'middle'});
+    tx(g,v,[x+bw/2,EY1-h-10],16,(i===hi||i===lo)?col:'#c4c7d4',{'text-anchor':'middle','font-weight':500}); }); })();
+// jam
+(function(){ const g=EG.jam, N=24, bw=(EX1-EX0)/N, max=120;
+  axisY(g,max,[0,40,80,120],v=>v); tx(g,'RATA-RATA PM2.5 (µg/m³)',[EX1,EY0-26],13,'#80849a',{'letter-spacing':'.1em','text-anchor':'end'});
+  const hi=JAM.indexOf(Math.max(...JAM)), lo=JAM.indexOf(75);
+  JAM.forEach((v,i)=>{ const h=v/max*(EY1-EY0), x=EX0+i*bw; const col=i===hi?'#ffc266':(i===16?'#c4dcff':'#7db4ff');
+    const r=mk('rect',{class:'bar',x:x+3,y:EY1-h,width:bw-6,height:h,fill:col,'fill-opacity':(i===hi||i===16)?.95:.55},g); r.style.setProperty('--d',(i*22)+'ms');
+    if((i%3===0&&Math.abs(i-16)>1)||i===hi||i===16) tx(g,String(i).padStart(2,'0')+'.00',[x+bw/2,EY1+24],12,(i===hi||i===16)?col:'#80849a',{'text-anchor':'middle'});
+    if(i===hi||i===16) tx(g,v,[x+bw/2,EY1-h-10],16,col,{'text-anchor':'middle','font-weight':500}); }); })();
+const TAB_CAP={
+ sebaran:['Median · rata-rata','57 <span class="u">·</span> 81,1<span class="u">µg/m³</span>','PM2.5 miring ke kanan: kebanyakan jam rendah, sedikit jam sangat tinggi. Jam ekstrem inilah yang akan <b>mendominasi RMSE</b>.'],
+ bulan:['Tertinggi · terendah','Des 99 <span class="u">·</span> Agu 57<span class="u">µg/m³</span>','Rata-rata bulanan: <b>Desember</b> tertinggi (99), <b>Agustus</b> terendah (57). Ada pola musim.'],
+ jam:['Tertinggi · terendah','21.00 <span class="u">·</span> 16.00','Rata-rata per jam: tertinggi pukul <b>21.00</b> (90), terendah pukul <b>16.00</b> (75). Selisihnya jauh lebih kecil daripada selisih antar bulan.']};
+let tab='sebaran';
+function setTab(t,animate){ tab=t; $$('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+  Object.keys(EG).forEach(k=>{EG[k].style.display=k===t?'':'none';});
+  se.classList.remove('go'); void se.getBoundingClientRect(); setTimeout(()=>se.classList.add('go'),60);
+  readoutNow(TAB_CAP[t][0],TAB_CAP[t][1]); caption(TAB_CAP[t][2]); }
+$$('#tabs button').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();setTab(b.dataset.t);}));
+
+/* ═════════ View nilai hilang ═════════ */
+const sg=$('#svg-gap'); const GAPS=[['1 jam',996],['2 sampai 3 jam',505],['4 sampai 6 jam',127],['7 sampai 24 jam',80],['lebih dari 24 jam',22]];
+(function(){ const g=mk('g',{},sg), GX0=74, GX1=872, GY1=380, GY0=84, bw=(GX1-GX0)/5, max=1200;
+  [0,300,600,900,1200].forEach(v=>{ const y=GY1-v/max*(GY1-GY0); mk('line',{x1:GX0,x2:GX1,y1:y,y2:y,stroke:v===0?'rgba(255,255,255,.28)':'rgba(255,255,255,.07)'},g); tx(g,fmt(v),[GX0-12,y+1],14,'#80849a',{'text-anchor':'end','dominant-baseline':'central'}); });
+  tx(g,'JUMLAH KEJADIAN KOSONG',[GX1,GY0-48],13,'#80849a',{'letter-spacing':'.1em','text-anchor':'end'});
+  GAPS.forEach(([nm,c],i)=>{ const h=c/max*(GY1-GY0), x=GX0+i*bw, short=i<2;
+    const r=mk('rect',{class:'bar',x:x+16,y:GY1-h,width:bw-32,height:h,fill:short?'#7db4ff':'#ffc266','fill-opacity':short?.7:.9},g); r.style.setProperty('--d',(i*110)+'ms');
+    tx(g,fmt(c),[x+bw/2,GY1-h-10],19,'#f1f2f6',{'text-anchor':'middle','font-weight':500});
+    tx(g,nm,[x+bw/2,GY1+26],14,'#c4c7d4',{'text-anchor':'middle'}); });
+  // kurung 87%
+  const bx0=GX0+16, bx1=GX0+2*bw-16, by=GY0-8; 
+  mk('path',{d:'M'+bx0+' '+(by+10)+'V'+by+'H'+bx1+'V'+(by+10),fill:'none',stroke:'#c4dcff','stroke-width':2},g);
+  tx(g,'87% KEJADIAN',[(bx0+bx1)/2,by-10],15,'#c4dcff',{'text-anchor':'middle','letter-spacing':'.12em'});
+  tx(g,'TERPANJANG: 343 JAM',[GX1-6,GY1-62],14,'#ffc266',{'text-anchor':'end','letter-spacing':'.1em'});
+  tx(g,'Total 1.730 kejadian · median 1 jam · PM2.5, 9 stasiun latih',[GX0,GY1+64],14,'#80849a');
+  tx(g,'Biru: celah 1 sampai 3 jam. Kuning: celah lebih panjang.',[GX0,GY1+90],14,'#80849a');
+  GAPS.forEach(([nm,c],i)=>{ const x=GX0+i*bw; const hit=mk('rect',{x:x,y:GY0,width:bw,height:GY1-GY0,fill:'transparent'},g);
+    hit.addEventListener('mousemove',ev=>tip('<small>'+nm+'</small>'+fmt(c)+' kejadian ('+fd(c/1730*100)+'%)',ev)); hit.addEventListener('mouseleave',tipOff); });
+  g.setAttribute('class','gapg'); })();
+
+/* ═════════ View alur praproses ═════════ */
+const sf=$('#svg-flow'); const gf=mk('g',{},sf);
+const BOX=[['01 · DATA MENTAH',['12 stasiun','420.768 baris']],['02 · SISIHKAN UJI',['mulai 12 Mei 2016','pukul 19.00','dikunci sebelum EDA']],['03 · FITUR DAN TARGET',['29 fitur','sampai jam t','target: jam t+24']],['04 · BERSIHKAN',['buang baris','target kosong','24 jam terakhir']]];
+const FB=[];
+BOX.forEach((b,i)=>{ const x=44+i*214, g=mk('g',{transform:'translate('+x+',34)'},gf), ig=mk('g',{},g); ig.style.opacity=0; ig.style.transform='translateY(14px)'; ig.style.transition='opacity .6s ease '+(i*180)+'ms,transform .6s ease '+(i*180)+'ms'; FB.push(ig);
+  mk('rect',{width:180,height:138,fill:'rgba(255,255,255,.025)',stroke:i===1?'rgba(255,255,255,.28)':'rgba(255,255,255,.13)'},ig); mk('rect',{width:180,height:3,fill:i===1?'#80849a':'#7db4ff'},ig);
+  tx(ig,b[0],[14,30],11.5,'#7db4ff',{'letter-spacing':'.08em'});
+  if(i===0){ tx(ig,b[1][0],[14,76],24,'#f1f2f6',{'font-family':SANS,'font-weight':600}); tx(ig,b[1][1],[14,112],24,'#c4dcff',{'font-family':SANS,'font-weight':600}); }
+  else b[1].forEach((ln,j)=>tx(ig,ln,[14,66+j*27],j===0?16:15,j===0?'#f1f2f6':'#c4c7d4',{'font-family':SANS,'font-weight':j===0?600:400}));
+  if(i<3){ const a=mk('path',{d:'M'+(x+184)+' 103h24m-7 -6 7 6 -7 6',fill:'none',stroke:'#80849a','stroke-width':2},gf); a.style.opacity=0; a.style.transition='opacity .5s ease '+(i*180+300)+'ms'; FB.push(a); } });
+tx(gf,'Fitur kosong diisi median dari data latih, di dalam pipeline per lipatan.',[44,218],15,'#80849a');
+const OUT=[['LATIH','246.798','baris, 29 fitur, 9 stasiun','dipakai di Tahap 3 sampai 5',false],['UJI · DIKUNCI','82.151','baris disimpan, tidak dibuka','61.686 stasiun latih + 20.465 stasiun asing',true]];
+OUT.forEach((o,i)=>{ const x=44+i*434, g=mk('g',{transform:'translate('+x+',260)'},gf), ig=mk('g',{},g); ig.style.opacity=0; ig.style.transform='translateY(14px)'; ig.style.transition='opacity .6s ease '+(900+i*200)+'ms,transform .6s ease '+(900+i*200)+'ms'; FB.push(ig);
+  mk('rect',{width:396,height:190,fill:o[4]?'rgba(255,255,255,.02)':'rgba(125,180,255,.07)',stroke:o[4]?'rgba(255,255,255,.28)':'rgba(125,180,255,.55)','stroke-dasharray':o[4]?'6 5':'0'},ig); mk('rect',{width:396,height:4,fill:o[4]?'#80849a':'#7db4ff'},ig);
+  tx(ig,o[0],[22,40],14,o[4]?'#80849a':'#7db4ff',{'letter-spacing':'.14em'}); tx(ig,o[1],[22,102],58,o[4]?'#c4c7d4':'#c4dcff',{'font-weight':500}); tx(ig,o[2],[22,134],18,'#c4c7d4',{'font-family':SANS}); tx(ig,o[3],[22,164],15,'#80849a',{'font-family':SANS}); });
+[[134,'M134 172V230H242V256'],[560,'M560 172V230H242V256']].forEach(()=>{});
+const conn=mk('path',{d:'M776 172V232H242V256M776 232H676V256',fill:'none',stroke:'#80849a','stroke-width':2,'stroke-dasharray':'5 5'},gf); conn.style.opacity=0; conn.style.transition='opacity .5s ease .8s'; FB.push(conn);
+
+/* ═════════ Langkah ═════════ */
+const FIG=['Fig. 05 · Dataset','Fig. 06 · Satu baris latihan','Fig. 07 · Aturan fitur','Fig. 08 · Apa yang tampak di data','Fig. 09 · Nilai hilang','Fig. 10 · Alur praproses'];
+const VIEWS=['v-data','v-row','v-row','v-eda','v-gap','v-flow'];
+function setView(i){
+  $$('.view').forEach(v=>v.classList.toggle('on',v.id===VIEWS[i]));
+  $('#fig').innerHTML=FIG[i].replace(/^(Fig\. \d+)/,'<b>$1</b>');
+  $('#v-data').classList.toggle('on',i===0); $('#dgrid').classList.toggle('on',i===0);
+  const lk=$('#lk'); lk.style.opacity=i===2?1:0; lk.style.pointerEvents=i===2?'auto':'none';
+  gC.style.opacity=i===1?1:0;
+  se.classList.toggle('go',i===3); sg.classList.toggle('go',i===4);
+  FB.forEach(e=>{ const on=i===5; if(e.tagName==='path'){e.style.opacity=on?1:0;} else {e.style.opacity=on?1:0;e.style.transform=on?'none':'translateY(14px)';} });
+  tipOff();
+}
+const STEPS=[
+  ()=>{ blocks(0); setView(0); readoutNow('Baris data','420.768'); caption('Satu baris = satu jam di satu stasiun. Kolom kuning, <b>PM2.5</b>, adalah yang diramal.'); },
+  ()=>{ blocks(1); mode=1; leak=false; setView(1); placeT(); readoutNow('Satu baris latihan','29 fitur <span class="u">→</span> 1 target'); caption('<b>Fitur</b> (biru): yang sudah terukur sampai jam t, termasuk riwayat PM2.5 (titik biru). <b>Target</b> (kuning): PM2.5 24 jam kemudian. Seret garis putih.'); },
+  ()=>{ blocks(2); mode=2; setView(2); placeT(); readoutNow('Fitur boleh dari','≤ jam t'); caption('Fitur <b>tidak boleh</b> memakai data sesudah jam t. Seret garis putih, lalu coba tombol <b>Bocor</b> di kiri bawah.'); },
+  ()=>{ blocks(3); setView(3); setTab('sebaran'); },
+  ()=>{ blocks(4); setView(4); readoutNow('Kejadian celah PM2.5','1.730'); caption('<b>87%</b> celah hanya 1 sampai 3 jam, terpanjang 343 jam. Keputusan: tanpa <em>forward fill</em>, target kosong dibuang, fitur kosong diisi median di dalam <em>pipeline</em>.'); },
+  ()=>{ blocks(5); setView(5); readoutNow('Baris latih','246.798'); caption('Hasil Tahap 2: <b>246.798</b> baris latih dengan 29 fitur. <b>82.151</b> baris uji hanya disimpan, belum pernah dibuka.'); }
+];
+function RESET_HOOK(){ tIdx=106; leak=false; mode=1; $$('#lk button').forEach((b,i)=>b.classList.toggle('on',i===0)); $$('.copy .blk').forEach(b=>b.classList.remove('show','active','seen','old')); $$('.view').forEach(v=>v.classList.remove('on')); $('#dgrid').classList.remove('on'); FB.forEach(e=>{e.style.opacity=0;}); se.classList.remove('go'); sg.classList.remove('go'); }
+
+
+/* ═════════ Progres bawah ═════════ */
+const LAST = STEPS.length-1;
+let step = 0;
+const GROUPS=[["Pembuka", 1], ["Tahap 1", 1], ["Tahap 2", 1], ["Tahap 3", 1], ["Tahap 4", 1], ["Rencana", 1]];
+(function(){ const p=$('#prog'); GROUPS.forEach(([n,c])=>{const s=document.createElement('div');s.className='seg';s.style.flex=c;s.innerHTML='<div class="bar"><i></i></div><span>'+n+'</span>';p.appendChild(s);}); })();
+function progress(){
+  let start=0;
+  document.querySelectorAll('.seg').forEach((s,gi)=>{
+    const c=GROUPS[gi][1]; let done=0;
+    if(SLIDE_NO>start+c) done=c; else if(SLIDE_NO>start) done=(SLIDE_NO-1-start)+(step+1)/(LAST+1);
+    s.querySelector('i').style.width=(done/c*100)+'%';
+    s.classList.toggle('cur',SLIDE_NO>start&&SLIDE_NO<=start+c);
+    start+=c;
+  });
+}
+/* ═════════ Kontrol ═════════ */
+function render(){
+  clearRuns(); STEPS[step](); progress();
+  $('#cnt').textContent=(step+1)+' / '+(LAST+1);
+  $('#prev').disabled=false;
+  $('#prev').textContent = step===0 ? (PREV_SLIDE?('Slide '+(SLIDE_NO-1)):'Sebelumnya') : 'Sebelumnya';
+  $('#prev').disabled = (step===0 && !PREV_SLIDE);
+  const nx=$('#next');
+  if(step<LAST){ nx.disabled=false; nx.textContent='Berikutnya'; }
+  else if(NEXT_SLIDE){ nx.disabled=false; nx.textContent='Slide '+(SLIDE_NO+1); }
+  else { nx.disabled=true; nx.textContent='Slide terakhir'; }
+}
+function leave(url){if(window.TEMA)TEMA.leave(url);else location.href=url;}
+function next(){ if(step<LAST){step++;render();} else if(NEXT_SLIDE) leave(NEXT_SLIDE); }
+function prev(){ if(step>0){step--;render();} else if(PREV_SLIDE) leave(PREV_SLIDE); }
+function reset(){
+  clearRuns(); step=0;
+  if(typeof RESET_HOOK==='function') RESET_HOOK();
+  setTimeout(render,120);
+}
+$('#next').onclick=next; $('#prev').onclick=prev; $('#reset').onclick=reset;
+addEventListener('keydown',e=>{
+  if(e.metaKey||e.ctrlKey||e.altKey)return;
+  const k=e.key;
+  if(k==='ArrowRight'||k===' '||k==='PageDown'||k==='Enter'){e.preventDefault();next();}
+  else if(k==='ArrowLeft'||k==='PageUp'||k==='Backspace'){e.preventDefault();prev();}
+  else if(k==='r'||k==='R'){reset();}
+  else if(k==='f'||k==='F'){ if(document.fullscreenElement)document.exitFullscreen(); else document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen(); }
+  else if(k==='i'||k==='I'){leave('INDEX.html');}
+});
+function fit(){
+  const s=Math.min(innerWidth/1920,innerHeight/1080), st=$('#stage');
+  st.style.transform='translate('+((innerWidth-1920*s)/2)+'px,'+((innerHeight-1080*s)/2)+'px) scale('+s+')';
+}
+addEventListener('resize',fit); fit();
+const q=new URLSearchParams(location.search).get('step');
+if(q!==null){ step=Math.max(0,Math.min(LAST,+q||0)); render(); }
+else setTimeout(render,500);
+
+/* ═════════ Dock: muncul saat kursor di bawah, hilang 1 detik setelah dilepas ═════════ */
+(function(){
+  const dock=document.getElementById('dock'); let t=null, armed=false;
+  const show=()=>{dock.classList.add('show');clearTimeout(t);armed=false;};
+  const arm=()=>{ if(armed||!dock.classList.contains('show'))return; armed=true; t=setTimeout(()=>{dock.classList.remove('show');armed=false;},1000); };
+  addEventListener('mousemove',e=>{ if(e.clientY>innerHeight*0.85||dock.matches(':hover')) show(); else arm(); });
+  document.addEventListener('mouseleave',arm);
+})();
+const EDGE_PREV=PREV_SLIDE||step>0?()=>prev():null, EDGE_NEXT=()=>next();
+
+/* ═════════ Zona tepi layar ala Canva: kiri jauh = mundur, kanan jauh = maju ═════════ */
+(function(){
+  const EDGE=0.07, mkCur=d=>'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'44\' height=\'44\'><circle cx=\'22\' cy=\'22\' r=\'20\' fill=\'%230a0b0f\' stroke=\'%237db4ff\' stroke-width=\'2\'/><path d=\''+d+'\' fill=\'none\' stroke=\'%23c4dcff\' stroke-width=\'3.2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'/></svg>") 22 22, pointer';
+  const CL=mkCur('M25 13l-9 9 9 9'), CR=mkCur('M19 13l9 9-9 9');
+  const zoneOf=x=>{const r=x/innerWidth; const z=r<EDGE?-1:(r>1-EDGE?1:0); return (z===-1&&!EDGE_PREV)?0:z;};
+  const L=document.getElementById('eh-l'), R=document.getElementById('eh-r');
+  addEventListener('mousemove',e=>{ const z=zoneOf(e.clientX);
+    document.documentElement.style.cursor = z<0?CL:(z>0?CR:'');
+    L.classList.toggle('on',z<0); R.classList.toggle('on',z>0); });
+  document.addEventListener('mouseleave',()=>{L.classList.remove('on');R.classList.remove('on');document.documentElement.style.cursor='';});
+  addEventListener('click',e=>{ if(e.target.closest('#dock'))return; const z=zoneOf(e.clientX); if(z<0)EDGE_PREV(); else if(z>0)EDGE_NEXT(); });
+})();
+
+</script>
+</body>
+</html>

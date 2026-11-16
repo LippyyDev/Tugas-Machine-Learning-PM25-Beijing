@@ -1,0 +1,65 @@
+{
+  "cleanUrls": false,
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/INDEX.html"
+    },
+    {
+      "source": "/index",
+      "destination": "/INDEX.html"
+    },
+    {
+      "source": "/index.html",
+      "destination": "/INDEX.html"
+    },
+    {
+      "source": "/slide1",
+      "destination": "/SLIDE1.html"
+    },
+    {
+      "source": "/slide2",
+      "destination": "/SLIDE2.html"
+    },
+    {
+      "source": "/slide3",
+      "destination": "/SLIDE3.html"
+    },
+    {
+      "source": "/slide4",
+      "destination": "/SLIDE4.html"
+    },
+    {
+      "source": "/slide5",
+      "destination": "/SLIDE5.html"
+    },
+    {
+      "source": "/slide6",
+      "destination": "/SLIDE6.html"
+    },
+    {
+      "source": "/slide1.html",
+      "destination": "/SLIDE1.html"
+    },
+    {
+      "source": "/slide2.html",
+      "destination": "/SLIDE2.html"
+    },
+    {
+      "source": "/slide3.html",
+      "destination": "/SLIDE3.html"
+    },
+    {
+      "source": "/slide4.html",
+      "destination": "/SLIDE4.html"
+    },
+    {
+      "source": "/slide5.html",
+      "destination": "/SLIDE5.html"
+    },
+    {
+      "source": "/slide6.html",
+      "destination": "/SLIDE6.html"
+    }
+  ]
+}

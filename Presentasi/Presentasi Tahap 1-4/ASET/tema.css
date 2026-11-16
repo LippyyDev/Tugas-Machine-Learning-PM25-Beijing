@@ -1,0 +1,35 @@
+/* ───────── Tema terang/gelap dan transisi antar-slide ─────────
+   Dimuat paling akhir di <head> setiap slide. Cara kerja ada di tema.js. */
+
+/* Latar halaman selalu sama dengan warna panggung, agar tidak ada kilatan hitam di sela slide */
+html,body{background:#050507 !important}
+html{color-scheme:dark}
+
+/* Fade lama dimatikan; transisi ditangani tema.js */
+html body{opacity:1 !important;animation:none !important}
+
+/* Mode terang: dasar gelap dibalik. Warna merek (logo, gambar) dibalik sekali lagi agar tampil asli. */
+html[data-tema="light"]{filter:invert(1) hue-rotate(180deg);color-scheme:light}
+html[data-tema="light"] img{filter:invert(1) hue-rotate(180deg)}
+html.t-anim,html.t-anim img{transition:filter .55s ease}
+
+/* Sebelum animasi masuk dimulai, panggung disembunyikan. Pengaman: muncul sendiri setelah 3 detik. */
+html.t-pre #stage{visibility:hidden;animation:t-fail 0s linear 3s forwards}
+html.t-pre body:not(:has(#stage)){opacity:0 !important}
+@keyframes t-fail{to{visibility:visible}}
+html.t-fade body:not(:has(#stage)){opacity:0 !important;transition:opacity .3s ease}
+html.t-in body:not(:has(#stage)){transition:opacity .35s ease}
+
+/* Tombol tema (pojok kanan atas) */
+#t-btn{position:fixed;top:14px;right:14px;z-index:60;width:42px;height:42px;border-radius:50%;
+  display:grid;place-items:center;padding:0;cursor:pointer !important;
+  color:#c4dcff;background:rgba(10,11,15,.72);border:1px solid rgba(255,255,255,.22);
+  opacity:.55;transition:opacity .25s ease,border-color .25s ease,transform .5s cubic-bezier(.3,1.4,.4,1)}
+#t-btn:hover,#t-btn:focus-visible{opacity:1;border-color:#7db4ff;outline:none}
+#t-btn svg{width:22px;height:22px;display:block}
+#t-btn.spin{transform:rotate(180deg)}
+#t-btn .sun{display:block}#t-btn .moon{display:none}
+html[data-tema="light"] #t-btn .sun{display:none}
+html[data-tema="light"] #t-btn .moon{display:block}
+html.t-frame #t-btn{display:none}
+@media (prefers-reduced-motion:reduce){html.t-anim,html.t-anim img{transition:none}}

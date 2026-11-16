@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Slide 4 · Tahap 3 · Skema validasi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+/* ───────── Token ───────── */
+:root{
+  --bg:#050507;
+  --panel:#0a0b0f;
+  --line:rgba(255,255,255,.13);
+  --line2:rgba(255,255,255,.07);
+  --text:#f1f2f6;
+  --body:#c4c7d4;
+  --mute:#80849a;
+  --accent:#7db4ff;
+  --accent-bright:#c4dcff;
+  --amber:#ffc266;
+  --sans:'Space Grotesk','Segoe UI',system-ui,sans-serif;
+  --mono:'JetBrains Mono','Cascadia Mono',Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;background:#050507;overflow:hidden;font-family:var(--sans);color:var(--text)}
+
+/* ───────── Panggung 1920×1080 ───────── */
+#stage{
+  position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;overflow:hidden;
+  background:
+    radial-gradient(1100px 600px at 18% -8%,rgba(110,140,220,.13),transparent 70%),
+    radial-gradient(900px 600px at 100% 100%,rgba(90,110,180,.07),transparent 70%),
+    radial-gradient(rgba(255,255,255,.055) 1px,transparent 1.2px) 0 0/32px 32px,
+    var(--bg);
+}
+
+/* ───────── Header ───────── */
+.header{position:absolute;left:96px;right:96px;top:52px;height:76px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line2)}
+.brand{display:flex;align-items:center;gap:20px}
+.brand img{height:60px;width:auto;display:block}
+.brand b{display:block;font-size:28px;font-weight:600;letter-spacing:-.01em}
+.brand span{display:block;font-size:19px;color:var(--mute);margin-top:2px}
+.tag{font-family:var(--mono);font-size:16px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.kicker{position:absolute;left:96px;top:152px}
+.kicker h1{font-size:56px;line-height:1.1;font-weight:700;letter-spacing:-.03em;color:var(--text)}
+
+/* ───────── Kolom teks ───────── */
+.copy{position:absolute;left:96px;top:322px;width:740px;height:620px;display:flex;flex-direction:column;justify-content:flex-start;gap:18px}
+.blk{opacity:0;transform:translateY(14px);max-height:0;overflow:hidden;margin-top:0;transition:opacity .6s ease,transform .6s ease,max-height .7s ease,margin-top .7s ease;position:relative}
+.blk.show{opacity:1;transform:none;max-height:460px;margin-top:26px}
+.blk.show:first-child{margin-top:0}
+.blk .lbl{font-family:var(--mono);font-size:15px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);margin-bottom:10px;display:block;transition:color .4s}
+.blk p{font-size:30px;line-height:1.45;color:var(--body);font-weight:400;transition:font-size .5s ease,color .5s ease}
+.blk b{color:var(--text);font-weight:600}
+.blk em{font-style:italic;color:var(--text)}
+.blk.active .lbl{color:var(--accent)}
+.blk.active p{color:#e4e6ee}
+.blk.seen{opacity:.5}
+.blk.seen p{font-size:23px}
+.blk .more{display:inline;opacity:0;transition:opacity .7s ease .15s}
+.blk .more.show{opacity:1}
+
+/* ───────── Panel grafik ───────── */
+.panel{position:absolute;left:880px;top:236px;width:944px;height:716px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.005));}
+.panel::before,.panel::after,.panel .c1,.panel .c2{content:"";position:absolute;width:16px;height:16px;border:2px solid var(--accent);opacity:.9}
+.panel::before{left:-2px;top:-2px;border-right:0;border-bottom:0}
+.panel::after{right:-2px;top:-2px;border-left:0;border-bottom:0}
+.panel .c1{left:-2px;bottom:-2px;border-right:0;border-top:0}
+.panel .c2{right:-2px;bottom:-2px;border-left:0;border-top:0}
+.phead{height:76px;border-bottom:1px solid var(--line2);display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+.fig{font-family:var(--mono);font-size:15px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
+.fig b{color:var(--text);font-weight:500}
+.readout{text-align:right;transition:opacity .25s ease}
+.readout.swap{opacity:0}
+.readout small{display:block;font-family:var(--mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.readout strong{display:block;font-family:var(--mono);font-size:32px;font-weight:500;color:var(--text);line-height:1.1;margin-top:2px;font-variant-numeric:tabular-nums}
+.readout strong .u{font-size:17px;color:var(--mute);margin-left:6px}
+.readout strong .ok{font-size:16px;letter-spacing:.14em;color:#06121f;background:var(--accent);padding:3px 9px;border-radius:3px;margin-left:12px;vertical-align:middle}
+.readout strong .q{font-size:16px;letter-spacing:.1em;color:var(--amber);margin-left:12px}
+
+svg#g{display:block;width:100%;height:auto;aspect-ratio:960/520;margin-top:0}
+.pfoot{position:absolute;left:0;right:0;bottom:0;height:112px;border-top:1px solid var(--line2);padding:0 28px;display:flex;align-items:center}
+.pf{position:absolute;left:28px;right:28px;top:50%;transform:translateY(-50%);opacity:0;transition:opacity .45s ease;pointer-events:none}
+.pf.show{opacity:1}
+.legend{display:flex;gap:34px;align-items:center;font-size:21px;color:var(--body)}
+.legend span{display:flex;align-items:center;gap:12px}
+.legend .d{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.7)}
+.legend .l{width:30px;height:0;border-top:2px solid rgba(255,255,255,.5)}
+.legend .n{font-family:var(--mono);font-size:15px;border:1px solid var(--line);border-radius:3px;padding:2px 8px;background:#07080b}
+.cap{font-size:23px;line-height:1.45;color:var(--body)}
+.cap b{color:var(--text);font-weight:600}
+.cay{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px}
+.cay div{border:1px solid var(--line);background:#07080b;padding:7px 16px 8px;border-radius:3px}
+.cay small{display:block;font-family:var(--mono);font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.cay strong{display:block;font-family:var(--mono);font-weight:500;font-size:24px;color:var(--amber);margin-top:2px}
+.cay-note{font-size:13px;font-family:var(--mono);letter-spacing:.1em;color:var(--mute);text-transform:uppercase;margin-bottom:8px}
+
+/* ───────── Footer ───────── */
+.footer{position:absolute;left:96px;right:96px;bottom:44px;height:62px;display:flex;align-items:flex-end;justify-content:space-between}
+.prog{display:flex;gap:8px;width:1000px}
+.seg{position:relative}
+.seg .bar{height:3px;background:rgba(255,255,255,.14);position:relative;overflow:hidden}
+.seg .bar i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--accent);transition:width .6s ease}
+.seg span{display:block;margin-top:9px;font-family:var(--mono);font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#4b4e60;white-space:nowrap}
+.seg.cur span{color:var(--accent)}
+.ctrl{display:flex;align-items:center;gap:12px}
+.cnt{font-family:var(--mono);font-size:17px;letter-spacing:.12em;color:var(--mute);margin-right:10px;min-width:70px;text-align:right}
+.btn{font-family:var(--mono);font-size:17px;letter-spacing:.1em;text-transform:uppercase;color:var(--text);background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:3px;height:50px;padding:0 22px;cursor:pointer;transition:background .2s,border-color .2s,color .2s}
+.btn:hover:not(:disabled){background:rgba(125,180,255,.12);border-color:var(--accent);color:var(--accent-bright)}
+.btn.pri{border-color:rgba(125,180,255,.55);background:rgba(125,180,255,.1)}
+.btn:disabled{opacity:.3;cursor:default}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.hint{position:absolute;right:96px;bottom:12px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:#4b4e60;text-transform:uppercase}
+
+/* ───────── Dock navigasi (pop up, muncul saat kursor di bawah) ───────── */
+.prog{width:100%}
+#dock{position:absolute;left:50%;bottom:78px;transform:translate(-50%,28px);opacity:0;pointer-events:none;z-index:10;
+  display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 16px 9px;
+  background:#0a0b0f;border:1px solid rgba(255,255,255,.2);border-radius:6px;box-shadow:0 18px 50px rgba(0,0,0,.6);
+  transition:opacity .35s ease,transform .35s ease}
+#dock.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+#dock .hint{position:static}
+
+#dock .btn{font-size:14px;height:36px;padding:0 16px;letter-spacing:.08em}
+#dock .cnt{font-size:14px;min-width:54px;margin-right:6px}
+#dock .ctrl{gap:8px}
+#dock .hint{font-size:11px}
+.edge-hint{position:fixed;top:0;bottom:0;width:7vw;pointer-events:none;opacity:0;transition:opacity .25s ease;z-index:5}
+.edge-hint.l{left:0;background:linear-gradient(90deg,rgba(125,180,255,.14),transparent)}
+.edge-hint.r{right:0;background:linear-gradient(270deg,rgba(125,180,255,.14),transparent)}
+.edge-hint.on{opacity:1}
+
+
+
+.blk.old{opacity:0;max-height:0;margin-top:0;transform:translateY(-10px)}
+.prog{width:100%}
+.src{position:absolute;right:96px;top:176px;font-family:var(--mono);font-size:15px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.blk code,.cap code{font-family:var(--mono);font-size:.82em;color:var(--accent-bright);background:rgba(125,180,255,.1);padding:1px 7px;border-radius:3px}
+svg.vz{display:block;width:100%;height:526px}
+.vwrap{position:absolute;left:0;right:0;top:76px;height:526px}
+.view{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .5s ease}
+.view.on{opacity:1;pointer-events:auto}
+.tt{position:absolute;pointer-events:none;font-family:var(--mono);font-size:15px;background:#07080b;border:1px solid var(--accent);color:var(--text);padding:7px 12px;border-radius:3px;white-space:nowrap;opacity:0;transition:opacity .15s ease;z-index:6}
+.tt.on{opacity:1}
+.tt small{display:block;font-size:12px;letter-spacing:.1em;color:var(--mute);text-transform:uppercase}
+.sw{display:flex;gap:0;border:1px solid var(--line);border-radius:3px;overflow:hidden}
+.sw button{font-family:var(--mono);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);background:rgba(255,255,255,.02);border:0;border-right:1px solid var(--line);padding:9px 16px;cursor:pointer;transition:background .2s,color .2s}
+.sw button:last-child{border-right:0}
+.sw button:hover{color:var(--text)}
+.sw button.on{background:rgba(125,180,255,.16);color:var(--accent-bright)}
+
+.src{max-width:700px;text-align:right}
+.sw.pos{position:absolute;left:74px;top:14px;z-index:4}
+svg .c0 rect, svg rect.cs{transition:fill .55s ease,fill-opacity .55s ease}
+svg .fade{transition:opacity .45s ease}
+svg .hov{cursor:pointer}
+
+</style>
+<link rel="stylesheet" href="ASET/tema.css">
+<script src="ASET/tema.js"></script>
+</head>
+<body>
+<div class="edge-hint l" id="eh-l"></div><div class="edge-hint r" id="eh-r"></div>
+<div id="stage">
+  <div class="header">
+    <div class="brand"><img src="ASET/LOGO-UNHAS.png" alt="Logo Universitas Hasanuddin">
+      <div><b>Universitas Hasanuddin</b><span>Magister Teknik Informatika</span></div></div>
+    <div class="tag">Proyek Individu Pembelajaran Mesin</div>
+  </div>
+
+  <div class="kicker"><h1>Skema Validasi</h1></div>
+  <div class="src">Dasar: Penjelasan Proyek, Tahap 3 dan bagian 2, notebook</div>
+
+  <div class="copy">
+    <div class="blk" id="b1"><span class="lbl">01 · Urut waktu</span>
+      <p>Data <b>tidak diacak</b>. Model hanya boleh belajar dari masa lalu untuk menebak masa depan. <b>20% terakhir</b>, mulai 12 Mei 2016 pukul 19.00, dikunci sebagai data uji.</p></div>
+    <div class="blk" id="b2"><span class="lbl">02 · Lima lipatan</span>
+      <p>Sisanya, 80% awal, memilih model lewat <code>TimeSeriesSplit</code> dengan <b>5 lipatan</b>. Jendela latih makin melebar, validasi selalu lebih baru.</p></div>
+    <div class="blk" id="b3"><span class="lbl">03 · Jarak aman</span>
+      <p>Target baris latih adalah PM2.5 <b>24 jam</b> sesudahnya. Tanpa jarak, target baris latih terakhir jatuh di validasi. Jarak <b>24 jam</b> mencegahnya.</p></div>
+    <div class="blk" id="b4"><span class="lbl">04 · Praproses di dalam <em>pipeline</em></span>
+      <p>Pengisian nilai hilang dan penskalaan hanya belajar dari <b>data latih</b> pada setiap lipatan, karena ditaruh di dalam <em>pipeline</em>.</p></div>
+    <div class="blk" id="b5"><span class="lbl">05 · Uji di stasiun lain</span>
+      <p><b>9 stasiun</b> melatih model. <b>3 stasiun asing</b> (Dingling, Wanliu, Shunyi) tidak pernah dilihat. Ini <b>usulan</b> penulis, belum dikonfirmasi dosen.</p></div>
+    <div class="blk" id="b6"><span class="lbl">06 · Dicegah dan diakui</span>
+      <p>Lima sumber kebocoran ditutup. Tiga kelemahan diakui terbuka, supaya bisa dibahas bersama dosen.</p></div>
+  </div>
+
+  <div class="panel">
+    <i class="c1"></i><i class="c2"></i>
+    <div class="phead">
+      <div class="fig" id="fig"></div>
+      <div class="readout" id="readout"><small id="ro-l"></small><strong id="ro-v"></strong></div>
+    </div>
+    <div class="vwrap">
+      <div class="view" id="v-urut">
+        <div class="sw pos" id="sw-urut"><button data-m="seq" class="on">Berurutan</button><button data-m="rand">Acak</button></div>
+        <svg class="vz" id="svg-urut" viewBox="0 0 942 526"></svg>
+      </div>
+      <div class="view" id="v-fold"><svg class="vz" id="svg-fold" viewBox="0 0 942 526"></svg></div>
+      <div class="view" id="v-gap"><svg class="vz" id="svg-gap" viewBox="0 0 942 526"></svg></div>
+      <div class="view" id="v-pipe">
+        <div class="sw pos" id="sw-pipe"><button data-m="salah">Salah</button><button data-m="benar" class="on">Benar</button></div>
+        <svg class="vz" id="svg-pipe" viewBox="0 0 942 526"></svg>
+      </div>
+      <div class="view" id="v-sta"><svg class="vz" id="svg-sta" viewBox="0 0 942 526"></svg></div>
+      <div class="view" id="v-cek"><svg class="vz" id="svg-cek" viewBox="0 0 942 526"></svg></div>
+    </div>
+    <div class="tt" id="tt"></div>
+    <div class="pfoot"><div class="pf" id="pf-cap"><div class="cap" id="cap"></div></div></div>
+  </div>
+  <div class="footer"><div class="prog" id="prog"></div></div>
+  <div id="dock"><div class="ctrl">
+      <span class="cnt" id="cnt"></span>
+      <button class="btn" id="prev">Sebelumnya</button><button class="btn" id="reset">Reset</button><button class="btn pri" id="next">Berikutnya</button>
+    </div><div class="hint">← → navigasi · R reset · F layar penuh · I indeks</div></div>
+</div>
+
+<script>
+const PREV_SLIDE="SLIDE3.html", NEXT_SLIDE="SLIDE5.html", SLIDE_NO=4;
+
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const SVGNS = 'http://www.w3.org/2000/svg';
+const mk = (tag,attrs={},parent)=>{const e=document.createElementNS(SVGNS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;};
+const fmt = n => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+const fd = (v,n=1) => v.toFixed(n).replace('.',',');
+let timers=[], ticker=null, runId=0;
+const later=(fn,ms)=>{timers.push(setTimeout(fn,ms));};
+function clearRuns(){timers.forEach(clearTimeout);timers=[];if(ticker){clearInterval(ticker);ticker=null;}runId++;}
+function readout(label,html){
+  const r=$('#readout'); if(!r)return; r.classList.add('swap');
+  setTimeout(()=>{ $('#ro-l').textContent=label; $('#ro-v').innerHTML=html; r.classList.remove('swap'); },200);
+}
+function readoutNow(label,html){ if(!$('#readout'))return; $('#ro-l').textContent=label; $('#ro-v').innerHTML=html; }
+function caption(html){ const c=$('#cap'); if(!c)return; c.innerHTML=html; $$('.pf').forEach(p=>p.classList.toggle('show',p.id==='pf-cap')); }
+function showFoot(id){ $$('.pf').forEach(p=>p.classList.toggle('show',p.id==='pf-'+id)); }
+/* blok teks bertahap: yang aktif terang, dua sebelumnya redup, yang lebih lama disembunyikan */
+function blocks(active){
+  $$('.copy .blk').forEach((el,i)=>{
+    el.classList.toggle('show',i<=active && i>=active-2);
+    el.classList.toggle('active',i===active);
+    el.classList.toggle('seen',i<active && i>=active-2);
+    el.classList.toggle('old',i<active-2);
+  });
+}
+/* titik layar ke koordinat SVG */
+function svgPt(svg,ev){const p=svg.createSVGPoint();p.x=ev.clientX;p.y=ev.clientY;return p.matrixTransform(svg.getScreenCTM().inverse());}
+
+
+const MONO='JetBrains Mono,Consolas,monospace', SANS='Space Grotesk,Segoe UI,sans-serif';
+const tx=(g,t,a,s=14,fill='#80849a',ex={})=>{const e=mk('text',Object.assign({x:a[0],y:a[1],fill,'font-size':s,'font-family':MONO},ex),g);e.textContent=t;return e;};
+const tt=$('#tt');
+function tip(html,ev){ const r=$('.panel').getBoundingClientRect(), sc=r.width/944; tt.innerHTML=html; tt.classList.add('on');
+  tt.style.left=((ev.clientX-r.left)/sc+14)+'px'; tt.style.top=((ev.clientY-r.top)/sc-12)+'px'; }
+const tipOff=()=>tt.classList.remove('on');
+const UTC0=Date.UTC(2013,2,1,0,0), MONID=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+const dstr=h=>{const d=new Date(UTC0+h*3600e3);return d.getUTCDate()+' '+MONID[d.getUTCMonth()]+' '+d.getUTCFullYear();};
+const TRAIN=[4648, 9319, 13990, 18661, 23332], VAL=4671, GAPH=24, NTOT=35064, BND=28051;
+const BLUE='#7db4ff', AMB='#ffc266', GREY='#80849a';
+
+/* ═════════ V0: berurutan atau acak (ilustrasi, 100 potongan waktu) ═════════ */
+const s0=$('#svg-urut'); const N0=100, PX0=798/N0, Y0=166, H0=84;
+let seed=11; const rnd=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
+const perm=[...Array(N0).keys()]; for(let i=N0-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[perm[i],perm[j]]=[perm[j],perm[i]];}
+const isTe=new Array(N0).fill(false); perm.slice(0,20).forEach(i=>isTe[i]=true);
+let pick=-1; for(let i=30;i<70;i++){ if(isTe[i]&&!isTe[i-1]&&!isTe[i+1]){pick=i;break;} }
+tx(s0,'ILUSTRASI: 100 POTONGAN WAKTU, MAR 2013 SAMPAI FEB 2017',[74,112],13,GREY,{'letter-spacing':'.1em'});
+const g0=mk('g',{class:'c0'},s0);
+const C0=[...Array(N0)].map((_,i)=>mk('rect',{x:74+i*PX0+1,y:Y0,width:PX0-2,height:H0,rx:1.5,fill:BLUE,'fill-opacity':.7},g0));
+tx(s0,'Mar 2013',[74,Y0-12],14,GREY); tx(s0,'Feb 2017',[872,Y0-12],14,GREY,{'text-anchor':'end'});
+const aSeq=mk('g',{class:'fade'},s0), aRnd=mk('g',{class:'fade'},s0);
+const bx=74+80*PX0;
+mk('line',{x1:bx,x2:bx,y1:Y0-22,y2:Y0+H0+10,stroke:'#f1f2f6','stroke-width':1.5,'stroke-dasharray':'5 5'},aSeq);
+tx(aSeq,'12 Mei 2016, 19.00',[bx,Y0-30],14,'#f1f2f6',{'text-anchor':'middle'});
+const brk=(g,x1,x2,y,col)=>mk('path',{d:'M'+x1+' '+y+'v10H'+x2+'v-10',fill:'none',stroke:col,'stroke-width':2},g);
+brk(aSeq,74+2,bx-6,Y0+H0+16,BLUE); tx(aSeq,'LATIH: memilih model dan tuning',[(74+bx)/2,Y0+H0+48],15,BLUE,{'text-anchor':'middle','letter-spacing':'.08em'});
+brk(aSeq,bx+6,872-2,Y0+H0+16,GREY); tx(aSeq,'UJI: DIKUNCI',[(bx+872)/2,Y0+H0+48],15,GREY,{'text-anchor':'middle','letter-spacing':'.08em'});
+if(pick>0){ const px=74+pick*PX0;
+  [pick-1,pick+1].forEach(i=>mk('rect',{x:74+i*PX0,y:Y0-3,width:PX0,height:H0+6,fill:'none',stroke:'#c4dcff','stroke-width':1.8},aRnd));
+  mk('rect',{x:px,y:Y0-3,width:PX0,height:H0+6,fill:'none',stroke:'#fff','stroke-width':2},aRnd);
+  mk('path',{d:'M'+(px+PX0/2)+' '+(Y0+H0+8)+'v26',stroke:AMB,'stroke-width':1.6,fill:'none'},aRnd);
+  tx(aRnd,'Satu jam diuji, jam di kiri dan kanannya sudah dipelajari',[px+PX0/2,Y0+H0+58],15,AMB,{'text-anchor':'middle'}); }
+const m0a=tx(s0,'',[74,372],24,'#f1f2f6',{'font-family':SANS,'font-weight':500}), m0b=tx(s0,'',[74,408],18,'#c4c7d4',{'font-family':SANS});
+const lg0=mk('g',{},s0); [[BLUE,'latih'],[AMB,'uji (diacak)'],[GREY,'uji (dikunci)']].forEach(([c,t],i)=>{ mk('rect',{x:74+i*190,y:458,width:14,height:14,fill:c,'fill-opacity':.8},lg0); tx(lg0,t,[96+i*190,470],14,'#c4c7d4'); });
+let m0='seq';
+function setUrut(m){ m0=m;
+  C0.forEach((r,i)=>{ const te=m==='seq'?i>=80:isTe[i];
+    r.style.transitionDelay=(i*5)+'ms';
+    r.setAttribute('fill',te?(m==='seq'?GREY:AMB):BLUE); r.setAttribute('fill-opacity',te?(m==='seq'?.5:.95):.7); });
+  aSeq.style.opacity=m==='seq'?1:0; aRnd.style.opacity=m==='rand'?1:0;
+  m0a.textContent=m==='seq'?'Berurutan: latih di masa lalu, uji di masa depan.':'Diacak: uji diselipkan di antara jam latih.';
+  m0b.textContent=m==='seq'?'Sama seperti pemakaian sungguhan: ramalan selalu untuk jam yang belum terjadi.':'Jam bertetangga biasanya mirip, jadi model seolah mengintip jawabannya.';
+  $$('#sw-urut button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));
+  readoutNow('Pembagian',m==='seq'?'80 <span class="u">/</span> 20':'<span style="color:#ffc266">diacak</span>');
+  caption(m==='seq'?'Data diurut menurut waktu: <b>80% awal</b> untuk belajar, <b>20% akhir</b> dikunci. Tekan <b>Acak</b> untuk melihat apa yang salah dengan cara lain.':'Jika diacak, jam uji diselipkan di antara jam latih. Skor tampak bagus tetapi menipu, karena di dunia nyata masa depan belum pernah dilihat.'); }
+$$('#sw-urut button').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();setUrut(b.dataset.m);}));
+
+/* ═════════ V1: lima lipatan nyata ═════════ */
+const sf=$('#svg-fold'); const FX=h=>74+h/NTOT*798, FY0=104, FP=54, FH=34;
+tx(sf,'LIPATAN',[74,FY0-26],12,GREY,{'letter-spacing':'.1em'}); 
+const hat=mk('defs',{},sf); const hp=mk('pattern',{id:'hG',width:10,height:10,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'},hat); mk('line',{x1:0,y1:0,x2:0,y2:10,stroke:'rgba(128,132,154,.55)','stroke-width':2},hp);
+mk('rect',{x:FX(BND),y:FY0-16,width:FX(NTOT)-FX(BND),height:5*FP-4,fill:'url(#hG)',stroke:'rgba(128,132,154,.5)'},sf);
+tx(sf,'UJI 20% · DIKUNCI',[FX(NTOT),FY0-26],12,GREY,{'text-anchor':'end','letter-spacing':'.06em'});
+const FR=TRAIN.map((n,k)=>{ const y=FY0+k*FP, g=mk('g',{class:'fade'},sf), ig=mk('g',{},g);
+  tx(g,String(k+1),[66,y+FH/2+5],16,'#c4c7d4',{'text-anchor':'end','font-weight':500});
+  const rl=mk('rect',{x:FX(0),y:y,width:FX(n)-FX(0),height:FH,fill:BLUE,'fill-opacity':.7},ig);
+  mk('rect',{x:FX(n),y:y,width:Math.max(2.5,GAPH/NTOT*798),height:FH,fill:'#fff','fill-opacity':.85},ig);
+  mk('rect',{x:FX(n+GAPH),y:y,width:VAL/NTOT*798,height:FH,fill:AMB,'fill-opacity':.8},ig);
+  const hit=mk('rect',{x:40,y:y-8,width:840,height:FH+16,fill:'transparent',class:'hov'},g);
+  hit.addEventListener('click',e=>{e.stopPropagation();selFold(k);});
+  hit.addEventListener('mousemove',ev=>tip('<small>Lipatan '+(k+1)+'</small>latih '+fmt(n)+' jam, validasi '+fmt(VAL)+' jam',ev)); hit.addEventListener('mouseleave',tipOff);
+  ig.style.transformBox='fill-box'; ig.style.transformOrigin='0 50%'; ig.style.transition='transform .8s cubic-bezier(.3,.7,.2,1)'; 
+  return {g,ig}; });
+const AY=FY0+5*FP+8; mk('line',{x1:74,x2:872,y1:AY,y2:AY,stroke:'rgba(255,255,255,.28)'},sf);
+[[0,'Mar 2013'],[8760,'Mar 2014'],[17520,'Mar 2015'],[26304,'Mar 2016']].forEach(([h,l])=>{mk('line',{x1:FX(h),x2:FX(h),y1:AY,y2:AY+6,stroke:'rgba(255,255,255,.28)'},sf);tx(sf,l,[FX(h),AY+24],13,GREY,{'text-anchor':'middle'});});
+tx(sf,'Feb 2017',[872,AY+24],13,GREY,{'text-anchor':'end'});
+const fd1=tx(sf,'',[74,AY+64],13,GREY,{'letter-spacing':'.1em'}), fd2=tx(sf,'',[74,AY+92],19,'#f1f2f6',{'font-family':SANS}), fd3=tx(sf,'',[74,AY+120],19,'#f1f2f6',{'font-family':SANS});
+[[BLUE,'latih',74],[ '#fff','jarak 24 jam',190],[AMB,'validasi',360]].forEach(([c,t,x])=>{});
+let fsel=-1;
+function selFold(k){ fsel=(k===fsel)?-1:k;
+  FR.forEach((r,i)=>{ r.g.style.opacity=(fsel<0||i===fsel)?1:.3; });
+  if(fsel<0){ fd1.textContent='KLIK SATU LIPATAN'; fd2.textContent=''; fd3.textContent=''; readoutNow('Lipatan','5'); caption('Biru: belajar. Putih tipis: jarak 24 jam. Kuning: validasi, selalu <b>lebih baru</b> dari biru. Tiap lipatan memvalidasi 4.671 jam di 9 stasiun. Klik satu lipatan.'); }
+  else { const n=TRAIN[fsel]; fd1.textContent='LIPATAN '+(fsel+1);
+    fd2.textContent='Latih: 1 Mar 2013 sampai '+dstr(n-1)+' ('+fmt(n)+' jam)';
+    fd3.textContent='Validasi: '+dstr(n+GAPH)+' sampai '+dstr(n+GAPH+VAL-1)+' ('+fmt(VAL)+' jam)';
+    readoutNow('Lipatan '+(fsel+1),fmt(n)+' <span class="u">jam latih</span>');
+    caption('Lipatan '+(fsel+1)+': latih sampai <b>'+dstr(n-1)+'</b>, jeda 24 jam, validasi <b>'+dstr(n+GAPH)+'</b> sampai <b>'+dstr(n+GAPH+VAL-1)+'</b>. Klik lagi untuk melepas.'); } }
+
+/* ═════════ V2: jarak aman 24 jam ═════════ */
+const sg=$('#svg-gap'); const CP=7.7, CXS=79, CYY=146, CHH=54, NTR=36, NGP=36, NVL=30;
+const cell=(i,col,op,g)=>mk('rect',{class:'cs',x:CXS+i*CP,y:CYY,width:CP-1.6,height:CHH,fill:col,'fill-opacity':op},g);
+const gT=mk('g',{},sg), gG=mk('g',{},sg), gV=mk('g',{},sg);
+const cT=[...Array(NTR)].map((_,i)=>cell(i,BLUE,.7,gT)), cG=[...Array(NGP)].map((_,i)=>cell(i,'#fff',.55,gG)), cV=[...Array(NVL)].map((_,i)=>cell(i,AMB,.45,gV));
+const setX=(r,i)=>r.setAttribute('x',CXS+i*CP);
+tx(sg,'LATIH',[CXS,CYY+CHH+22],13,BLUE,{'letter-spacing':'.1em'});
+const lblV=tx(sg,'VALIDASI',[0,CYY+CHH+22],13,AMB,{'letter-spacing':'.1em'});
+const lblG=tx(sg,'JARAK',[0,CYY-12],13,'#fff',{'text-anchor':'middle','letter-spacing':'.1em'});
+// 24 baris latih terakhir
+const bx1=CXS+(NTR-24)*CP, bx2=CXS+NTR*CP-1.6;
+mk('path',{d:'M'+bx1+' '+(CYY-12)+'v-9H'+bx2+'v9',fill:'none',stroke:BLUE,'stroke-width':2},sg);
+tx(sg,'24 baris latih terakhir (jam t)',[(bx1+bx2)/2,CYY-34],14,BLUE,{'text-anchor':'middle'});
+// target mendarat
+const TY=CYY+CHH+50; const gTg=mk('g',{},sg);
+const tg=[...Array(24)].map((_,j)=>mk('rect',{class:'cs',x:CXS+(NTR+j)*CP,y:TY,width:CP-1.6,height:18,fill:BLUE,'fill-opacity':.35},gTg));
+mk('path',{d:'M'+((bx1+bx2)/2)+' '+(CYY+CHH+6)+'v'+(TY+9-(CYY+CHH+6))+'H'+(CXS+NTR*CP-8),fill:'none',stroke:GREY,'stroke-width':1.5,'stroke-dasharray':'4 4'},sg);
+mk('path',{d:'M'+(CXS+NTR*CP-8)+' '+(TY+9)+'l-6 -5v10z',fill:GREY},sg);
+tx(sg,'+24 jam',[((bx1+bx2)/2)+8,TY+34],13,GREY);
+tx(sg,'target mendarat di sini',[CXS+(NTR+24)*CP+10,TY+14],14,'#c4c7d4',{'font-family':SANS});
+// penggeser
+const SX0=74, SXW=420, SY=392, GMAX=36;
+mk('line',{x1:SX0,x2:SX0+SXW,y1:SY,y2:SY,stroke:'rgba(255,255,255,.28)','stroke-width':3,'stroke-linecap':'round'},sg);
+const sFill=mk('line',{x1:SX0,x2:SX0,y1:SY,y2:SY,stroke:BLUE,'stroke-width':3,'stroke-linecap':'round'},sg);
+const sx=g=>SX0+SXW*g/GMAX;
+[0,24].forEach(g=>{mk('line',{x1:sx(g),x2:sx(g),y1:SY-8,y2:SY+8,stroke:GREY},sg);});
+tx(sg,'0',[sx(0),SY+28],13,GREY,{'text-anchor':'middle'}); tx(sg,'24 = horizon',[sx(24),SY+28],13,'#c4dcff',{'text-anchor':'middle'}); tx(sg,'36',[sx(36),SY+28],13,GREY,{'text-anchor':'middle'});
+tx(sg,'JARAK AMAN (JAM)',[SX0,SY-24],13,GREY,{'letter-spacing':'.1em'});
+const sH=mk('circle',{r:11,fill:'#0a0b10',stroke:'#c4dcff','stroke-width':3,style:'cursor:ew-resize'},sg);
+const sHit=mk('rect',{x:SX0-14,y:SY-22,width:SXW+28,height:44,fill:'transparent',style:'cursor:ew-resize'},sg);
+const rsV=tx(sg,'',[872,SY-4],44,AMB,{'text-anchor':'end','font-weight':500}), rsL=tx(sg,'',[872,SY+26],14,GREY,{'text-anchor':'end'});
+let gGap=0;
+function setGap(g){ gGap=g;
+  cG.forEach((r,i)=>{ r.style.opacity=i<g?1:0; setX(r,NTR+i); });
+  cV.forEach((r,i)=>setX(r,NTR+g+i));
+  const leak=Math.max(0,24-g);
+  tg.forEach((r,j)=>{ const lk=j>=g; r.setAttribute('fill',lk?AMB:BLUE); r.setAttribute('fill-opacity',lk?.95:.35); });
+  lblV.setAttribute('x',CXS+(NTR+g)*CP); lblG.setAttribute('x',CXS+(NTR+g/2)*CP); lblG.style.opacity=g>0?1:0;
+  sH.setAttribute('cx',sx(g)); sH.setAttribute('cy',SY); sFill.setAttribute('x2',sx(g));
+  rsV.textContent=leak; rsV.setAttribute('fill',leak>0?AMB:BLUE); rsL.textContent=leak>0?'baris bocor ke validasi':'baris bocor. Aman.';
+  readoutNow('Target bocor ke validasi',leak+' <span class="u">baris</span>'); }
+let dragG=false; const setG=ev=>{const p=svgPt(sg,ev);clearRuns();setGap(Math.max(0,Math.min(GMAX,Math.round((p.x-SX0)/SXW*GMAX))));};
+sHit.addEventListener('pointerdown',e=>{dragG=true;sHit.setPointerCapture(e.pointerId);setG(e);});
+sHit.addEventListener('pointermove',e=>{if(dragG)setG(e);}); sHit.addEventListener('pointerup',()=>{dragG=false;}); sHit.addEventListener('pointercancel',()=>{dragG=false;});
+
+/* ═════════ V3: praproses di dalam pipeline ═════════ */
+const sp=$('#svg-pipe'); const gS=mk('g',{class:'fade'},sp), gB=mk('g',{class:'fade'},sp);
+const blk=(y,col,name,sub,dim)=>{ const g=mk('g',{},sp); mk('rect',{x:74,y:y,width:210,height:64,fill:col,'fill-opacity':.12,stroke:col,'stroke-opacity':.7},g); mk('rect',{x:74,y:y,width:4,height:64,fill:col},g); tx(g,name,[94,y+28],16,'#f1f2f6',{'font-family':SANS,'font-weight':600}); tx(g,sub,[94,y+50],13,'#c4c7d4'); return g; };
+blk(120,BLUE,'LATIH','data belajar'); const bV=blk(230,AMB,'VALIDASI','satu lipatan'); const bU=blk(340,GREY,'UJI','dikunci');
+const mid=mk('g',{},sp); mk('rect',{x:410,y:196,width:250,height:128,fill:'rgba(125,180,255,.07)',stroke:BLUE,'stroke-opacity':.7},mid); mk('rect',{x:410,y:196,width:250,height:4,fill:BLUE},mid);
+tx(mid,'IMPUTER + SCALER',[428,226],13,BLUE,{'letter-spacing':'.1em'});
+const mt1=tx(mid,'',[428,262],19,'#f1f2f6',{'font-family':SANS,'font-weight':600}), mt2=tx(mid,'',[428,288],15,'#c4c7d4',{'font-family':SANS}), mt3=tx(mid,'',[428,310],15,'#c4c7d4',{'font-family':SANS});
+const mdl=mk('g',{},sp); mk('rect',{x:760,y:226,width:112,height:68,fill:'rgba(255,255,255,.03)',stroke:'rgba(255,255,255,.28)'},mdl); tx(mdl,'MODEL',[816,266],16,'#f1f2f6',{'text-anchor':'middle','font-weight':500,'letter-spacing':'.1em'});
+const arr=(g,d,col,dash)=>mk('path',{d:d,fill:'none',stroke:col,'stroke-width':2.4,'stroke-dasharray':dash||'0'},g);
+const head=(g,x,y,col,dir)=>mk('path',{d:dir>0?'M'+x+' '+y+'l-9 -6v12z':'M'+x+' '+y+'l9 -6v12z',fill:col},g);
+// LATIH selalu masuk (tetap di kedua mode)
+arr(sp,'M284 152H350V240H404',BLUE); head(sp,408,240,BLUE,1);
+// Salah: validasi dan uji ikut masuk
+arr(gS,'M284 262H404',AMB); head(gS,408,262,AMB,1);
+arr(gS,'M284 372H350V284H404',AMB); head(gS,408,284,AMB,1);
+tx(gS,'BOCOR: validasi dan uji ikut dihitung',[428,356],15,AMB,{'font-weight':500});
+// Benar: validasi hanya menerima hasilnya
+arr(gB,'M404 276H294',AMB,'6 5'); head(gB,288,276,AMB,-1);
+tx(gB,'terapkan saja',[296,300],13,AMB);
+tx(gB,'DIHITUNG ULANG TIAP LIPATAN',[428,356],14,BLUE,{'letter-spacing':'.08em'});
+arr(sp,'M660 260H752',GREY); head(sp,756,260,GREY,1);
+const lockT=tx(sp,'tidak disentuh',[179,418],14,GREY,{'text-anchor':'middle'});
+let pm='benar';
+function setPipe(m){ pm=m; gS.style.opacity=m==='salah'?1:0; gB.style.opacity=m==='benar'?1:0; bU.style.opacity=m==='salah'?1:.45; lockT.style.opacity=m==='benar'?1:0;
+  if(m==='salah'){ mt1.textContent='median dan skala'; mt2.textContent='dari SEMUA baris'; mt3.textContent='latih + validasi + uji'; }
+  else { mt1.textContent='median dan skala'; mt2.textContent='dari LATIH saja'; mt3.textContent='lipatan itu saja'; }
+  $$('#sw-pipe button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));
+  readoutNow('Dihitung dari',m==='salah'?'<span style="color:#ffc266">semua baris</span>':'latih saja');
+  caption(m==='salah'?'<b>Salah:</b> median dan skala dihitung dari semua baris, jadi data validasi dan uji ikut dilihat. Skor tampak lebih bagus dari kenyataannya.':'<b>Benar:</b> di dalam <em>pipeline</em>, median dan skala dihitung dari data latih setiap lipatan, lalu hanya diterapkan ke validasi. Data uji tidak disentuh.'); }
+$$('#sw-pipe button').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();clearRuns();setPipe(b.dataset.m);}));
+
+/* ═════════ V4: 9 stasiun latih dan 3 stasiun asing ═════════ */
+const ss=$('#svg-sta'); const LAT=["Aotizhongxin", "Changping", "Dongsi", "Guanyuan", "Gucheng", "Huairou", "Nongzhanguan", "Tiantan", "Wanshouxigong"], ASI=['Dingling','Wanliu','Shunyi'];
+const SX=190, SW=872-SX, WA=SW*.8-3, WB=SW*.2-3, ROWH=24, ROWP=29, SY0=96;
+const ROLE={latih:['LATIH · 60% baris','Melatih model, memilih model, dan tuning',BLUE,.7],uji:['UJI · 15% baris','Masa depan di stasiun yang ikut dilatih',AMB,.55],skip:['TIDAK DIPAKAI · 20% baris','Sengaja dibuang: model belum boleh melihat stasiun ini',GREY,.3],asing:['UJI ASING · 5% baris','Stasiun yang tidak dikenal, sekaligus masa depan',AMB,.95]};
+tx(ss,'80% AWAL',[SX,SY0-30],13,GREY,{'letter-spacing':'.1em'}); tx(ss,'sebelum 12 Mei 2016, 19.00',[SX,SY0-14],12,GREY);
+tx(ss,'20% AKHIR',[SX+WA+3+WB,SY0-30],13,GREY,{'letter-spacing':'.1em','text-anchor':'end'});
+const SC=[];
+const addRow=(name,i,roleA,roleB,asing)=>{ const y=SY0+i*ROWP+(asing?18:0);
+  tx(ss,name,[SX-12,y+ROWH/2+5],14,asing?AMB:'#c4c7d4',{'text-anchor':'end'});
+  [[SX,WA,roleA],[SX+WA+3,WB,roleB]].forEach(([x,w,r])=>{ const el=mk('rect',{class:'cs hov',x:x,y:y,width:w,height:ROWH,fill:ROLE[r][2],'fill-opacity':ROLE[r][3]},ss);
+    if(r==='skip') el.setAttribute('stroke','rgba(128,132,154,.6)'); if(r==='asing'){el.setAttribute('stroke','#fff');el.setAttribute('stroke-opacity',.7);}
+    SC.push({el:el,r:r});
+    el.addEventListener('mousemove',ev=>{tip('<small>'+name+'</small>'+ROLE[r][0],ev);hlRole(r);}); el.addEventListener('mouseleave',()=>{tipOff();hlRole(null);}); }); };
+LAT.forEach((n,i)=>addRow(n,i,'latih','uji',false)); ASI.forEach((n,i)=>addRow(n,9+i,'skip','asing',true));
+tx(ss,'ASING',[SX-12,SY0+9*ROWP+11],12,AMB,{'text-anchor':'end','letter-spacing':'.12em'});
+const LGY=476, LG=[['latih',74],['uji',264],['skip',424],['asing',650]]; const LGE=[];
+LG.forEach(([r,x])=>{ const g=mk('g',{class:'hov'},ss); mk('rect',{x:x,y:LGY,width:14,height:14,fill:ROLE[r][2],'fill-opacity':ROLE[r][3]},g); tx(g,ROLE[r][0],[x+22,LGY+12],13,'#c4c7d4'); mk('rect',{x:x-6,y:LGY-8,width:r==='skip'?220:(r==='asing'?220:170),height:30,fill:'transparent'},g);
+  g.addEventListener('mouseenter',()=>hlRole(r)); g.addEventListener('mouseleave',()=>hlRole(null)); });
+function hlRole(r){ SC.forEach(c=>{ c.el.style.opacity=(r===null||c.r===r)?1:.2; }); 
+  if(r){ readoutNow(ROLE[r][0].split(' · ')[0],ROLE[r][0].split(' · ')[1]); caption('<b>'+ROLE[r][0]+'.</b> '+ROLE[r][1]+'.'); } else { readoutNow('Stasiun','9 <span class="u">+</span> 3'); caption('Waktu dibagi sama untuk semua stasiun. <b>9 stasiun</b> melatih model, <b>3 stasiun asing</b> sengaja tidak dilihat sebelum diuji. Arahkan kursor ke kotak mana pun.'); } }
+
+/* ═════════ V5: dicegah dan diakui ═════════ */
+const sc=$('#svg-cek');
+const OK=[['Fitur dari masa depan','semua fitur dari jam t ke kiri','Semua fitur dihitung dari jam t ke kiri. Rata-rata bergulir memakai jam t dan sebelumnya, bukan sesudahnya.'],
+ ['Praproses memakai data uji','di dalam pipeline, per lipatan','Pengisian dan penskalaan ada di dalam <em>pipeline</em>, jadi dihitung ulang dari data latih pada setiap lipatan.'],
+ ['Target jatuh di validasi','jarak aman 24 jam','Ada jarak 24 jam di antara latih dan validasi pada setiap lipatan.'],
+ ['Data uji dilihat berulang','dikunci, dibuka satu kali','20% akhir dikunci dan dibuka satu kali di akhir. Bila skornya buruk, model tidak disetel ulang.'],
+ ['Stasiun asing ikut belajar','3 stasiun tidak ikut dilatih','Tiga stasiun asing tidak ikut dilatih, bahkan 80% awalnya dibuang.']];
+const NG=[['Hanya 5 lipatan',['Simpangan baku antar lipatan','besar (86,82 ± 24,70 pada baseline).'],'Hanya 5 lipatan membuat angka validasi kurang stabil. Karena itu rata-rata dan simpangan baku selalu dilaporkan.'],
+ ['Statistik ringkas uji pernah terlihat',['7 dan 15 Nov 2026. Tidak dipakai untuk','memilih fitur, model, atau pengaturan.'],'Dicatat terbuka di laporan. Statistik ringkas periode uji tidak dipakai untuk keputusan apa pun.'],
+ ['Aturan jarak aman sama dengan horizon',['Belum ada sumber peer review yang','terbaca. Alasannya logis, belum terkutip.'],'Dicatat sebagai bahan umpan balik di Pertemuan 13.']];
+const CAPD='Arahkan kursor ke tiap butir. Biru: sudah ditutup. Kuning: kelemahan yang diakui.';
+const rows=[];
+tx(sc,'DICEGAH (5)',[74,60],13,BLUE,{'letter-spacing':'.14em'}); tx(sc,'DIAKUI (3)',[496,60],13,AMB,{'letter-spacing':'.14em'});
+const itm=(x,y,w,h,col,ic,title,subs,capt)=>{ const g=mk('g',{class:'fade hov'},sc), ig=mk('g',{},g); ig.style.opacity=0; ig.style.transform='translateY(10px)'; ig.style.transition='opacity .5s ease,transform .5s ease';
+  mk('rect',{x:x,y:y,width:w,height:h,fill:col,'fill-opacity':.07,stroke:col,'stroke-opacity':.45},ig); mk('rect',{x:x,y:y,width:3,height:h,fill:col},ig);
+  const ic2=mk('g',{},ig); mk('circle',{cx:x+26,cy:y+h/2,r:12,fill:'none',stroke:col,'stroke-width':2},ic2);
+  if(ic==='ok') mk('path',{d:'M'+(x+20)+' '+(y+h/2)+'l4 5 8 -9',fill:'none',stroke:col,'stroke-width':2.4,'stroke-linecap':'round','stroke-linejoin':'round'},ic2); else { tx(ic2,'!',[x+26,y+h/2+6],17,col,{'text-anchor':'middle','font-weight':500}); }
+  tx(ig,title,[x+52,y+(subs.length>1?27:26)],16,'#f1f2f6',{'font-family':SANS,'font-weight':600});
+  subs.forEach((s,i)=>tx(ig,s,[x+52,y+49+i*19],14,'#c4c7d4',{'font-family':SANS}));
+  mk('rect',{x:x,y:y,width:w,height:h,fill:'transparent'},ig);
+  g.addEventListener('mouseenter',()=>{caption(capt);rows.forEach(r=>{r.style.opacity=(r===g)?1:.4;});}); g.addEventListener('mouseleave',()=>{caption(CAPD);rows.forEach(r=>{r.style.opacity=1;});});
+  rows.push(g); return ig; };
+const IG=[];
+OK.forEach((o,i)=>IG.push(itm(74,80+i*80,396,68,BLUE,'ok',o[0],[o[1]],o[2])));
+NG.forEach((o,i)=>IG.push(itm(496,80+i*122,376,108,AMB,'warn',o[0],o[1],o[2])));
+
+/* ═════════ Langkah ═════════ */
+const FIG=['Fig. 11 · Urut waktu atau acak','Fig. 12 · Lima lipatan','Fig. 13 · Jarak aman 24 jam','Fig. 14 · Praproses dalam pipeline','Fig. 15 · Stasiun latih dan asing','Fig. 16 · Dicegah dan diakui'];
+const VIEWS=['v-urut','v-fold','v-gap','v-pipe','v-sta','v-cek'];
+function setView(i){ $$('.view').forEach(v=>v.classList.toggle('on',v.id===VIEWS[i])); $('#fig').innerHTML=FIG[i].replace(/^(Fig\. \d+)/,'<b>$1</b>'); tipOff();
+  FR.forEach((r,k)=>{ r.ig.style.transitionDelay=(i===1?(k*140):0)+'ms'; r.ig.style.transform=i===1?'scaleX(1)':'scaleX(0)'; });
+  IG.forEach((g,k)=>{ g.style.transitionDelay=(i===5?k*110:0)+'ms'; g.style.opacity=i===5?1:0; g.style.transform=i===5?'none':'translateY(10px)'; }); }
+const STEPS=[
+  ()=>{ blocks(0); setView(0); setUrut('seq'); },
+  ()=>{ blocks(1); setView(1); fsel=-1; selFold(-1); },
+  ()=>{ blocks(2); setView(2); setGap(0); caption('Tanpa jarak, target dari 24 baris latih terakhir <b>mendarat di validasi</b> (kuning). Geser penggeser ke <b>24</b> dan semuanya aman. Penggeser berjalan sendiri dulu.'); later(()=>{ let g=0; ticker=setInterval(()=>{ g++; setGap(g); if(g>=24){clearInterval(ticker);ticker=null;} },110); },900); },
+  ()=>{ blocks(3); setView(3); setPipe('salah'); later(()=>setPipe('benar'),2600); },
+  ()=>{ blocks(4); setView(4); hlRole(null); },
+  ()=>{ blocks(5); setView(5); readoutNow('Ditutup · diakui','5 <span class="u">·</span> 3'); caption(CAPD); }
+];
+function RESET_HOOK(){ gGap=0; fsel=-1; $$('.copy .blk').forEach(b=>b.classList.remove('show','active','seen','old')); $$('.view').forEach(v=>v.classList.remove('on')); FR.forEach(r=>{r.ig.style.transform='scaleX(0)';r.g.style.opacity=1;}); IG.forEach(g=>{g.style.opacity=0;}); }
+
+
+/* ═════════ Progres bawah ═════════ */
+const LAST = STEPS.length-1;
+let step = 0;
+const GROUPS=[["Pembuka", 1], ["Tahap 1", 1], ["Tahap 2", 1], ["Tahap 3", 1], ["Tahap 4", 1], ["Rencana", 1]];
+(function(){ const p=$('#prog'); GROUPS.forEach(([n,c])=>{const s=document.createElement('div');s.className='seg';s.style.flex=c;s.innerHTML='<div class="bar"><i></i></div><span>'+n+'</span>';p.appendChild(s);}); })();
+function progress(){
+  let start=0;
+  document.querySelectorAll('.seg').forEach((s,gi)=>{
+    const c=GROUPS[gi][1]; let done=0;
+    if(SLIDE_NO>start+c) done=c; else if(SLIDE_NO>start) done=(SLIDE_NO-1-start)+(step+1)/(LAST+1);
+    s.querySelector('i').style.width=(done/c*100)+'%';
+    s.classList.toggle('cur',SLIDE_NO>start&&SLIDE_NO<=start+c);
+    start+=c;
+  });
+}
+/* ═════════ Kontrol ═════════ */
+function render(){
+  clearRuns(); STEPS[step](); progress();
+  $('#cnt').textContent=(step+1)+' / '+(LAST+1);
+  $('#prev').disabled=false;
+  $('#prev').textContent = step===0 ? (PREV_SLIDE?('Slide '+(SLIDE_NO-1)):'Sebelumnya') : 'Sebelumnya';
+  $('#prev').disabled = (step===0 && !PREV_SLIDE);
+  const nx=$('#next');
+  if(step<LAST){ nx.disabled=false; nx.textContent='Berikutnya'; }
+  else if(NEXT_SLIDE){ nx.disabled=false; nx.textContent='Slide '+(SLIDE_NO+1); }
+  else { nx.disabled=true; nx.textContent='Slide terakhir'; }
+}
+function leave(url){if(window.TEMA)TEMA.leave(url);else location.href=url;}
+function next(){ if(step<LAST){step++;render();} else if(NEXT_SLIDE) leave(NEXT_SLIDE); }
+function prev(){ if(step>0){step--;render();} else if(PREV_SLIDE) leave(PREV_SLIDE); }
+function reset(){
+  clearRuns(); step=0;
+  if(typeof RESET_HOOK==='function') RESET_HOOK();
+  setTimeout(render,120);
+}
+$('#next').onclick=next; $('#prev').onclick=prev; $('#reset').onclick=reset;
+addEventListener('keydown',e=>{
+  if(e.metaKey||e.ctrlKey||e.altKey)return;
+  const k=e.key;
+  if(k==='ArrowRight'||k===' '||k==='PageDown'||k==='Enter'){e.preventDefault();next();}
+  else if(k==='ArrowLeft'||k==='PageUp'||k==='Backspace'){e.preventDefault();prev();}
+  else if(k==='r'||k==='R'){reset();}
+  else if(k==='f'||k==='F'){ if(document.fullscreenElement)document.exitFullscreen(); else document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen(); }
+  else if(k==='i'||k==='I'){leave('INDEX.html');}
+});
+function fit(){
+  const s=Math.min(innerWidth/1920,innerHeight/1080), st=$('#stage');
+  st.style.transform='translate('+((innerWidth-1920*s)/2)+'px,'+((innerHeight-1080*s)/2)+'px) scale('+s+')';
+}
+addEventListener('resize',fit); fit();
+const q=new URLSearchParams(location.search).get('step');
+if(q!==null){ step=Math.max(0,Math.min(LAST,+q||0)); render(); }
+else setTimeout(render,500);
+
+/* ═════════ Dock: muncul saat kursor di bawah, hilang 1 detik setelah dilepas ═════════ */
+(function(){
+  const dock=document.getElementById('dock'); let t=null, armed=false;
+  const show=()=>{dock.classList.add('show');clearTimeout(t);armed=false;};
+  const arm=()=>{ if(armed||!dock.classList.contains('show'))return; armed=true; t=setTimeout(()=>{dock.classList.remove('show');armed=false;},1000); };
+  addEventListener('mousemove',e=>{ if(e.clientY>innerHeight*0.85||dock.matches(':hover')) show(); else arm(); });
+  document.addEventListener('mouseleave',arm);
+})();
+const EDGE_PREV=PREV_SLIDE||step>0?()=>prev():null, EDGE_NEXT=()=>next();
+
+/* ═════════ Zona tepi layar ala Canva: kiri jauh = mundur, kanan jauh = maju ═════════ */
+(function(){
+  const EDGE=0.07, mkCur=d=>'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'44\' height=\'44\'><circle cx=\'22\' cy=\'22\' r=\'20\' fill=\'%230a0b0f\' stroke=\'%237db4ff\' stroke-width=\'2\'/><path d=\''+d+'\' fill=\'none\' stroke=\'%23c4dcff\' stroke-width=\'3.2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'/></svg>") 22 22, pointer';
+  const CL=mkCur('M25 13l-9 9 9 9'), CR=mkCur('M19 13l9 9-9 9');
+  const zoneOf=x=>{const r=x/innerWidth; const z=r<EDGE?-1:(r>1-EDGE?1:0); return (z===-1&&!EDGE_PREV)?0:z;};
+  const L=document.getElementById('eh-l'), R=document.getElementById('eh-r');
+  addEventListener('mousemove',e=>{ const z=zoneOf(e.clientX);
+    document.documentElement.style.cursor = z<0?CL:(z>0?CR:'');
+    L.classList.toggle('on',z<0); R.classList.toggle('on',z>0); });
+  document.addEventListener('mouseleave',()=>{L.classList.remove('on');R.classList.remove('on');document.documentElement.style.cursor='';});
+  addEventListener('click',e=>{ if(e.target.closest('#dock'))return; const z=zoneOf(e.clientX); if(z<0)EDGE_PREV(); else if(z>0)EDGE_NEXT(); });
+})();
+
+</script>
+</body>
+</html>

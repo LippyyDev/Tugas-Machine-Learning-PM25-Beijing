@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Slide 5 · Tahap 4 · Baseline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+/* ───────── Token ───────── */
+:root{
+  --bg:#050507;
+  --panel:#0a0b0f;
+  --line:rgba(255,255,255,.13);
+  --line2:rgba(255,255,255,.07);
+  --text:#f1f2f6;
+  --body:#c4c7d4;
+  --mute:#80849a;
+  --accent:#7db4ff;
+  --accent-bright:#c4dcff;
+  --amber:#ffc266;
+  --sans:'Space Grotesk','Segoe UI',system-ui,sans-serif;
+  --mono:'JetBrains Mono','Cascadia Mono',Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;background:#050507;overflow:hidden;font-family:var(--sans);color:var(--text)}
+
+/* ───────── Panggung 1920×1080 ───────── */
+#stage{
+  position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;overflow:hidden;
+  background:
+    radial-gradient(1100px 600px at 18% -8%,rgba(110,140,220,.13),transparent 70%),
+    radial-gradient(900px 600px at 100% 100%,rgba(90,110,180,.07),transparent 70%),
+    radial-gradient(rgba(255,255,255,.055) 1px,transparent 1.2px) 0 0/32px 32px,
+    var(--bg);
+}
+
+/* ───────── Header ───────── */
+.header{position:absolute;left:96px;right:96px;top:52px;height:76px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line2)}
+.brand{display:flex;align-items:center;gap:20px}
+.brand img{height:60px;width:auto;display:block}
+.brand b{display:block;font-size:28px;font-weight:600;letter-spacing:-.01em}
+.brand span{display:block;font-size:19px;color:var(--mute);margin-top:2px}
+.tag{font-family:var(--mono);font-size:16px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.kicker{position:absolute;left:96px;top:152px}
+.kicker h1{font-size:56px;line-height:1.1;font-weight:700;letter-spacing:-.03em;color:var(--text)}
+
+/* ───────── Kolom teks ───────── */
+.copy{position:absolute;left:96px;top:322px;width:740px;height:620px;display:flex;flex-direction:column;justify-content:flex-start;gap:18px}
+.blk{opacity:0;transform:translateY(14px);max-height:0;overflow:hidden;margin-top:0;transition:opacity .6s ease,transform .6s ease,max-height .7s ease,margin-top .7s ease;position:relative}
+.blk.show{opacity:1;transform:none;max-height:460px;margin-top:26px}
+.blk.show:first-child{margin-top:0}
+.blk .lbl{font-family:var(--mono);font-size:15px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);margin-bottom:10px;display:block;transition:color .4s}
+.blk p{font-size:30px;line-height:1.45;color:var(--body);font-weight:400;transition:font-size .5s ease,color .5s ease}
+.blk b{color:var(--text);font-weight:600}
+.blk em{font-style:italic;color:var(--text)}
+.blk.active .lbl{color:var(--accent)}
+.blk.active p{color:#e4e6ee}
+.blk.seen{opacity:.5}
+.blk.seen p{font-size:23px}
+.blk .more{display:inline;opacity:0;transition:opacity .7s ease .15s}
+.blk .more.show{opacity:1}
+
+/* ───────── Panel grafik ───────── */
+.panel{position:absolute;left:880px;top:236px;width:944px;height:716px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.005));}
+.panel::before,.panel::after,.panel .c1,.panel .c2{content:"";position:absolute;width:16px;height:16px;border:2px solid var(--accent);opacity:.9}
+.panel::before{left:-2px;top:-2px;border-right:0;border-bottom:0}
+.panel::after{right:-2px;top:-2px;border-left:0;border-bottom:0}
+.panel .c1{left:-2px;bottom:-2px;border-right:0;border-top:0}
+.panel .c2{right:-2px;bottom:-2px;border-left:0;border-top:0}
+.phead{height:76px;border-bottom:1px solid var(--line2);display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+.fig{font-family:var(--mono);font-size:15px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
+.fig b{color:var(--text);font-weight:500}
+.readout{text-align:right;transition:opacity .25s ease}
+.readout.swap{opacity:0}
+.readout small{display:block;font-family:var(--mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.readout strong{display:block;font-family:var(--mono);font-size:32px;font-weight:500;color:var(--text);line-height:1.1;margin-top:2px;font-variant-numeric:tabular-nums}
+.readout strong .u{font-size:17px;color:var(--mute);margin-left:6px}
+.readout strong .ok{font-size:16px;letter-spacing:.14em;color:#06121f;background:var(--accent);padding:3px 9px;border-radius:3px;margin-left:12px;vertical-align:middle}
+.readout strong .q{font-size:16px;letter-spacing:.1em;color:var(--amber);margin-left:12px}
+
+svg#g{display:block;width:100%;height:auto;aspect-ratio:960/520;margin-top:0}
+.pfoot{position:absolute;left:0;right:0;bottom:0;height:112px;border-top:1px solid var(--line2);padding:0 28px;display:flex;align-items:center}
+.pf{position:absolute;left:28px;right:28px;top:50%;transform:translateY(-50%);opacity:0;transition:opacity .45s ease;pointer-events:none}
+.pf.show{opacity:1}
+.legend{display:flex;gap:34px;align-items:center;font-size:21px;color:var(--body)}
+.legend span{display:flex;align-items:center;gap:12px}
+.legend .d{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.7)}
+.legend .l{width:30px;height:0;border-top:2px solid rgba(255,255,255,.5)}
+.legend .n{font-family:var(--mono);font-size:15px;border:1px solid var(--line);border-radius:3px;padding:2px 8px;background:#07080b}
+.cap{font-size:23px;line-height:1.45;color:var(--body)}
+.cap b{color:var(--text);font-weight:600}
+.cay{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px}
+.cay div{border:1px solid var(--line);background:#07080b;padding:7px 16px 8px;border-radius:3px}
+.cay small{display:block;font-family:var(--mono);font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.cay strong{display:block;font-family:var(--mono);font-weight:500;font-size:24px;color:var(--amber);margin-top:2px}
+.cay-note{font-size:13px;font-family:var(--mono);letter-spacing:.1em;color:var(--mute);text-transform:uppercase;margin-bottom:8px}
+
+/* ───────── Footer ───────── */
+.footer{position:absolute;left:96px;right:96px;bottom:44px;height:62px;display:flex;align-items:flex-end;justify-content:space-between}
+.prog{display:flex;gap:8px;width:1000px}
+.seg{position:relative}
+.seg .bar{height:3px;background:rgba(255,255,255,.14);position:relative;overflow:hidden}
+.seg .bar i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--accent);transition:width .6s ease}
+.seg span{display:block;margin-top:9px;font-family:var(--mono);font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#4b4e60;white-space:nowrap}
+.seg.cur span{color:var(--accent)}
+.ctrl{display:flex;align-items:center;gap:12px}
+.cnt{font-family:var(--mono);font-size:17px;letter-spacing:.12em;color:var(--mute);margin-right:10px;min-width:70px;text-align:right}
+.btn{font-family:var(--mono);font-size:17px;letter-spacing:.1em;text-transform:uppercase;color:var(--text);background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:3px;height:50px;padding:0 22px;cursor:pointer;transition:background .2s,border-color .2s,color .2s}
+.btn:hover:not(:disabled){background:rgba(125,180,255,.12);border-color:var(--accent);color:var(--accent-bright)}
+.btn.pri{border-color:rgba(125,180,255,.55);background:rgba(125,180,255,.1)}
+.btn:disabled{opacity:.3;cursor:default}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.hint{position:absolute;right:96px;bottom:12px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:#4b4e60;text-transform:uppercase}
+
+/* ───────── Dock navigasi (pop up, muncul saat kursor di bawah) ───────── */
+.prog{width:100%}
+#dock{position:absolute;left:50%;bottom:78px;transform:translate(-50%,28px);opacity:0;pointer-events:none;z-index:10;
+  display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 16px 9px;
+  background:#0a0b0f;border:1px solid rgba(255,255,255,.2);border-radius:6px;box-shadow:0 18px 50px rgba(0,0,0,.6);
+  transition:opacity .35s ease,transform .35s ease}
+#dock.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+#dock .hint{position:static}
+
+#dock .btn{font-size:14px;height:36px;padding:0 16px;letter-spacing:.08em}
+#dock .cnt{font-size:14px;min-width:54px;margin-right:6px}
+#dock .ctrl{gap:8px}
+#dock .hint{font-size:11px}
+.edge-hint{position:fixed;top:0;bottom:0;width:7vw;pointer-events:none;opacity:0;transition:opacity .25s ease;z-index:5}
+.edge-hint.l{left:0;background:linear-gradient(90deg,rgba(125,180,255,.14),transparent)}
+.edge-hint.r{right:0;background:linear-gradient(270deg,rgba(125,180,255,.14),transparent)}
+.edge-hint.on{opacity:1}
+
+
+
+.blk.old{opacity:0;max-height:0;margin-top:0;transform:translateY(-10px)}
+.prog{width:100%}
+.src{position:absolute;right:96px;top:176px;font-family:var(--mono);font-size:15px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.blk code,.cap code{font-family:var(--mono);font-size:.82em;color:var(--accent-bright);background:rgba(125,180,255,.1);padding:1px 7px;border-radius:3px}
+svg.vz{display:block;width:100%;height:526px}
+.vwrap{position:absolute;left:0;right:0;top:76px;height:526px}
+.view{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .5s ease}
+.view.on{opacity:1;pointer-events:auto}
+.tt{position:absolute;pointer-events:none;font-family:var(--mono);font-size:15px;background:#07080b;border:1px solid var(--accent);color:var(--text);padding:7px 12px;border-radius:3px;white-space:nowrap;opacity:0;transition:opacity .15s ease;z-index:6}
+.tt.on{opacity:1}
+.tt small{display:block;font-size:12px;letter-spacing:.1em;color:var(--mute);text-transform:uppercase}
+.sw{display:flex;gap:0;border:1px solid var(--line);border-radius:3px;overflow:hidden}
+.sw button{font-family:var(--mono);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);background:rgba(255,255,255,.02);border:0;border-right:1px solid var(--line);padding:9px 16px;cursor:pointer;transition:background .2s,color .2s}
+.sw button:last-child{border-right:0}
+.sw button:hover{color:var(--text)}
+.sw button.on{background:rgba(125,180,255,.16);color:var(--accent-bright)}
+
+.src{max-width:720px;text-align:right}
+svg .cs{transition:fill .5s ease,fill-opacity .5s ease}
+svg .hov{cursor:pointer}
+svg .bar{transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(0);transition:transform .8s cubic-bezier(.3,.7,.2,1) var(--d,0ms)}
+svg.go .bar{transform:scaleY(1)}
+svg .hbar{transform-box:fill-box;transform-origin:0 50%;transform:scaleX(0);transition:transform .9s cubic-bezier(.3,.7,.2,1) var(--d,0ms)}
+svg.go .hbar{transform:scaleX(1)}
+svg .fade{transition:opacity .45s ease}
+
+</style>
+<link rel="stylesheet" href="ASET/tema.css">
+<script src="ASET/tema.js"></script>
+</head>
+<body>
+<div class="edge-hint l" id="eh-l"></div><div class="edge-hint r" id="eh-r"></div>
+<div id="stage">
+  <div class="header">
+    <div class="brand"><img src="ASET/LOGO-UNHAS.png" alt="Logo Universitas Hasanuddin">
+      <div><b>Universitas Hasanuddin</b><span>Magister Teknik Informatika</span></div></div>
+    <div class="tag">Proyek Individu Pembelajaran Mesin</div>
+  </div>
+
+  <div class="kicker"><h1><em>Baseline</em></h1></div>
+  <div class="src">Dasar: Penjelasan Proyek, Tahap 4, hasil eksekusi notebook</div>
+
+  <div class="copy">
+    <div class="blk" id="b1"><span class="lbl">01 · Tebakan paling sederhana</span>
+      <p><em>Naive forecast</em>: tebak PM2.5 24 jam lagi <b>sama dengan sekarang</b>. Tidak belajar apa pun, hanya menyalin nilai jam t.</p></div>
+    <div class="blk" id="b2"><span class="lbl">02 · Seberapa meleset</span>
+      <p>RMSE pada 5 lipatan: <b>86,82 ± 24,70</b>. Lipatan 1, 3, dan 5 sekitar 100, lipatan 2 dan 4 sekitar 60.</p></div>
+    <div class="blk" id="b3"><span class="lbl">03 · Ukuran pendamping</span>
+      <p>MAE <b>59,39 ± 16,53</b>. RMSE lebih besar karena meleset jauh dihukum lebih berat, dan itulah yang paling merugikan.</p></div>
+    <div class="blk" id="b4"><span class="lbl">04 · Cara memakai angka ini</span>
+      <p>Model lanjutan baru berguna bila RMSE-nya <b>di bawah 86,82</b> pada lipatan yang sama. Angka ini dari data latih, <b>bukan data uji</b>. <em>Naive</em> 24 jam lemah, jadi mengalahkannya saja belum cukup.</p></div>
+  </div>
+
+  <div class="panel">
+    <i class="c1"></i><i class="c2"></i>
+    <div class="phead">
+      <div class="fig" id="fig"></div>
+      <div class="readout" id="readout"><small id="ro-l"></small><strong id="ro-v"></strong></div>
+    </div>
+    <div class="vwrap">
+      <div class="view" id="v-naive"><svg class="vz" id="svg-naive" viewBox="0 0 942 526"></svg></div>
+      <div class="view" id="v-fold"><svg class="vz" id="svg-fold" viewBox="0 0 942 526"></svg></div>
+      <div class="view" id="v-mae"><svg class="vz" id="svg-mae" viewBox="0 0 942 526"></svg></div>
+      <div class="view" id="v-pakai"><svg class="vz" id="svg-pakai" viewBox="0 0 942 526"></svg></div>
+    </div>
+    <div class="tt" id="tt"></div>
+    <div class="pfoot"><div class="pf" id="pf-cap"><div class="cap" id="cap"></div></div></div>
+  </div>
+  <div class="footer"><div class="prog" id="prog"></div></div>
+  <div id="dock"><div class="ctrl">
+      <span class="cnt" id="cnt"></span>
+      <button class="btn" id="prev">Sebelumnya</button><button class="btn" id="reset">Reset</button><button class="btn pri" id="next">Berikutnya</button>
+    </div><div class="hint">← → navigasi · R reset · F layar penuh · I indeks</div></div>
+</div>
+
+<script>
+const PREV_SLIDE="SLIDE4.html", NEXT_SLIDE="SLIDE6.html", SLIDE_NO=5;
+
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const SVGNS = 'http://www.w3.org/2000/svg';
+const mk = (tag,attrs={},parent)=>{const e=document.createElementNS(SVGNS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;};
+const fmt = n => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+const fd = (v,n=1) => v.toFixed(n).replace('.',',');
+let timers=[], ticker=null, runId=0;
+const later=(fn,ms)=>{timers.push(setTimeout(fn,ms));};
+function clearRuns(){timers.forEach(clearTimeout);timers=[];if(ticker){clearInterval(ticker);ticker=null;}runId++;}
+function readout(label,html){
+  const r=$('#readout'); if(!r)return; r.classList.add('swap');
+  setTimeout(()=>{ $('#ro-l').textContent=label; $('#ro-v').innerHTML=html; r.classList.remove('swap'); },200);
+}
+function readoutNow(label,html){ if(!$('#readout'))return; $('#ro-l').textContent=label; $('#ro-v').innerHTML=html; }
+function caption(html){ const c=$('#cap'); if(!c)return; c.innerHTML=html; $$('.pf').forEach(p=>p.classList.toggle('show',p.id==='pf-cap')); }
+function showFoot(id){ $$('.pf').forEach(p=>p.classList.toggle('show',p.id==='pf-'+id)); }
+/* blok teks bertahap: yang aktif terang, dua sebelumnya redup, yang lebih lama disembunyikan */
+function blocks(active){
+  $$('.copy .blk').forEach((el,i)=>{
+    el.classList.toggle('show',i<=active && i>=active-2);
+    el.classList.toggle('active',i===active);
+    el.classList.toggle('seen',i<active && i>=active-2);
+    el.classList.toggle('old',i<active-2);
+  });
+}
+/* titik layar ke koordinat SVG */
+function svgPt(svg,ev){const p=svg.createSVGPoint();p.x=ev.clientX;p.y=ev.clientY;return p.matrixTransform(svg.getScreenCTM().inverse());}
+
+
+/* ═════════ Deret waktu nyata: 14 hari (336 jam) PM2.5 Tiantan, 11 sampai 24 Nov 2013, data latih ═════════ */
+const EX=[24, 12, 15, 11, 16, 5, 12, 16, 16, 13, 10, 12, 22, 24, 34, 34, 34, 46, 56, 68, 83, 79, 79, 75, 87, 98, 97, 101, 107, 104, 94, 92, 72, 65, 50, 36, 18, 11, 27, 24, 24, 23, 22, 22, 33, 69, 88, 81, 89, 99, 93, 91, 97, 108, 113, 109, 114, 122, 122, 157, 86, 215, 228, 230, 220, 226, 221, 225, 232, 248, 239, 241, 222, 203, 169, 69, 52, 30, 17, 13, 16, 16, 21, 18, 22, 22, 20, 21, 53, 69, 55, 56, 70, 91, 85, 83, 73, 85, 81, 97, 115, 133, 141, 146, 136, 132, 157, 91, 63, 63, 99, 118, 88, 87, 73, 80, 81, 97, 113, 112, 129, 139, 138, 137, 135, 87, 46, 42, 32, 24, 15, 12, 5, 5, 12, 9, 6, 3, 6, 7, 11, 5, 10, 10, 8, 16, 15, 14, 4, 7, 27, 26, 7, 6, 7, 5, 3, 3, 9, 11, 4, 4, 7, 7, 11, 9, 6, 13, 18, 19, 6, 14, 6, 8, 3, 3, 9, 10, 13, 10, 7, 9, 8, 7, 6, 6, 9, 14, 11, 9, 6, 9, 6, 8, 8, 6, 8, 9, 7, 6, 13, 15, 18, 13, 19, 18, 25, 26, 48, 74, 62, 71, 73, 79, 73, 81, 91, 92, 107, 127, 119, 80, 65, 42, 48, 72, 52, 21, 28, 25, 18, 14, 17, 55, 25, 70, 81, 90, 102, 104, 108, 105, 109, 130, 148, 123, 80, 62, 67, 78, 56, 54, 43, 54, 54, 34, 51, 90, 137, 132, 150, 191, 214, 219, 213, 213, 194, 157, 156, 126, 98, 68, 46, 48, 47, 55, 65, 64, 100, 197, 159, 177, 168, 177, 267, 303, 316, 321, 331, 338, 347, 331, 277, 285, 277, 225, 183, 146, 140, 120, 121, 132, 177, 188, 206, 229, 229, 233, 233, 234, 256, 239, 226, 228, 222, 217, 149, 99, 46, 31, 31, 32, 35, 39, 44, 50, 47, 55, 59, 53, 52, 47, 45, 25, 23, 17];
+const EX_START=new Date(2013,10,11,0,0);
+const CX0=74, CX1=872, CY0=64, CY1=372, YMAX=360;
+const DXH=(CX1-CX0)/(EX.length-1);
+const xs=i=>CX0+i*DXH, ys=v=>CY1-v/YMAX*(CY1-CY0);
+const T_MIN=0, T_MAX=EX.length-25;           // jam t harus punya jam t+24
+const MON=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+const jamStr=i=>{const d=new Date(EX_START.getTime()+i*3600e3);return d.getDate()+' '+MON[d.getMonth()]+', '+String(d.getHours()).padStart(2,'0')+'.00';};
+function drawAxes(g){
+  for(const v of [0,100,200,300]){
+    mk('line',{x1:CX0,x2:CX1,y1:ys(v),y2:ys(v),stroke:v===0?'rgba(255,255,255,.28)':'rgba(255,255,255,.07)','stroke-width':1},g);
+    const t=mk('text',{x:CX0-12,y:ys(v)+1,'text-anchor':'end','dominant-baseline':'central',fill:'#80849a','font-size':14,'font-family':'JetBrains Mono,Consolas,monospace'},g);t.textContent=v;
+  }
+  const u=mk('text',{x:CX0-12,y:CY0-26,'text-anchor':'start',fill:'#80849a','font-size':13,'font-family':'JetBrains Mono,Consolas,monospace',},g);u.textContent='µg/m³';
+  for(let i=0;i<EX.length;i+=48){
+    const d=new Date(EX_START.getTime()+i*3600e3);
+    const t=mk('text',{x:xs(i),y:CY1+22,'text-anchor':'middle',fill:'#80849a','font-size':13,'font-family':'JetBrains Mono,Consolas,monospace'},g);t.textContent=d.getDate()+' '+MON[d.getMonth()];
+    mk('line',{x1:xs(i),x2:xs(i),y1:CY1,y2:CY1+6,stroke:'rgba(255,255,255,.28)'},g);
+  }
+}
+const linePath=(a,b)=>{let d='';for(let i=a;i<=b;i++)d+=(i===a?'M':'L')+xs(i).toFixed(1)+' '+ys(EX[i]).toFixed(1);return d;};
+const areaPath=(a,b)=>linePath(a,b)+'L'+xs(b).toFixed(1)+' '+CY1+'L'+xs(a).toFixed(1)+' '+CY1+'Z';
+
+const MONO='JetBrains Mono,Consolas,monospace', SANS='Space Grotesk,Segoe UI,sans-serif';
+const tx=(g,t,a,s=14,fill='#80849a',ex={})=>{const e=mk('text',Object.assign({x:a[0],y:a[1],fill,'font-size':s,'font-family':MONO},ex),g);e.textContent=t;return e;};
+const tt=$('#tt');
+function tip(html,ev){ const r=$('.panel').getBoundingClientRect(), sc=r.width/944; tt.innerHTML=html; tt.classList.add('on');
+  tt.style.left=((ev.clientX-r.left)/sc+14)+'px'; tt.style.top=((ev.clientY-r.top)/sc-12)+'px'; }
+const tipOff=()=>tt.classList.remove('on');
+const BLUE='#7db4ff', AMB='#ffc266', GREY='#80849a';
+const RF=[101.7, 62.2, 103.6, 57.7, 108.8], MEAN=86.82, SDV=24.70, MAEV=59.39, MAESD=16.53, PG={"n_pasang": 242768, "top5_porsi_kuadrat": 48.7, "top5_porsi_mutlak": 22.1, "rmse": 88.1, "mae": 59.2};
+const UTC0=Date.UTC(2013,2,1,0,0), MONID=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+const dstr=h=>{const d=new Date(UTC0+h*3600e3);return d.getUTCDate()+' '+MONID[d.getUTCMonth()]+' '+d.getUTCFullYear();};
+const TRAIN=[4648,9319,13990,18661,23332], VAL=4671, GAPH=24;
+const fd1=v=>fd(v,1), fd2=v=>fd(v,2);
+
+/* ═════════ V0: naive di deret waktu nyata ═════════ */
+const sn=$('#svg-naive'); const defs=mk('defs',{},sn);
+const gr=mk('linearGradient',{id:'gA',x1:0,y1:0,x2:0,y2:1},defs); mk('stop',{offset:'0%','stop-color':'#7db4ff','stop-opacity':.22},gr); mk('stop',{offset:'100%','stop-color':'#7db4ff','stop-opacity':0},gr);
+drawAxes(mk('g',{},sn));
+mk('path',{d:areaPath(0,EX.length-1),fill:'url(#gA)'},sn);
+mk('path',{d:linePath(0,EX.length-1),fill:'none',stroke:'#c4dcff','stroke-width':2,'stroke-linejoin':'round'},sn);
+const tLine=mk('line',{y1:CY0-6,y2:CY1,stroke:'#f1f2f6','stroke-width':1.5,'stroke-dasharray':'5 6'},sn);
+const fcL=mk('line',{stroke:BLUE,'stroke-width':2.4,'stroke-dasharray':'7 6'},sn);
+const eL=mk('line',{stroke:AMB,'stroke-width':3.4},sn);
+const pDot=mk('circle',{r:7,fill:'#0a0b10',stroke:BLUE,'stroke-width':2.6},sn);
+const aDot=mk('circle',{r:9,fill:'rgba(255,194,102,.2)',stroke:AMB,'stroke-width':2.6},sn);
+const tDot=mk('circle',{r:7.5,fill:'#0a0b10',stroke:'#f1f2f6','stroke-width':2.5},sn);
+const HALO={stroke:'#0a0b0f','stroke-width':5,'paint-order':'stroke'};
+const tLab=tx(sn,'',[0,CY0-20],14,'#f1f2f6',Object.assign({'text-anchor':'middle','letter-spacing':'.12em'}));
+const pLab=tx(sn,'RAMALAN',[0,0],13,BLUE,Object.assign({'letter-spacing':'.1em'},HALO));
+const aLab=tx(sn,'KENYATAAN',[0,0],13,AMB,Object.assign({'letter-spacing':'.1em'},HALO));
+const eLab=tx(sn,'',[0,0],15,AMB,Object.assign({'font-weight':500},HALO));
+const stat=[['RAMALAN (NILAI JAM T)',BLUE],['KENYATAAN (JAM T+24)',AMB],['MELESET',AMB]].map(([l,c],i)=>{ tx(sn,l,[74+i*268,CY1+54],12,GREY,{'letter-spacing':'.1em'}); return tx(sn,'',[74+i*268,CY1+92],34,c,{'font-weight':500}); });
+let tIdx=106;
+function placeT(){
+  const x=xs(tIdx), x2=xs(tIdx+24), v1=EX[tIdx], v2=EX[tIdx+24], y1=ys(v1), y2=ys(v2), err=Math.abs(v2-v1);
+  tLine.setAttribute('x1',x); tLine.setAttribute('x2',x); tDot.setAttribute('cx',x); tDot.setAttribute('cy',y1);
+  tLab.setAttribute('x',x); tLab.textContent='JAM T · '+jamStr(tIdx).toUpperCase();
+  fcL.setAttribute('x1',x); fcL.setAttribute('x2',x2); fcL.setAttribute('y1',y1); fcL.setAttribute('y2',y1);
+  eL.setAttribute('x1',x2); eL.setAttribute('x2',x2); eL.setAttribute('y1',y1); eL.setAttribute('y2',y2);
+  pDot.setAttribute('cx',x2); pDot.setAttribute('cy',y1); aDot.setAttribute('cx',x2); aDot.setAttribute('cy',y2);
+  const right=x2>CX1-130, dx=right?-16:16, an=right?'end':'start', far=Math.abs(y1-y2)>=30;
+  pLab.setAttribute('x',x2+dx); pLab.setAttribute('y',far?y1+5:(y1<=y2?y1-8:y1+22)); pLab.setAttribute('text-anchor',an);
+  aLab.setAttribute('x',x2+dx); aLab.setAttribute('y',far?y2+5:(y1<=y2?y2+22:y2-8)); aLab.setAttribute('text-anchor',an);
+  eLab.setAttribute('x',x2+dx); eLab.setAttribute('y',(y1+y2)/2+5); eLab.setAttribute('text-anchor',an); eLab.textContent=Math.abs(y1-y2)>=80?'MELESET '+fmt(err):'';
+  stat[0].textContent=fmt(v1); stat[1].textContent=fmt(v2); stat[2].textContent=fmt(err);
+  readoutNow('Meleset di jam ini',fmt(err)+' <span class="u">µg/m³</span>');
+}
+const hit=mk('rect',{x:CX0,y:CY0-30,width:CX1-CX0,height:CY1-CY0+60,fill:'transparent',style:'cursor:ew-resize'},sn);
+let drag=false; const setFromEv=ev=>{const p=svgPt(sn,ev);tIdx=Math.max(T_MIN,Math.min(T_MAX,Math.round((p.x-CX0)/DXH)));placeT();};
+hit.addEventListener('pointerdown',e=>{drag=true;hit.setPointerCapture(e.pointerId);setFromEv(e);});
+hit.addEventListener('pointermove',e=>{if(drag)setFromEv(e);}); hit.addEventListener('pointerup',()=>{drag=false;}); hit.addEventListener('pointercancel',()=>{drag=false;});
+
+/* ═════════ V1: RMSE naive per lipatan ═════════ */
+const sf=$('#svg-fold'); const BX0=74, BX1=872, BY0=84, BY1=388, YM=120, by=v=>BY1-v/YM*(BY1-BY0), SLOT=(BX1-BX0)/5, BW=104;
+[0,40,80,120].forEach(v=>{ mk('line',{x1:BX0,x2:BX1,y1:by(v),y2:by(v),stroke:v===0?'rgba(255,255,255,.28)':'rgba(255,255,255,.07)'},sf); tx(sf,v,[BX0-12,by(v)+1],14,GREY,{'text-anchor':'end','dominant-baseline':'central'}); });
+tx(sf,'RMSE (µg/m³)',[BX1,BY0-30],13,GREY,{'text-anchor':'end','letter-spacing':'.1em'});
+mk('rect',{x:BX0,y:by(MEAN+SDV),width:BX1-BX0,height:by(MEAN-SDV)-by(MEAN+SDV),fill:BLUE,'fill-opacity':.07},sf);
+mk('line',{x1:BX0,x2:BX1,y1:by(MEAN),y2:by(MEAN),stroke:'#f1f2f6','stroke-width':1.6,'stroke-dasharray':'6 5'},sf);
+const WIN=[true,false,true,false,true];
+RF.forEach((v,i)=>{ const x=BX0+i*SLOT+(SLOT-BW)/2, h=BY1-by(v), col=WIN[i]?AMB:BLUE;
+  const r=mk('rect',{class:'bar',x:x,y:by(v),width:BW,height:h,fill:col,'fill-opacity':.78},sf); r.style.setProperty('--d',(i*110)+'ms');
+  tx(sf,fd1(v),[x+BW/2,by(v)-10],20,'#f1f2f6',{'text-anchor':'middle','font-weight':500});
+  tx(sf,'Lipatan '+(i+1),[x+BW/2,BY1+26],14,'#c4c7d4',{'text-anchor':'middle'});
+  tx(sf,WIN[i]?'dingin':'hangat',[x+BW/2,BY1+46],13,col,{'text-anchor':'middle'});
+  const hr=mk('rect',{x:BX0+i*SLOT,y:BY0-10,width:SLOT,height:BY1-BY0+10,fill:'transparent',class:'hov'},sf);
+  const n=TRAIN[i];
+  hr.addEventListener('mousemove',ev=>tip('<small>Lipatan '+(i+1)+' · validasi '+dstr(n+GAPH)+' sampai '+dstr(n+GAPH+VAL-1)+'</small>RMSE '+fd1(v),ev)); hr.addEventListener('mouseleave',tipOff); });
+mk('rect',{x:74,y:452,width:14,height:14,fill:AMB,'fill-opacity':.8},sf); tx(sf,'validasi mencakup musim dingin',[96,464],13,'#c4c7d4');
+mk('rect',{x:394,y:452,width:14,height:14,fill:BLUE,'fill-opacity':.8},sf); tx(sf,'validasi musim hangat',[416,464],13,'#c4c7d4');
+mk('line',{x1:620,x2:644,y1:459,y2:459,stroke:'#f1f2f6','stroke-width':1.8,'stroke-dasharray':'5 4'},sf); tx(sf,'rata-rata, pita = ± sd',[654,464],13,'#c4c7d4');
+tx(sf,'Musim diturunkan dari tanggal validasi. Dugaan sebab sd besar: beda musim.',[74,494],13,GREY);
+
+/* ═════════ V2: RMSE dan MAE ═════════ */
+const sm=$('#svg-mae'); const MX0=214, MX1=840, MSC=(MX1-MX0)/130, mxv=v=>MX0+v*MSC;
+[0,30,60,90,120].forEach(v=>{ mk('line',{x1:mxv(v),x2:mxv(v),y1:92,y2:222,stroke:v===0?'rgba(255,255,255,.28)':'rgba(255,255,255,.07)'},sm); tx(sm,v,[mxv(v),246],13,GREY,{'text-anchor':'middle'}); });
+tx(sm,'µg/m³',[MX1+16,246],13,GREY,{'text-anchor':'end'});
+[['RMSE',MEAN,SDV,BLUE,104],['MAE',MAEV,MAESD,'#c4dcff',164]].forEach(([nm,m,s,c,y],i)=>{
+  tx(sm,nm,[MX0-18,y+30],20,'#f1f2f6',{'text-anchor':'end','font-weight':500});
+  const r=mk('rect',{class:'hbar',x:mxv(0),y:y,width:mxv(m)-mxv(0),height:44,fill:c,'fill-opacity':.7},sm); r.style.setProperty('--d',(i*160)+'ms');
+  const w=mk('g',{class:'fade'},sm); mk('line',{x1:mxv(m-s),x2:mxv(m+s),y1:y+22,y2:y+22,stroke:'#fff','stroke-width':2},w); [m-s,m+s].forEach(q=>mk('line',{x1:mxv(q),x2:mxv(q),y1:y+10,y2:y+34,stroke:'#fff','stroke-width':2},w));
+  tx(sm,fd2(m)+' ± '+fd2(s),[mxv(m+s)+14,y+30],18,'#f1f2f6',{'font-weight':500});
+  const hr=mk('rect',{x:mxv(0),y:y-6,width:mxv(130)-mxv(0),height:56,fill:'transparent',class:'hov'},sm);
+  hr.addEventListener('mousemove',ev=>tip('<small>'+nm+' naive, 5 lipatan</small>'+fd2(m)+' ± '+fd2(s),ev)); hr.addEventListener('mouseleave',tipOff); });
+tx(sm,'RATA-RATA ± SIMPANGAN BAKU ANTAR LIPATAN',[MX0,84],12,GREY,{'letter-spacing':'.1em'});
+tx(sm,'MENGAPA RMSE LEBIH BESAR',[74,292],13,'#c4dcff',{'letter-spacing':'.12em'});
+tx(sm,'5% galat terbesar menyumbang…',[74,322],18,'#c4c7d4',{'font-family':SANS});
+const SB0=74, SBW=798;
+[['…jumlah kuadrat galat (basis RMSE)',PG.top5_porsi_kuadrat,AMB,350],['…jumlah galat mutlak (basis MAE)',PG.top5_porsi_mutlak,BLUE,412]].forEach(([nm,p,c,y],i)=>{
+  tx(sm,nm,[SB0,y-8],13,'#c4c7d4');
+  mk('rect',{x:SB0,y:y,width:SBW,height:30,fill:'rgba(255,255,255,.05)',stroke:'rgba(255,255,255,.13)'},sm);
+  const r=mk('rect',{class:'hbar',x:SB0,y:y,width:SBW*p/100,height:30,fill:c,'fill-opacity':.85},sm); r.style.setProperty('--d',(500+i*160)+'ms');
+  tx(sm,fd(p,1)+'%',[SB0+SBW*p/100+12,y+22],20,'#f1f2f6',{'font-weight':500}); });
+tx(sm,'Seluruh data latih, 9 stasiun, '+fmt(PG.n_pasang)+' pasangan (bukan per lipatan).',[74,484],13,GREY);
+
+/* ═════════ V3: cara memakai: bandingkan per lipatan ═════════ */
+const sp=$('#svg-pakai'); const PX0=74, PX1=872, PSC=(PX1-PX0)/130, pv=v=>PX0+v*PSC, AY=236;
+mk('line',{x1:PX0,x2:PX1,y1:AY,y2:AY,stroke:'rgba(255,255,255,.3)','stroke-width':2},sp);
+[0,20,40,60,80,100,120].forEach(v=>{ mk('line',{x1:pv(v),x2:pv(v),y1:AY,y2:AY+7,stroke:'rgba(255,255,255,.3)'},sp); tx(sp,v,[pv(v),AY+28],13,GREY,{'text-anchor':'middle'}); });
+tx(sp,'RMSE (µg/m³)',[PX1,AY+54],13,GREY,{'text-anchor':'end','letter-spacing':'.1em'});
+mk('line',{x1:pv(MEAN),x2:pv(MEAN),y1:AY-92,y2:AY,stroke:'#f1f2f6','stroke-width':1.6,'stroke-dasharray':'5 5'},sp);
+tx(sp,'RATA-RATA NAIVE 86,82',[pv(MEAN)+10,AY-84],13,'#f1f2f6',{'letter-spacing':'.08em'});
+const OFFY=[-30,-30,-30,-30,-30];
+RF.forEach((v,i)=>{ mk('circle',{cx:pv(v),cy:AY,r:7.5,fill:i%2===0?AMB:BLUE,'fill-opacity':.9,stroke:'#0a0b10','stroke-width':2},sp); tx(sp,'L'+(i+1),[pv(v),AY-(i===2?40:19)],13,'#c4c7d4',{'text-anchor':'middle'}); });
+tx(sp,'tiap titik = RMSE naive di satu lipatan',[PX0,AY-84],13,GREY);
+const mk0=mk('g',{},sp);
+const mLine=mk('line',{y1:AY-52,y2:AY+14,stroke:BLUE,'stroke-width':3},mk0);
+const mTri=mk('path',{d:'M0 0l-11 -17h22z',fill:BLUE},mk0);
+const mLab=tx(mk0,'',[0,AY+86],20,BLUE,{'text-anchor':'middle','font-weight':500});
+const mhit=mk('rect',{x:PX0-20,y:AY-70,width:PX1-PX0+40,height:150,fill:'transparent',style:'cursor:ew-resize'},sp);
+tx(sp,'CONTOH HIPOTETIS: geser untuk membaca hasil nanti. Ini bukan hasil model.',[PX0,AY+120],13,AMB,{'letter-spacing':'.06em'});
+const r1=tx(sp,'',[PX0,AY+172],22,'#f1f2f6',{'font-family':SANS,'font-weight':500}), r2=tx(sp,'',[PX0,AY+206],18,'#c4c7d4',{'font-family':SANS}), r3=tx(sp,'',[PX0,AY+236],16,GREY,{'font-family':SANS});
+let mv=70;
+function setM(v){ mv=Math.max(30,Math.min(125,v)); const x=pv(mv);
+  mLine.setAttribute('x1',x); mLine.setAttribute('x2',x); mTri.setAttribute('transform','translate('+x+','+(AY-52)+')'); mLab.setAttribute('x',x); mLab.textContent=fd(mv,0);
+  const k=RF.filter(r=>mv<r).length;
+  r1.textContent='Bila RMSE model = '+fd(mv,0)+' di semua lipatan, ia mengalahkan naive di '+k+' dari 5 lipatan.';
+  r2.textContent=mv<MEAN?'Rata-rata tampak lebih baik ('+fd(mv,0)+' < 86,82)'+(k<5?', tetapi tidak di setiap lipatan.':', dan di setiap lipatan.'):'Rata-rata belum lebih baik dari naive.';
+  r3.textContent=k<5&&mv<MEAN?'Karena itu bandingkan lipatan demi lipatan, bukan hanya rata-rata.':(k===5?'Aman dibaca: unggul konsisten.':'');
+  readoutNow('RMSE contoh',fd(mv,0)+' <span class="u">µg/m³</span>'); }
+let dm=false; const sm2=ev=>{const p=svgPt(sp,ev);setM((p.x-PX0)/PSC);};
+mhit.addEventListener('pointerdown',e=>{dm=true;mhit.setPointerCapture(e.pointerId);sm2(e);}); mhit.addEventListener('pointermove',e=>{if(dm)sm2(e);}); mhit.addEventListener('pointerup',()=>{dm=false;}); mhit.addEventListener('pointercancel',()=>{dm=false;});
+
+/* ═════════ Langkah ═════════ */
+const FIG=['Fig. 17 · Tebakan naive','Fig. 18 · RMSE tiap lipatan','Fig. 19 · RMSE dan MAE','Fig. 20 · Membaca hasil model nanti'];
+const VIEWS=['v-naive','v-fold','v-mae','v-pakai'];
+function setView(i){ $$('.view').forEach(v=>v.classList.toggle('on',v.id===VIEWS[i])); $('#fig').innerHTML=FIG[i].replace(/^(Fig\. \d+)/,'<b>$1</b>'); tipOff();
+  sf.classList.remove('go'); sm.classList.remove('go'); void sf.getBoundingClientRect();
+  if(i===1) setTimeout(()=>sf.classList.add('go'),80); if(i===2) setTimeout(()=>sm.classList.add('go'),80); }
+const STEPS=[
+  ()=>{ blocks(0); setView(0); placeT(); caption('Ramalan <em>naive</em> = nilai sekarang (biru). Kenyataan 24 jam kemudian di lingkaran kuning. Seret garis putih. Korelasi jam t dan t+24 hanya <b>0,40</b>.'); },
+  ()=>{ blocks(1); setView(1); readoutNow('RMSE rata-rata','86,82 <span class="u">±</span> 24,70'); caption('RMSE <em>naive</em> per lipatan, data latih 9 stasiun. Validasi musim dingin sekitar <b>100</b>, musim hangat sekitar <b>60</b>. Arahkan kursor ke batang.'); },
+  ()=>{ blocks(2); setView(2); readoutNow('MAE rata-rata','59,39 <span class="u">±</span> 16,53'); caption('RMSE memberi bobot besar pada galat besar, jadi lebih tinggi dari MAE. Cocok di sini: meleset jauh saat polusi tinggi paling merugikan.'); },
+  ()=>{ blocks(3); setView(3); setM(70); caption('Target model lanjutan: <b>di bawah 86,82</b>. Geser penanda biru: rata-rata bisa tampak lebih baik padahal kalah di lipatan musim hangat.'); }
+];
+function RESET_HOOK(){ tIdx=106; mv=70; $$('.copy .blk').forEach(b=>b.classList.remove('show','active','seen','old')); $$('.view').forEach(v=>v.classList.remove('on')); sf.classList.remove('go'); sm.classList.remove('go'); }
+
+
+/* ═════════ Progres bawah ═════════ */
+const LAST = STEPS.length-1;
+let step = 0;
+const GROUPS=[["Pembuka", 1], ["Tahap 1", 1], ["Tahap 2", 1], ["Tahap 3", 1], ["Tahap 4", 1], ["Rencana", 1]];
+(function(){ const p=$('#prog'); GROUPS.forEach(([n,c])=>{const s=document.createElement('div');s.className='seg';s.style.flex=c;s.innerHTML='<div class="bar"><i></i></div><span>'+n+'</span>';p.appendChild(s);}); })();
+function progress(){
+  let start=0;
+  document.querySelectorAll('.seg').forEach((s,gi)=>{
+    const c=GROUPS[gi][1]; let done=0;
+    if(SLIDE_NO>start+c) done=c; else if(SLIDE_NO>start) done=(SLIDE_NO-1-start)+(step+1)/(LAST+1);
+    s.querySelector('i').style.width=(done/c*100)+'%';
+    s.classList.toggle('cur',SLIDE_NO>start&&SLIDE_NO<=start+c);
+    start+=c;
+  });
+}
+/* ═════════ Kontrol ═════════ */
+function render(){
+  clearRuns(); STEPS[step](); progress();
+  $('#cnt').textContent=(step+1)+' / '+(LAST+1);
+  $('#prev').disabled=false;
+  $('#prev').textContent = step===0 ? (PREV_SLIDE?('Slide '+(SLIDE_NO-1)):'Sebelumnya') : 'Sebelumnya';
+  $('#prev').disabled = (step===0 && !PREV_SLIDE);
+  const nx=$('#next');
+  if(step<LAST){ nx.disabled=false; nx.textContent='Berikutnya'; }
+  else if(NEXT_SLIDE){ nx.disabled=false; nx.textContent='Slide '+(SLIDE_NO+1); }
+  else { nx.disabled=true; nx.textContent='Slide terakhir'; }
+}
+function leave(url){if(window.TEMA)TEMA.leave(url);else location.href=url;}
+function next(){ if(step<LAST){step++;render();} else if(NEXT_SLIDE) leave(NEXT_SLIDE); }
+function prev(){ if(step>0){step--;render();} else if(PREV_SLIDE) leave(PREV_SLIDE); }
+function reset(){
+  clearRuns(); step=0;
+  if(typeof RESET_HOOK==='function') RESET_HOOK();
+  setTimeout(render,120);
+}
+$('#next').onclick=next; $('#prev').onclick=prev; $('#reset').onclick=reset;
+addEventListener('keydown',e=>{
+  if(e.metaKey||e.ctrlKey||e.altKey)return;
+  const k=e.key;
+  if(k==='ArrowRight'||k===' '||k==='PageDown'||k==='Enter'){e.preventDefault();next();}
+  else if(k==='ArrowLeft'||k==='PageUp'||k==='Backspace'){e.preventDefault();prev();}
+  else if(k==='r'||k==='R'){reset();}
+  else if(k==='f'||k==='F'){ if(document.fullscreenElement)document.exitFullscreen(); else document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen(); }
+  else if(k==='i'||k==='I'){leave('INDEX.html');}
+});
+function fit(){
+  const s=Math.min(innerWidth/1920,innerHeight/1080), st=$('#stage');
+  st.style.transform='translate('+((innerWidth-1920*s)/2)+'px,'+((innerHeight-1080*s)/2)+'px) scale('+s+')';
+}
+addEventListener('resize',fit); fit();
+const q=new URLSearchParams(location.search).get('step');
+if(q!==null){ step=Math.max(0,Math.min(LAST,+q||0)); render(); }
+else setTimeout(render,500);
+
+/* ═════════ Dock: muncul saat kursor di bawah, hilang 1 detik setelah dilepas ═════════ */
+(function(){
+  const dock=document.getElementById('dock'); let t=null, armed=false;
+  const show=()=>{dock.classList.add('show');clearTimeout(t);armed=false;};
+  const arm=()=>{ if(armed||!dock.classList.contains('show'))return; armed=true; t=setTimeout(()=>{dock.classList.remove('show');armed=false;},1000); };
+  addEventListener('mousemove',e=>{ if(e.clientY>innerHeight*0.85||dock.matches(':hover')) show(); else arm(); });
+  document.addEventListener('mouseleave',arm);
+})();
+const EDGE_PREV=PREV_SLIDE||step>0?()=>prev():null, EDGE_NEXT=()=>next();
+
+/* ═════════ Zona tepi layar ala Canva: kiri jauh = mundur, kanan jauh = maju ═════════ */
+(function(){
+  const EDGE=0.07, mkCur=d=>'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'44\' height=\'44\'><circle cx=\'22\' cy=\'22\' r=\'20\' fill=\'%230a0b0f\' stroke=\'%237db4ff\' stroke-width=\'2\'/><path d=\''+d+'\' fill=\'none\' stroke=\'%23c4dcff\' stroke-width=\'3.2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'/></svg>") 22 22, pointer';
+  const CL=mkCur('M25 13l-9 9 9 9'), CR=mkCur('M19 13l9 9-9 9');
+  const zoneOf=x=>{const r=x/innerWidth; const z=r<EDGE?-1:(r>1-EDGE?1:0); return (z===-1&&!EDGE_PREV)?0:z;};
+  const L=document.getElementById('eh-l'), R=document.getElementById('eh-r');
+  addEventListener('mousemove',e=>{ const z=zoneOf(e.clientX);
+    document.documentElement.style.cursor = z<0?CL:(z>0?CR:'');
+    L.classList.toggle('on',z<0); R.classList.toggle('on',z>0); });
+  document.addEventListener('mouseleave',()=>{L.classList.remove('on');R.classList.remove('on');document.documentElement.style.cursor='';});
+  addEventListener('click',e=>{ if(e.target.closest('#dock'))return; const z=zoneOf(e.clientX); if(z<0)EDGE_PREV(); else if(z>0)EDGE_NEXT(); });
+})();
+
+</script>
+</body>
+</html>
