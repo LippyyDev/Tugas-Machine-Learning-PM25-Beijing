@@ -153,7 +153,9 @@ svg.vz{display:block;width:100%;height:526px}
 .sw button.on{background:rgba(125,180,255,.16);color:var(--accent-bright)}
 
 .kicker{top:152px}
-.copy{top:322px}
+.copy{top:262px;height:690px}
+.copy .blk p{font-size:28px;line-height:1.42}
+.copy .blk.seen p{font-size:21px}
 .sent{position:absolute;left:44px;right:70px;top:44px;font-size:27px;line-height:2.6;color:var(--body)}
 .sent .t{position:relative;display:inline;padding:2px 8px 3px;border-radius:3px;color:var(--text);font-weight:500;border-bottom:2px solid var(--accent);background:rgba(125,180,255,.1);box-decoration-break:clone;-webkit-box-decoration-break:clone}
 .sent .t i{position:absolute;left:0;top:-23px;font-style:normal;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);white-space:nowrap}
@@ -181,19 +183,19 @@ svg.vz{display:block;width:100%;height:526px}
 
   <div class="copy">
     <div class="blk" id="b1"><span class="lbl">01 · PM2.5 dan deret waktu</span>
-      <p><b>PM2.5</b> adalah debu sangat halus (2,5 mikrometer atau kurang) yang bisa masuk ke paru-paru. Diukur <b>tiap jam</b>, jadi datanya berupa <em>deret waktu</em>.</p></div>
+      <p><b>PM2.5</b> adalah partikel debu mikro (≤ 2,5 µm) yang berbahaya karena bisa menembus paru-paru. Karena sensor mencatatnya <b>tiap jam</b>, data yang kita olah berbentuk <em>deret waktu</em>.</p></div>
     <div class="blk" id="b2"><span class="lbl">02 · Studi kasus</span>
-      <p>Pukul 10.00, seorang warga ingin tahu apakah <b>besok pukul 10.00</b> aman untuk berolahraga di luar. Angka sekarang ada di aplikasi, ia butuh <b>ramalan</b>.</p></div>
-    <div class="blk" id="b3"><span class="lbl">03 · Yang diramal</span>
-      <p>Yang ditebak: <b>PM2.5 pada jam t+24</b>, dari data sampai jam t. Jenisnya <em>regresi deret waktu</em>, yaitu menebak sebuah angka dari data berurutan waktu.</p></div>
+      <p>Bayangkan pukul 10.00 pagi ini, seseorang ingin memastikan apakah <b>besok di jam yang sama</b> udara cukup aman untuk lari pagi. Aplikasi hanya menampilkan kondisi saat ini, jadi ia butuh <b>prediksi</b>.</p></div>
+    <div class="blk" id="b3"><span class="lbl">03 · Yang diprediksi</span>
+      <p>Target kita adalah memprediksi kadar <b>PM2.5 pada jam t+24</b> berdasarkan riwayat data hingga jam t. Pendekatan ini masuk kategori <em>regresi deret waktu</em>, yaitu memproyeksikan nilai numerik dari pola historis.</p></div>
     <div class="blk" id="b4"><span class="lbl">04 · Satu kalimat</span>
-      <p>Dari kasus tadi, rancangan dirangkum dalam <b>satu kalimat</b>: pemakai, keputusan, target, fitur, kesalahan termahal, dan metrik.</p></div>
+      <p>Seluruh skenario tadi kita padatkan menjadi <b>satu rumusan utuh</b> yang mengikat enam elemen kunci: pengguna, keputusan, target, fitur, risiko kesalahan terbesar, hingga metrik evaluasi.</p></div>
     <div class="blk" id="b5"><span class="lbl">05 · RMSE dan MAE</span>
-      <p><b>Galat</b> adalah selisih tebakan dan kenyataan. <b>MAE</b> merata-ratakan galat apa adanya. <b>RMSE</b> mengkuadratkan dulu, jadi satu tebakan yang meleset jauh terasa berat.</p></div>
+      <p><b>Galat</b> mengukur selisih antara prediksi dan realita. <b>MAE</b> menghitung rata-rata selisih secara merata, sedangkan <b>RMSE</b> mengkuadratkan galatnya terlebih dahulu, sehingga satu prediksi yang meleset jauh mendapat penalti jauh lebih berat.</p></div>
     <div class="blk" id="b6"><span class="lbl">06 · Pada data nyata</span>
-      <p>Pada tebakan <em>naive</em> di data latih, <b>5% galat terbesar</b> menyumbang hampir separuh RMSE, tetapi hanya seperlima MAE. Maka <b>RMSE</b> jadi metrik utama.</p></div>
+      <p>Saat diuji dengan <em>baseline naive</em> pada data latih, <b>5% galat paling ekstrem</b> menyumbang hampir separuh total nilai RMSE, namun hanya seperlima pada MAE. Karena itu, <b>RMSE</b> dipilih sebagai metrik utama.</p></div>
     <div class="blk" id="b7"><span class="lbl">07 · Tiga tantangan wajib</span>
-      <p><b>Nilai hilang</b> pada sensor, <b>validasi berurutan waktu</b>, dan <b>uji di stasiun lain</b> (pergeseran distribusi).</p></div>
+      <p>Ada tiga kendala utama yang harus diselesaikan: menangani <b>data sensor yang kosong</b>, menjaga <b>validasi tetap berurutan waktu</b>, serta menguji ketahanan model pada <b>stasiun baru</b> (<em>distribution shift</em>).</p></div>
   </div>
 
   <div class="panel">
@@ -351,7 +353,7 @@ const MONO='JetBrains Mono,Consolas,monospace';
 const tx=(g,t,a,s=14,fill='#80849a',ex={})=>{const e=mk('text',Object.assign({x:a[0],y:a[1],fill,'font-size':s,'font-family':MONO},ex),g);e.textContent=t;return e;};
 const BARX=70, BARW=770;
 const eg = mk('g',{},se);
-tx(eg,'TEBAKAN NAIVE: PM2.5 JAM T+24 = PM2.5 JAM T',[BARX,52],14,'#80849a',{'letter-spacing':'.12em'});
+tx(eg,'PREDIKSI NAIVE: PM2.5 JAM T+24 = PM2.5 JAM T',[BARX,52],14,'#80849a',{'letter-spacing':'.12em'});
 function errBar(y,title,sub,share){
   tx(eg,title,[BARX,y-14],17,'#f1f2f6',{'font-family':'Space Grotesk,Segoe UI,sans-serif','font-weight':600});
   tx(eg,sub,[BARX+BARW,y-14],13,'#80849a',{'text-anchor':'end','letter-spacing':'.08em'});
@@ -381,7 +383,7 @@ const sm = $('#svg-met'); const mg = mk('g',{},sm);
 const MB={x0:74,x1:512,y0:84,y1:414,vmax:160};
 const myv=v=>MB.y1-v/MB.vmax*(MB.y1-MB.y0);
 const GAL=[10,10,10,100];
-tx(mg,'CONTOH HIPOTETIS · GALAT TIAP TEBAKAN (µg/m³)',[MB.x0,46],14,'#80849a',{'letter-spacing':'.12em'});
+tx(mg,'CONTOH HIPOTETIS · GALAT TIAP PREDIKSI (µg/m³)',[MB.x0,46],14,'#80849a',{'letter-spacing':'.12em'});
 for(const v of [0,50,100,150]){
   mk('line',{x1:MB.x0,x2:MB.x1,y1:myv(v),y2:myv(v),stroke:v===0?'rgba(255,255,255,.28)':'rgba(255,255,255,.07)'},mg);
   tx(mg,v,[MB.x0-12,myv(v)+1],14,'#80849a',{'text-anchor':'end','dominant-baseline':'central'});
@@ -391,7 +393,7 @@ GAL.forEach((v,i)=>{
   const x=MB.x0+34+i*104;
   const r=mk('rect',{x:x,width:64,fill:i===3?'#ffc266':'#7db4ff','fill-opacity':i===3?.9:.55},mg); mBar.push(r);
   mVal.push(tx(mg,'',[x+32,0],20,'#f1f2f6',{'text-anchor':'middle','font-weight':500}));
-  tx(mg,'tebakan '+(i+1),[x+32,MB.y1+26],14,'#80849a',{'text-anchor':'middle'});
+  tx(mg,'prediksi '+(i+1),[x+32,MB.y1+26],14,'#80849a',{'text-anchor':'middle'});
 });
 const mHandle=mk('circle',{r:11,fill:'#0a0b10',stroke:'#ffc266','stroke-width':3,style:'cursor:ns-resize'},mg);
 tx(mg,'SERET UJUNG BATANG KUNING KE ATAS ATAU BAWAH',[(MB.x0+MB.x1)/2,484],13,'#ffc266',{'text-anchor':'middle','letter-spacing':'.1em'});
@@ -432,17 +434,17 @@ updMet();
 /* ═════════ View 3: tiga tantangan ═════════ */
 const st3 = $('#svg-tan'); const tg = mk('g',{},st3);
 const CARDS=[
-  {n:'01',t:'Nilai hilang',d:'Sensor kosong pada sebagian jam. Isi tidak boleh diambil dari jam sesudahnya.',ic:g=>{
+  {n:'01',t:'Nilai hilang',d:'Data sensor sering terputus di jam tertentu. Proses pengisian (imputasi) dilarang keras mengambil informasi dari jam masa depan.',ic:g=>{
     mk('path',{d:'M16 78 L40 50 L62 66 L86 30',fill:'none',stroke:'#c4dcff','stroke-width':3,'stroke-linejoin':'round'},g);
     mk('path',{d:'M96 28 L120 54 L140 40 L164 70',fill:'none',stroke:'#c4dcff','stroke-width':3,'stroke-linejoin':'round'},g);
     mk('line',{x1:86,y1:30,x2:96,y2:28,stroke:'#ffc266','stroke-width':3,'stroke-dasharray':'3 5'},g);
     tx(g,'NA',[90,17],13,'#ffc266',{'text-anchor':'middle','font-weight':500});}},
-  {n:'02',t:'Validasi berurutan',d:'Data tidak diacak. Belajar dari masa lalu, diuji di masa depan.',ic:g=>{
+  {n:'02',t:'Validasi berurutan',d:'Data tidak boleh diacak. Model harus dilatih menggunakan masa lalu untuk menguji kemampuannya di masa depan.',ic:g=>{
     mk('rect',{x:14,y:44,width:100,height:30,fill:'#7db4ff','fill-opacity':.55},g);
     mk('rect',{x:114,y:44,width:50,height:30,fill:'none',stroke:'#c4dcff','stroke-width':2,'stroke-dasharray':'4 4'},g);
     mk('path',{d:'M14 92H164M156 86l8 6-8 6',fill:'none',stroke:'#80849a','stroke-width':2},g);
     tx(g,'WAKTU',[14,26],12,'#80849a',{'letter-spacing':'.12em'});}},
-  {n:'03',t:'Uji di stasiun lain',d:'Model dicoba di stasiun yang belum pernah dilihatnya. Kinerja bisa turun.',ic:g=>{
+  {n:'03',t:'Uji di stasiun lain',d:'Model dievaluasi pada lokasi stasiun yang belum pernah dikenali sebelumnya untuk melihat seberapa jauh performanya turun.',ic:g=>{
     mk('circle',{cx:44,cy:56,r:16,fill:'#0f1c31',stroke:'#7db4ff','stroke-width':2.5},g);
     mk('circle',{cx:134,cy:56,r:16,fill:'none',stroke:'#ffc266','stroke-width':2.5,'stroke-dasharray':'4 4'},g);
     mk('path',{d:'M66 56H110M102 50l8 6-8 6',fill:'none',stroke:'#c4dcff','stroke-width':2.5},g);
@@ -456,9 +458,9 @@ CARDS.forEach((c,i)=>{
   const ig=mk('g',{transform:'translate(36,70)'},g); c.ic(ig);
   const t=tx(g,c.t,[22,222],25,'#f1f2f6',{'font-family':'Space Grotesk,Segoe UI,sans-serif','font-weight':600});
   // keterangan: bungkus manual per kata
-  const words=c.d.split(' '); let line='',ly=262; const lines=[];
-  words.forEach(w=>{ if((line+' '+w).trim().length>25){lines.push(line.trim());line=w;} else line+=' '+w; }); lines.push(line.trim());
-  lines.forEach((l,k)=>tx(g,l,[22,ly+k*30],19,'#c4c7d4',{'font-family':'Space Grotesk,Segoe UI,sans-serif'}));
+  const words=c.d.split(' '); let line='',ly=258; const lines=[];
+  words.forEach(w=>{ if((line+" "+w).trim().length>25){lines.push(line.trim());line=w;} else line+=' '+w; }); lines.push(line.trim());
+  lines.forEach((l,k)=>tx(g,l,[22,ly+k*28],18,'#c4c7d4',{'font-family':'Space Grotesk,Segoe UI,sans-serif'}));
 });
 
 /* ═════════ View 4: rumusan satu kalimat ═════════ */
@@ -480,11 +482,11 @@ function setView(i){
 }
 const STEPS=[
   ()=>{ blocks(0); setView(0); markOn=false; futureOn=false; placeT(); readoutNow('Contoh nyata: Tiantan','336<span class="u">jam</span>'); caption('Tiap titik satu jam: <b>14 hari</b> PM2.5 di stasiun Tiantan (11 sampai 24 Nov 2013, data latih). Kurvanya naik turun mengikuti waktu, dan nilai sekarang cenderung mirip dengan beberapa jam sebelumnya.'); },
-  ()=>{ blocks(1); setView(1); markOn=true; futureOn=false; placeT(); caption('Seret garis putih untuk memilih jam <b>t</b>. Yang sudah terukur hanya di kirinya. PM2.5 sesudahnya <b>belum terjadi</b>, dan itulah yang dibutuhkan warga.'); },
-  ()=>{ blocks(2); setView(2); markOn=true; futureOn=true; placeT(); caption('Cincin kuning adalah <b>target</b>: PM2.5 tepat 24 jam setelah jam t. Pada contoh awal, udara masih bersih (21) tetapi besoknya 157. Coba seret ke jam lain.'); },
+  ()=>{ blocks(1); setView(1); markOn=true; futureOn=false; placeT(); caption('Geser garis putih untuk menentukan jam <b>t</b>. Data yang tersedia hanya di sisi kiri; kondisi di sisi kanan <b>belum terjadi</b> dan menjadi fokus prediksi.'); },
+  ()=>{ blocks(2); setView(2); markOn=true; futureOn=true; placeT(); caption('Cincin kuning menandai <b>target</b> (24 jam ke depan). Pada titik awal, udara terpantau bersih (21 µg/m³), namun melonjak ke 157 keesokan harinya. Silakan geser garis untuk melihat pola jam lainnya.'); },
   ()=>{ blocks(3); setView(3); readoutNow('Metrik utama','RMSE<span class="u">+ MAE</span>'); caption('Tiap bagian kasus punya tempat di kalimat: <b>warga</b> memutuskan <b>membatasi paparan</b>, target <b>PM2.5 jam t+24</b>. Metrik dipilih dari <b>biaya kesalahan</b>, bukan dari kebiasaan.'); },
-  ()=>{ blocks(4); setView(4); readoutNow('Contoh hipotetis','RMSE<span class="u">lawan MAE</span>'); caption('Seret ujung batang kuning. Tiga tebakan tetap meleset 10, satu tebakan makin jauh meleset. <b>RMSE naik jauh lebih cepat daripada MAE.</b> Angka di sini contoh hipotetis, bukan hasil data.'); },
-  ()=>{ blocks(5); setView(5); readoutNow('Porsi 5% galat terbesar', fd(PG.top5_porsi_kuadrat)+'%<span class="u">dari RMSE</span>'); caption('Hanya <b>5%</b> galat terbesar menyumbang <b>'+fd(PG.top5_porsi_kuadrat)+'%</b> dari galat kuadrat (dasar RMSE), tetapi <b>'+fd(PG.top5_porsi_mutlak)+'%</b> dari galat mutlak (dasar MAE). RMSE peka terhadap meleset jauh.'); },
+  ()=>{ blocks(4); setView(4); readoutNow('Contoh hipotetis','RMSE<span class="u">lawan MAE</span>'); caption('Seret ujung batang kuning. Tiga prediksi tetap meleset 10, satu prediksi makin jauh meleset. <b>RMSE naik jauh lebih cepat daripada MAE.</b> Angka di sini contoh hipotetis, bukan hasil data.'); },
+  ()=>{ blocks(5); setView(5); readoutNow('Porsi 5% galat terbesar', fd(PG.top5_porsi_kuadrat)+'%<span class="u">dari RMSE</span>'); caption('Hanya <b>5%</b> galat terbesar menyumbang <b>'+fd(PG.top5_porsi_kuadrat)+'%</b> dari galat kuadrat (dasar RMSE), tetapi <b>'+fd(PG.top5_porsi_mutlak)+'%</b> dari galat mutlak (dasar MAE). RMSE peka terhadap prediksi yang meleset jauh.'); },
   ()=>{ blocks(6); setView(6); readoutNow('Tantangan wajib','3'); caption('Tiga tantangan wajib dari dosen. Ketiganya menentukan rancangan di Tahap 2 dan Tahap 3.'); }
 ];
 function RESET_HOOK(){ tIdx=82; futureOn=false; markOn=true; $$('.copy .blk').forEach(b=>b.classList.remove('show','active','seen','old')); $$('.view').forEach(v=>v.classList.remove('on')); fillBar(BAR1,false); fillBar(BAR2,false); $('#sent').classList.remove('go'); $$('#svg-tan .tc').forEach(g=>{g.style.opacity=0;}); }
