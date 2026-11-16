@@ -1,6 +1,6 @@
 # Gambar
 
-Sebelas gambar: satu diagram pembagian data (`t3_`), sembilan EDA tahap 2 (data latih Tiantan, kecuali nomor 08 dan 09 yang membandingkan stasiun). Awalan `t2_` menandai tahap 2, `t3_` tahap 3 (diagram dibuat dengan skrip `matplotlib`, bukan keluaran *notebook*), dan `t4_` tahap 4, nomor mengikuti urutan di *notebook*.
+Sebelas gambar: satu diagram pembagian data (`t3_`), sembilan EDA tahap 2 (isi saat ini masih hasil pilot data latih Tiantan, kecuali nomor 08 dan 09 yang membandingkan stasiun; *notebook* 9/3 memakai 9 stasiun latih digabung dan menimpa gambar ini saat dijalankan). Awalan `t2_` menandai tahap 2, `t3_` tahap 3 (diagram dibuat dengan skrip `matplotlib`, bukan keluaran *notebook*), dan `t4_` tahap 4, nomor mengikuti urutan di *notebook*.
 
 | Berkas | Isi |
 |---|---|

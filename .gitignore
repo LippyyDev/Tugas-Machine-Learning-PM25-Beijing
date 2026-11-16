@@ -8,3 +8,6 @@ venv/
 # Sistem
 .DS_Store
 Thumbs.db
+
+# Berkas fitur hasil notebook tahap 2 (sekitar 100 MB), dibuat ulang dengan menjalankan notebook
+Data/Data Olahan/*.csv
