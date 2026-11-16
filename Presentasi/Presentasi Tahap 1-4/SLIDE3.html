@@ -148,6 +148,8 @@ svg.vz{display:block;width:100%;height:526px}
 .view.on{opacity:1;pointer-events:auto}
 .tt{position:absolute;pointer-events:none;font-family:var(--mono);font-size:15px;background:#07080b;border:1px solid var(--accent);color:var(--text);padding:7px 12px;border-radius:3px;white-space:nowrap;opacity:0;transition:opacity .15s ease;z-index:6}
 .tt.on{opacity:1}
+.tt .hs{display:block;margin-top:6px;font-size:13px;color:var(--mute)}
+.tt small em{font-style:italic}
 .tt small{display:block;font-size:12px;letter-spacing:.1em;color:var(--mute);text-transform:uppercase}
 .sw{display:flex;gap:0;border:1px solid var(--line);border-radius:3px;overflow:hidden}
 .sw button{font-family:var(--mono);font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);background:rgba(255,255,255,.02);border:0;border-right:1px solid var(--line);padding:9px 16px;cursor:pointer;transition:background .2s,color .2s}
@@ -201,9 +203,9 @@ svg.go .bar{transform:scaleY(1)}
     <div class="blk" id="b1"><span class="lbl">01 · Struktur Dataset</span>
       <p>Dataset mencakup <b>12 stasiun</b> pemantau dengan rekaman 35.064 jam per stasiun (Maret 2013 sampai Februari 2017), menghasilkan total <b>420.768 baris</b> dan 18 variabel waktu, polutan, serta cuaca.</p></div>
     <div class="blk" id="b2"><span class="lbl">02 · Konstruksi Sampel Latih</span>
-      <p>Setiap sampel latih memetakan <b>29 fitur</b> historis yang tercatat hingga jam t untuk memprediksi <b>target</b> konsentrasi PM2.5 pada jam t+24.</p></div>
+      <p>Model regresi membaca data per baris. Karena itu, riwayat hingga jam t diringkas menjadi <b>29 fitur</b>: polutan dan cuaca saat ini, <em>lag</em> PM2.5, rata-rata bergulir, serta siklus waktu (sinus dan kosinus), untuk memprediksi <b>target</b> PM2.5 pada jam t+24.</p></div>
     <div class="blk" id="b3"><span class="lbl">03 · Pencegahan Kebocoran Data</span>
-      <p>Seluruh fitur wajib berasal dari waktu ≤ jam t. Menggunakan informasi setelah jam t memicu <em>data leakage</em>, sehingga skor validasi tampak tinggi secara semu, namun model gagal saat diterapkan.</p></div>
+      <p>Seluruh fitur wajib berasal dari waktu ≤ jam t, termasuk rata-rata bergulir yang jendelanya berhenti di jam t. Median untuk imputasi dihitung dari data latih saja. Menggunakan informasi setelah jam t memicu <em>data leakage</em>, sehingga skor validasi tampak tinggi secara semu, namun model gagal saat diterapkan.</p></div>
     <div class="blk" id="b4"><span class="lbl">04 · Pola &amp; Distribusi Data</span>
       <p>Distribusi PM2.5 condong ke kanan (<em>right-skewed</em>) dengan <b>median 57</b> dan rata-rata 81,1 µg/m³. Lonjakan polusi ekstrem inilah yang menarik rata-rata dan mendominasi galat RMSE.</p></div>
     <div class="blk" id="b5"><span class="lbl">05 · Penanganan Data Hilang</span>
@@ -329,6 +331,16 @@ mk('path',{d:areaPath(0,EX.length-1),fill:'url(#gA)'},sv);
 mk('path',{d:linePath(0,EX.length-1),fill:'none',stroke:'#c4dcff','stroke-width':2,'stroke-linejoin':'round'},sv);
 const labPast=tx(sv,'FITUR: SUDAH TERUKUR',[CX0+10,CY0+8],13,'#7db4ff',{'letter-spacing':'.12em'});
 const labFut=tx(sv,'',[0,CY0+8],13,'#ffc266',{'letter-spacing':'.12em','text-anchor':'end'});
+const gHi=mk('g',{},sv); gHi.style.pointerEvents='none';
+const hiCyc=mk('rect',{y:CY0-6,height:CY1-CY0+6,fill:'#c4dcff','fill-opacity':.13},gHi);
+const hiDays=mk('g',{},gHi);
+const hiCycLab=tx(gHi,'POLA BERULANG: TIAP 24 JAM',[CX0+10,CY0+30],12,'#c4dcff',{'letter-spacing':'.1em','stroke':'#0a0b0f','stroke-width':4,'paint-order':'stroke'});
+const ROLLS=[72,24,6];
+const hiRoll=ROLLS.map(()=>mk('rect',{y:CY0-6,height:CY1-CY0+6,fill:'#7db4ff','fill-opacity':.12,stroke:'#7db4ff','stroke-width':1,'stroke-dasharray':'4 4'},gHi));
+const hiRollLab=ROLLS.map(w=>tx(gHi,w+' JAM',[0,0],12,'#7db4ff',{'letter-spacing':'.08em','text-anchor':'end','stroke':'#0a0b0f','stroke-width':4,'paint-order':'stroke'}));
+const hiLagLn=[1,2,3,6,12,24,48].map(()=>mk('line',{stroke:'#7db4ff','stroke-width':1.5,'stroke-dasharray':'3 4'},gHi));
+const hiHalo=mk('circle',{r:17,fill:'rgba(241,242,246,.22)'},gHi);
+gHi.style.transition='opacity .25s ease';
 const gLag=mk('g',{},sv); const LAGS=[1,2,3,6,12,24,48]; const lagDots=LAGS.map(()=>mk('circle',{r:5,fill:'#0f1c31',stroke:'#7db4ff','stroke-width':2.2},gLag));
 const tLine=mk('line',{y1:CY0-6,y2:CY1,stroke:'#f1f2f6','stroke-width':1.5,'stroke-dasharray':'5 6'},sv);
 const tDot=mk('circle',{r:7.5,fill:'#0a0b10',stroke:'#f1f2f6','stroke-width':2.5},sv);
@@ -344,20 +356,56 @@ const COMP=[[11,['kondisi jam t']],[7,['lag PM2.5']],[3,['rata-rata','bergulir']
 const gC=mk('g',{},sv); const BX=CX0, BW=CX1-CX0, BY=428; let acc=0; const compEls=[];
 const OP=[.85,.68,.52,.4,.3];
 COMP.forEach(([n,name],i)=>{ const w=BW*n/29, x=BX+BW*acc/29; acc+=n;
-  const r=mk('rect',{x:x+1,y:BY,width:Math.max(0,w-2),height:34,fill:'#7db4ff','fill-opacity':OP[i]},gC);
+  const r=mk('rect',{x:x+1,y:BY,width:Math.max(0,w-2),height:34,fill:'#7db4ff','fill-opacity':OP[i]},gC); compEls.push(r);
   tx(gC,n,[x+w/2,BY+23],19,'#06121f',{'text-anchor':'middle','font-weight':500});
   name.forEach((ln,j)=>tx(gC,ln,[x+w/2,BY+56+j*15],12,'#c4c7d4',{'text-anchor':'middle'})); });
 tx(gC,'29 FITUR',[BX,BY-12],13,'#80849a',{'letter-spacing':'.14em'});
+tx(gC,'ARAHKAN KURSOR KE TIAP KELOMPOK',[CX1,BY-12],13,'#7db4ff',{'letter-spacing':'.1em','text-anchor':'end'});
+const KEYS=['now','lag','roll','wind','cal'];
+const HTIP={
+  now:'<small>11 fitur · kondisi jam t</small>PM2.5, PM10, SO2, NO2, CO, O3,<br>suhu, tekanan, titik embun,<br>hujan, kecepatan angin<br><span class="hs">Indikator langsung keadaan atmosfer<br>saat prediksi dibuat</span>',
+  lag:'<small>7 fitur · <em>lag</em> PM2.5</small>t-1, t-2, t-3, t-6, t-12, t-24, t-48 jam<br><span class="hs">Menangkap momentum: polusi sedang<br>naik atau turun</span>',
+  roll:'<small>3 fitur · rata-rata bergulir</small>Rata-rata PM2.5 selama 6, 24, dan<br>72 jam terakhir (jam t ikut dihitung)<br><span class="hs">Meredam fluktuasi sesaat dan<br>menangkap tren beberapa hari</span>',
+  wind:'<small>2 fitur · arah angin</small>Sinus dan kosinus dari arah 0° sampai 360°<br><span class="hs">Agar 359° dekat dengan 1°,<br>bukan berjauhan seperti angka 359 dan 1</span>',
+  cal:'<small>6 fitur · kalender</small>Jam, hari dalam pekan, dan bulan,<br>masing-masing sinus dan kosinus<br><span class="hs">Agar pukul 23.00 bersebelahan dengan 00.00,<br>bukan berjauhan seperti angka 23 dan 0</span>'
+};
+let hov=null;
+const compHit=[];
+COMP.forEach(([n,name],i)=>{ const w=BW*COMP.slice(0,i+1).reduce((a,b)=>a+b[0],0)/29-BW*COMP.slice(0,i).reduce((a,b)=>a+b[0],0)/29;
+  const x=BX+BW*COMP.slice(0,i).reduce((a,b)=>a+b[0],0)/29;
+  const h=mk('rect',{x:x,y:BY-4,width:w,height:80,fill:'transparent',style:'cursor:pointer'},gC);
+  h.addEventListener('mousemove',ev=>{ hov=KEYS[i]; applyHi(); tipRow(HTIP[hov],ev); });
+  h.addEventListener('mouseleave',()=>{ hov=null; applyHi(); tipOff(); }); });
 gC.style.transition='opacity .5s ease';
 const hit=mk('rect',{x:CX0,y:CY0-30,width:CX1-CX0,height:CY1-CY0+60,fill:'transparent',style:'cursor:ew-resize'},sv);
 let mode=1;   // 1 = baris latihan, 2 = aturan
+function tipRow(html,ev){ const r=$('.panel').getBoundingClientRect(); const sc=r.width/944; tt.innerHTML=html; tt.classList.add('on');
+  const w=tt.offsetWidth, h=tt.offsetHeight; let l=(ev.clientX-r.left)/sc+14; l=Math.min(l,944-w-8);
+  tt.style.left=l+'px'; tt.style.top=((ev.clientY-r.top)/sc-h-16)+'px'; }
+function applyHi(){
+  const t=tIdx, x=xs(t), y=ys(EX[t]); const on=k=>mode===1&&hov===k;
+  // 11 kondisi jam t
+  tDot.setAttribute('r',on('now')?11:7.5); tDot.setAttribute('fill',on('now')?'#f1f2f6':'#0a0b10');
+  hiHalo.setAttribute('cx',x); hiHalo.setAttribute('cy',y); hiHalo.style.opacity=on('now')?1:0;
+  // 7 lag
+  LAGS.forEach((k,i)=>{ const L=hiLagLn[i]; L.setAttribute('x1',xs(t-k)); L.setAttribute('y1',ys(EX[t-k])); L.setAttribute('x2',x); L.setAttribute('y2',y); L.style.opacity=on('lag')?.9:0;
+    lagDots[i].setAttribute('r',on('lag')?7.5:5); lagDots[i].setAttribute('fill',on('lag')?'#7db4ff':'#0f1c31'); });
+  // 3 rata-rata bergulir
+  ROLLS.forEach((w,i)=>{ const x0=Math.max(CX0,xs(t-w)); hiRoll[i].setAttribute('x',x0); hiRoll[i].setAttribute('width',Math.max(0,x-x0)); hiRoll[i].style.opacity=on('roll')?1:0;
+    const lab=hiRollLab[i], edge=xs(t-w)<CX0+56; lab.setAttribute('x',edge?x0+6:x0-5); lab.setAttribute('text-anchor',edge?'start':'end'); lab.setAttribute('y',CY1-12-i*18); lab.style.opacity=on('roll')?1:0; });
+  // 2 arah angin atau 6 kalender: sorotan siklik
+  const cyc=on('wind')||on('cal');
+  hiCyc.setAttribute('x',CX0); hiCyc.setAttribute('width',Math.max(0,x-CX0)); hiCyc.style.opacity=cyc?1:0; hiCycLab.style.opacity=cyc?1:0;
+  hiDays.innerHTML=''; if(cyc){ for(let k=1;t-24*k>=0;k++){ mk('line',{x1:xs(t-24*k),x2:xs(t-24*k),y1:CY0-6,y2:CY1,stroke:'#c4dcff','stroke-width':1.2,'stroke-dasharray':'2 5',opacity:.7},hiDays); } }
+  compEls.forEach((r,i)=>r.setAttribute('fill-opacity',hov===KEYS[i]&&mode===1?1:OP[i]));
+}
 function placeT(){
   const x=xs(tIdx), y=ys(EX[tIdx]), x2=xs(tIdx+24), y2=ys(EX[tIdx+24]);
   tLine.setAttribute('x1',x); tLine.setAttribute('x2',x); tDot.setAttribute('cx',x); tDot.setAttribute('cy',y);
   tLab.setAttribute('x',x); tLab.textContent='JAM T · '+jamStr(tIdx).toUpperCase();
   past.setAttribute('x',CX0); past.setAttribute('width',x-CX0);
   fz.setAttribute('x',x); fz.setAttribute('width',CX1-x); fz.style.opacity=mode===2?1:0;
-  labFut.setAttribute('x',CX1-10); labFut.textContent=mode===2?'BELUM ADA SAAT RAMALAN DIBUAT':'';
+  labFut.setAttribute('x',CX1-10); labFut.textContent=mode===2?'MASA DEPAN (TERLARANG UNTUK FITUR)':'';
   LAGS.forEach((k,i)=>{lagDots[i].setAttribute('cx',xs(tIdx-k)); lagDots[i].setAttribute('cy',ys(EX[tIdx-k]));});
   fRing.setAttribute('cx',x2); fRing.setAttribute('cy',y2); fLab.setAttribute('x',x2); fLab.setAttribute('y',y2-22);
   const lk=mode===2&&leak;
@@ -366,6 +414,7 @@ function placeT(){
   if(mode===2){ leakMsg.textContent=lk?'BOCOR: jam t+1 belum ada saat ramalan dibuat. Skor semu.':'AMAN: semua fitur berasal dari jam t ke kiri.'; leakMsg.setAttribute('fill',lk?'#ffc266':'#7db4ff'); }
   else leakMsg.textContent='';
   [leakDot,leakLab].forEach(e=>e.style.transition='opacity .3s ease');
+  applyHi();
 }
 let drag=false;
 const setFromEv=ev=>{const p=svgPt(sv,ev);tIdx=Math.max(T_MIN,Math.min(T_MAX,Math.round((p.x-CX0)/DXH)));placeT();};
@@ -469,14 +518,14 @@ function setView(i){
   $('#fig').innerHTML=FIG[i].replace(/^(Fig\. \d+)/,'<b>$1</b>');
   $('#v-data').classList.toggle('on',i===0); $('#dgrid').classList.toggle('on',i===0);
   const lk=$('#lk'); lk.style.opacity=i===2?1:0; lk.style.pointerEvents=i===2?'auto':'none';
-  gC.style.opacity=i===1?1:0;
+  gC.style.opacity=i===1?1:0; gC.style.pointerEvents=i===1?'auto':'none'; hov=null;
   se.classList.toggle('go',i===3); sg.classList.toggle('go',i===4);
   FB.forEach(e=>{ const on=i===5; if(e.tagName==='path'){e.style.opacity=on?1:0;} else {e.style.opacity=on?1:0;e.style.transform=on?'none':'translateY(14px)';} });
   tipOff();
 }
 const STEPS=[
-  ()=>{ blocks(0); setView(0); readoutNow('Baris data','420.768'); caption('Satu baris = satu jam di satu stasiun. Kolom kuning, <b>PM2.5</b>, adalah yang diramal.'); },
-  ()=>{ blocks(1); mode=1; leak=false; setView(1); placeT(); readoutNow('Satu baris latihan','29 fitur <span class="u">→</span> 1 target'); caption('<b>Fitur</b> (biru): yang sudah terukur sampai jam t, termasuk riwayat PM2.5 (titik biru). <b>Target</b> (kuning): PM2.5 24 jam kemudian. Seret garis putih.'); },
+  ()=>{ blocks(0); setView(0); readoutNow('Baris data','420.768'); caption('Satu baris = satu jam di satu stasiun. Kolom kuning, <b>PM2.5</b>, merupakan variabel target yang diprediksi.'); },
+  ()=>{ blocks(1); mode=1; leak=false; setView(1); placeT(); readoutNow('Satu baris latihan','29 fitur <span class="u">→</span> 1 target'); caption('<b>Fitur</b> (biru): yang sudah terukur sampai jam t, termasuk riwayat PM2.5 (titik biru). <b>Target</b> (kuning): PM2.5 24 jam kemudian. Seret garis putih, lalu arahkan kursor ke tiap kelompok fitur di bawah.'); },
   ()=>{ blocks(2); mode=2; setView(2); placeT(); readoutNow('Fitur boleh dari','≤ jam t'); caption('Fitur <b>tidak boleh</b> memakai data sesudah jam t. Seret garis putih, lalu coba tombol <b>Bocor</b> di kiri bawah.'); },
   ()=>{ blocks(3); setView(3); setTab('sebaran'); },
   ()=>{ blocks(4); setView(4); readoutNow('Kejadian celah PM2.5','1.730'); caption('<b>87%</b> celah data hanya berdurasi 1 sampai 3 jam (terpanjang 343 jam). Strategi yang diambil: tanpa <em>forward fill</em>, menghapus baris dengan target kosong, serta mengisi fitur kosong memakai median di dalam <em>pipeline</em>.'); },
