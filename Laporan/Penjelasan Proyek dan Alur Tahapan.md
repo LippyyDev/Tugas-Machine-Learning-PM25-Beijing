@@ -18,75 +18,27 @@ Dari skenario ini kita tahu apa yang harus dibuat: sebuah model yang pada pukul 
 
 Agar model bisa belajar menebak, ia butuh contoh dari masa lalu. Setiap contoh berisi kondisi udara dan cuaca pada satu jam, beserta PM2.5 yang terukur 24 jam sesudahnya. Semakin banyak dan semakin beragam contohnya, semakin baik model belajar pola, misalnya kapan polusi cenderung naik. Contoh seperti itu tersedia di dataset berikut.
 
-## 2. Dataset: kolom-kolomnya
+## 2. Dataset
 
 **Beijing Multi-Site Air Quality** dari UCI (https://archive.ics.uci.edu/dataset/501).
 
-Dataset ini berupa 12 berkas CSV, satu per stasiun pemantau udara di Beijing. Setiap baris adalah satu jam pengukuran. Total 420.768 baris (12 stasiun × 35.064 jam), dari 1 Maret 2013 pukul 00.00 sampai 28 Februari 2017 pukul 23.00. Setiap berkas punya 18 kolom yang sama.
+12 berkas CSV, satu per stasiun pemantau udara di Beijing. Satu baris adalah satu jam pengukuran, dari 1 Maret 2013 sampai 28 Februari 2017. Total 420.768 baris (12 stasiun × 35.064 jam), dengan 18 kolom yang sama di tiap berkas.
 
-### Kolom waktu dan tempat
-
-| Kolom | Arti | Isi |
+| Kelompok | Kolom | Arti |
 |---|---|---|
-| `No` | Nomor urut baris dalam satu stasiun | 1 sampai 35.064 |
-| `year` | Tahun | 2013 sampai 2017 |
-| `month` | Bulan | 1 sampai 12 |
-| `day` | Tanggal | 1 sampai 31 |
-| `hour` | Jam | 0 sampai 23 |
-| `station` | Nama stasiun | 12 nama, misalnya Tiantan dan Dingling |
+| Waktu dan tempat | `No`, `year`, `month`, `day`, `hour`, `station` | Nomor baris, tahun, bulan, tanggal, jam, dan nama stasiun |
+| Polutan | `PM2.5`, `PM10`, `SO2`, `NO2`, `CO`, `O3` | Konsentrasi partikel dan gas di udara. `PM2.5` adalah yang diramal |
+| Cuaca | `TEMP`, `PRES`, `DEWP`, `RAIN`, `WSPM`, `wd` | Suhu, tekanan, titik embun, hujan, kecepatan angin, dan arah angin (16 kategori teks) |
 
-Kolom `year`, `month`, `day`, dan `hour` digabung menjadi satu penanda waktu. Kolom `No` dan `station` tidak dipakai sebagai fitur.
+Nilai kosong ditandai `NA`. `PM2.5` kosong pada 2,08% baris, dan kolom lain 0,08% sampai 4,92%. Satuan mengikuti dokumentasi UCI (belum dicek ulang di halaman UCI).
 
-### Kolom polutan udara
+**Peran kolom di proyek:** target adalah `PM2.5` pada jam t+24 (nilai `PM2.5` yang digeser 24 jam). Fitur berasal dari polutan dan cuaca pada jam t, riwayat `PM2.5`, dan kalender dari bulan, hari, dan jam. Kolom `No` tidak dipakai.
 
-| Kolom | Arti | Rentang nilai | Kosong |
-|---|---|---|---|
-| `PM2.5` | Partikel halus 2,5 mikrometer atau kurang. **Ini yang diramal** | 2 sampai 999 | 2,08% |
-| `PM10` | Partikel 10 mikrometer atau kurang | 2 sampai 999 | 1,53% |
-| `SO2` | Sulfur dioksida | 0,3 sampai 500 | 2,14% |
-| `NO2` | Nitrogen dioksida | 1 sampai 290 | 2,88% |
-| `CO` | Karbon monoksida | 100 sampai 10.000 | 4,92% |
-| `O3` | Ozon | 0,2 sampai 1.071 | 3,16% |
+### Tiantan dan Dingling
 
-### Kolom cuaca
+**Tiantan** adalah stasiun utama. Model dilatih dan dipilih dengan 80% data awalnya, lalu diuji dengan 20% terakhir. Alasan dipilih: datanya lengkap, rata-rata PM2.5-nya (82,2) dekat dengan rata-rata 12 stasiun (80,2), dan punya banyak jam polusi tinggi. Ini keputusan penulis, bukan aturan dosen.
 
-| Kolom | Arti | Rentang nilai | Kosong |
-|---|---|---|---|
-| `TEMP` | Suhu udara | −19,9 sampai 41,6 | 0,09% |
-| `PRES` | Tekanan udara | 982,4 sampai 1.042,8 | 0,09% |
-| `DEWP` | Suhu titik embun | −43,4 sampai 29,1 | 0,10% |
-| `RAIN` | Curah hujan | 0 sampai 72,5 | 0,09% |
-| `wd` | Arah datangnya angin, 16 kategori (N, NNE, NE, ENE, E, dan seterusnya sampai NNW). Satu-satunya kolom berupa teks | 16 kategori | 0,43% |
-| `WSPM` | Kecepatan angin | 0 sampai 13,2 | 0,08% |
-
-Satuan mengikuti dokumentasi UCI: polutan dalam mikrogram per meter kubik, suhu dan titik embun dalam derajat Celsius, tekanan dalam hPa, hujan dalam mm, kecepatan angin dalam meter per detik. Satuan ini belum dicek ulang pada halaman UCI saat berkas ini disusun. Rentang nilai dan persentase kosong dihitung dari seluruh 420.768 baris.
-
-### Contoh satu baris (Tiantan, 1 Maret 2013 pukul 00.00)
-
-`PM2.5` = 6, `PM10` = 6, `SO2` = 4, `NO2` = 8, `CO` = 300, `O3` = 81, `TEMP` = −0,5, `PRES` = 1024,5, `DEWP` = −21,4, `RAIN` = 0, `wd` = NNW, `WSPM` = 5,7.
-
-### Kolom mana yang dipakai di proyek ini
-
-| Peran | Kolom |
-|---|---|
-| **Target** | `PM2.5` pada jam t+24. Ini bukan kolom asli, tetapi nilai `PM2.5` yang digeser 24 jam |
-| Fitur langsung | `PM2.5`, `PM10`, `SO2`, `NO2`, `CO`, `O3`, `TEMP`, `PRES`, `DEWP`, `RAIN`, `WSPM` pada jam t |
-| Fitur turunan | `PM2.5` pada jam-jam sebelumnya, rata-rata bergulir `PM2.5`, `wd` (diubah menjadi angka), dan kalender dari `month`, `day`, `hour` |
-| Pembentuk waktu dan tempat | `year`, `month`, `day`, `hour`, dan `station` |
-| Tidak dipakai | `No` |
-
-Nilai kosong ditandai `NA` di berkas CSV. Dataset ini berisi pengukuran, bukan data pribadi warga.
-
-### Mengapa Tiantan, dan untuk apa stasiun lain
-
-**Tiantan (stasiun utama).** Model dibangun di sini: 80% data awal untuk melatih dan memilih model, 20% terakhir untuk menguji. Tiantan dipilih karena datanya lengkap (PM2.5 kosong 2,1%, hampir sama dengan rata-rata semua stasiun yaitu 2,08%), rata-rata PM2.5-nya 82,2 dekat dengan rata-rata 12 stasiun (80,2), dan punya banyak jam polusi tinggi (594 jam di atas 300). Pilihan ini keputusan penulis, bukan aturan dosen.
-
-**Stasiun lain (Dingling).** Model dari Tiantan tidak dilatih ulang, hanya dicoba di sini pada periode uji yang sama. Tujuannya melihat apakah model masih akurat di tempat lain, karena di dunia nyata model dipakai di lokasi yang polanya berbeda. Ini menjawab tantangan wajib tentang pergeseran distribusi. Dingling dipilih karena distribusi PM2.5-nya paling berbeda dari Tiantan (rata-rata 67,0 dibanding 82,2). Pada data latih, Dingling belum terbukti paling sulit diramal, jadi hasilnya di data uji dilaporkan apa adanya.
-
-| Stasiun | Dipakai untuk | Data uji |
-|---|---|---|
-| Tiantan | Melatih, memilih, dan menguji model | 20% terakhir |
-| Dingling | Menguji model dari Tiantan di tempat lain, tanpa melatih ulang | Periode 20% terakhir yang sama |
+**Dingling** adalah stasiun uji. Model dari Tiantan dicoba di sini tanpa dilatih ulang, untuk melihat apakah model masih akurat di tempat lain. Dingling dipilih karena distribusi PM2.5-nya paling berbeda dari Tiantan (rata-rata 67,0), tetapi belum terbukti paling sulit diramal.
 
 ## 3. Rumusan masalah
 
