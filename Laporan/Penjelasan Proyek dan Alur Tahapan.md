@@ -87,7 +87,7 @@ Tahap 1 dikerjakan sebelum membuka data. Panduan meminta tiga pertanyaan dijawab
 
 | Pertanyaan | Jawaban di proyek ini |
 |---|---|
-| Apa yang diramal? | PM2.5 pada 24 jam ke depan (jam t+24), di stasiun Tiantan |
+| Apa yang diramal? | PM2.5 pada 24 jam ke depan (jam t+24) di stasiun pemantau Beijing. Model dibangun di Tiantan dan dicoba di Dingling untuk melihat apakah berlaku di tempat lain |
 | Untuk siapa? | Warga dan otoritas kesehatan lingkungan |
 | Keputusan apa yang diambil dari ramalan? | Membatasi paparan, misalnya aktivitas di luar ruangan dan pemakaian masker |
 | Kesalahan mana yang paling merugikan? | Galat besar, terutama ramalan yang terlalu rendah saat polusi tinggi |
