@@ -60,6 +60,9 @@ html,body{width:100%;height:100%;background:#050507;overflow:hidden;font-family:
 .blk.active p{color:#e4e6ee}
 .blk.seen{opacity:.5}
 .blk.seen p{font-size:23px}
+.copy{top:262px;height:690px}
+.copy .blk p{font-size:28px;line-height:1.42}
+.copy .blk.seen p{font-size:21px}
 .blk .more{display:inline;opacity:0;transition:opacity .7s ease .15s}
 .blk .more.show{opacity:1}
 
@@ -195,18 +198,18 @@ svg.go .bar{transform:scaleY(1)}
   <div class="src">Dasar: Penjelasan Proyek bagian 2 dan Tahap 2, hasil eksekusi notebook</div>
 
   <div class="copy">
-    <div class="blk" id="b1"><span class="lbl">01 · Datanya</span>
-      <p><b>12 stasiun</b> pemantau, masing-masing 35.064 jam (Maret 2013 sampai Februari 2017). Total <b>420.768 baris</b> dan 18 kolom: waktu, polutan, dan cuaca.</p></div>
-    <div class="blk" id="b2"><span class="lbl">02 · Satu baris latihan</span>
-      <p><b>Fitur</b> adalah semua yang sudah terukur sampai jam t. <b>Target</b> adalah PM2.5 pada jam t+24. Ada <b>29 fitur</b>.</p></div>
-    <div class="blk" id="b3"><span class="lbl">03 · Aturan terpenting</span>
-      <p>Fitur <b>tidak boleh</b> memakai data sesudah jam t. Bila dilanggar, skor tampak bagus tetapi model tidak bisa dipakai sungguhan. Itulah <em>kebocoran data</em>.</p></div>
-    <div class="blk" id="b4"><span class="lbl">04 · Temuan eksplorasi</span>
-      <p>PM2.5 <b>miring ke kanan</b>: median 57, rata-rata 81. Jam yang sangat tinggi menarik rata-rata dan akan mendominasi RMSE.</p></div>
-    <div class="blk" id="b5"><span class="lbl">05 · Nilai hilang</span>
-      <p>PM2.5 kosong pada <b>2,16%</b> jam. Pengisian 0 sampai 24 jam selisihnya setara derau, maka dipilih <b>tanpa <em>forward fill</em></b>.</p></div>
-    <div class="blk" id="b6"><span class="lbl">06 · Hasil</span>
-      <p><b>246.798</b> baris latih dari 9 stasiun dengan 29 fitur. <b>82.151</b> baris uji disimpan dan tidak dibuka.</p></div>
+    <div class="blk" id="b1"><span class="lbl">01 · Struktur Dataset</span>
+      <p>Dataset mencakup <b>12 stasiun</b> pemantau dengan rekaman 35.064 jam per stasiun (Maret 2013 sampai Februari 2017), menghasilkan total <b>420.768 baris</b> dan 18 variabel waktu, polutan, serta cuaca.</p></div>
+    <div class="blk" id="b2"><span class="lbl">02 · Konstruksi Sampel Latih</span>
+      <p>Setiap sampel latih memetakan <b>29 fitur</b> historis yang tercatat hingga jam t untuk memprediksi <b>target</b> konsentrasi PM2.5 pada jam t+24.</p></div>
+    <div class="blk" id="b3"><span class="lbl">03 · Pencegahan Kebocoran Data</span>
+      <p>Seluruh fitur wajib berasal dari waktu ≤ jam t. Menggunakan informasi setelah jam t memicu <em>data leakage</em>, sehingga skor validasi tampak tinggi secara semu, namun model gagal saat diterapkan.</p></div>
+    <div class="blk" id="b4"><span class="lbl">04 · Pola &amp; Distribusi Data</span>
+      <p>Distribusi PM2.5 condong ke kanan (<em>right-skewed</em>) dengan <b>median 57</b> dan rata-rata 81,1 µg/m³. Lonjakan polusi ekstrem inilah yang menarik rata-rata dan mendominasi galat RMSE.</p></div>
+    <div class="blk" id="b5"><span class="lbl">05 · Penanganan Data Hilang</span>
+      <p>Terdapat <b>2,16%</b> jam dengan nilai PM2.5 kosong. Karena uji imputasi <em>forward fill</em> (0 sampai 24 jam) tidak memberi peningkatan yang dapat dibedakan dari <em>noise</em>, data dibiarkan <b>tanpa <em>forward fill</em></b>.</p></div>
+    <div class="blk" id="b6"><span class="lbl">06 · Output Praproses</span>
+      <p>Tahap ini menghasilkan <b>246.798</b> baris data latih (dari 9 stasiun, 29 fitur), sementara <b>82.151</b> baris data uji dikunci dan tetap diisolasi dari proses eksplorasi.</p></div>
   </div>
 
   <div class="panel">
@@ -410,9 +413,9 @@ function axisY(g,max,ticks,fmtv){ ticks.forEach(v=>{ const y=EY1-v/max*(EY1-EY0)
     if((i%3===0&&Math.abs(i-16)>1)||i===hi||i===16) tx(g,String(i).padStart(2,'0')+'.00',[x+bw/2,EY1+24],12,(i===hi||i===16)?col:'#80849a',{'text-anchor':'middle'});
     if(i===hi||i===16) tx(g,v,[x+bw/2,EY1-h-10],16,col,{'text-anchor':'middle','font-weight':500}); }); })();
 const TAB_CAP={
- sebaran:['Median · rata-rata','57 <span class="u">·</span> 81,1<span class="u">µg/m³</span>','PM2.5 miring ke kanan: kebanyakan jam rendah, sedikit jam sangat tinggi. Jam ekstrem inilah yang akan <b>mendominasi RMSE</b>.'],
- bulan:['Tertinggi · terendah','Des 99 <span class="u">·</span> Agu 57<span class="u">µg/m³</span>','Rata-rata bulanan: <b>Desember</b> tertinggi (99), <b>Agustus</b> terendah (57). Ada pola musim.'],
- jam:['Tertinggi · terendah','21.00 <span class="u">·</span> 16.00','Rata-rata per jam: tertinggi pukul <b>21.00</b> (90), terendah pukul <b>16.00</b> (75). Selisihnya jauh lebih kecil daripada selisih antar bulan.']};
+ sebaran:['Median · rata-rata','57 <span class="u">·</span> 81,1<span class="u">µg/m³</span>','Distribusi PM2.5 condong ke kanan: mayoritas jam berada di level rendah, namun segelintir lonjakan ekstrem akan <b>mendominasi RMSE</b>.'],
+ bulan:['Tertinggi · terendah','Des 99 <span class="u">·</span> Agu 57<span class="u">µg/m³</span>','Pola musiman terlihat jelas: rata-rata tertinggi memuncak pada <b>Desember</b> (99 µg/m³) dan terendah pada <b>Agustus</b> (57 µg/m³).'],
+ jam:['Tertinggi · terendah','21.00 <span class="u">·</span> 16.00','Variasi <em>diurnal</em> (per jam) cenderung landai: tertinggi pukul <b>21.00</b> (90) dan terendah pukul <b>16.00</b> (75), jauh lebih kecil dibanding fluktuasi antarmusim.']};
 let tab='sebaran';
 function setTab(t,animate){ tab=t; $$('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
   Object.keys(EG).forEach(k=>{EG[k].style.display=k===t?'':'none';});
@@ -442,7 +445,7 @@ const sg=$('#svg-gap'); const GAPS=[['1 jam',996],['2 sampai 3 jam',505],['4 sam
 
 /* ═════════ View alur praproses ═════════ */
 const sf=$('#svg-flow'); const gf=mk('g',{},sf);
-const BOX=[['01 · DATA MENTAH',['12 stasiun','420.768 baris']],['02 · SISIHKAN UJI',['mulai 12 Mei 2016','pukul 19.00','dikunci sebelum EDA']],['03 · FITUR DAN TARGET',['29 fitur','sampai jam t','target: jam t+24']],['04 · BERSIHKAN',['buang baris','target kosong','24 jam terakhir']]];
+const BOX=[['01 · DATA MENTAH',['12 stasiun','420.768 baris']],['02 · SISIHKAN UJI',['cutoff 12 Mei 2016','pukul 19.00','diisolasi sebelum EDA']],['03 · FITUR DAN TARGET',['29 fitur','sampai jam t','target: jam t+24']],['04 · BERSIHKAN',['buang baris','target kosong','24 jam terakhir']]];
 const FB=[];
 BOX.forEach((b,i)=>{ const x=44+i*214, g=mk('g',{transform:'translate('+x+',34)'},gf), ig=mk('g',{},g); ig.style.opacity=0; ig.style.transform='translateY(14px)'; ig.style.transition='opacity .6s ease '+(i*180)+'ms,transform .6s ease '+(i*180)+'ms'; FB.push(ig);
   mk('rect',{width:180,height:138,fill:'rgba(255,255,255,.025)',stroke:i===1?'rgba(255,255,255,.28)':'rgba(255,255,255,.13)'},ig); mk('rect',{width:180,height:3,fill:i===1?'#80849a':'#7db4ff'},ig);
@@ -451,7 +454,7 @@ BOX.forEach((b,i)=>{ const x=44+i*214, g=mk('g',{transform:'translate('+x+',34)'
   else b[1].forEach((ln,j)=>tx(ig,ln,[14,66+j*27],j===0?16:15,j===0?'#f1f2f6':'#c4c7d4',{'font-family':SANS,'font-weight':j===0?600:400}));
   if(i<3){ const a=mk('path',{d:'M'+(x+184)+' 103h24m-7 -6 7 6 -7 6',fill:'none',stroke:'#80849a','stroke-width':2},gf); a.style.opacity=0; a.style.transition='opacity .5s ease '+(i*180+300)+'ms'; FB.push(a); } });
 tx(gf,'Fitur kosong diisi median dari data latih, di dalam pipeline per lipatan.',[44,218],15,'#80849a');
-const OUT=[['LATIH','246.798','baris, 29 fitur, 9 stasiun','dipakai di Tahap 3 sampai 5',false],['UJI · DIKUNCI','82.151','baris disimpan, tidak dibuka','61.686 stasiun latih + 20.465 stasiun asing',true]];
+const OUT=[['LATIH','246.798','baris, 29 fitur, 9 stasiun','dipakai di Tahap 3 sampai 5',false],['UJI · DIKUNCI','82.151','baris dikunci (tidak disentuh)','61.686 stasiun latih + 20.465 stasiun baru',true]];
 OUT.forEach((o,i)=>{ const x=44+i*434, g=mk('g',{transform:'translate('+x+',260)'},gf), ig=mk('g',{},g); ig.style.opacity=0; ig.style.transform='translateY(14px)'; ig.style.transition='opacity .6s ease '+(900+i*200)+'ms,transform .6s ease '+(900+i*200)+'ms'; FB.push(ig);
   mk('rect',{width:396,height:190,fill:o[4]?'rgba(255,255,255,.02)':'rgba(125,180,255,.07)',stroke:o[4]?'rgba(255,255,255,.28)':'rgba(125,180,255,.55)','stroke-dasharray':o[4]?'6 5':'0'},ig); mk('rect',{width:396,height:4,fill:o[4]?'#80849a':'#7db4ff'},ig);
   tx(ig,o[0],[22,40],14,o[4]?'#80849a':'#7db4ff',{'letter-spacing':'.14em'}); tx(ig,o[1],[22,102],58,o[4]?'#c4c7d4':'#c4dcff',{'font-weight':500}); tx(ig,o[2],[22,134],18,'#c4c7d4',{'font-family':SANS}); tx(ig,o[3],[22,164],15,'#80849a',{'font-family':SANS}); });
@@ -476,8 +479,8 @@ const STEPS=[
   ()=>{ blocks(1); mode=1; leak=false; setView(1); placeT(); readoutNow('Satu baris latihan','29 fitur <span class="u">→</span> 1 target'); caption('<b>Fitur</b> (biru): yang sudah terukur sampai jam t, termasuk riwayat PM2.5 (titik biru). <b>Target</b> (kuning): PM2.5 24 jam kemudian. Seret garis putih.'); },
   ()=>{ blocks(2); mode=2; setView(2); placeT(); readoutNow('Fitur boleh dari','≤ jam t'); caption('Fitur <b>tidak boleh</b> memakai data sesudah jam t. Seret garis putih, lalu coba tombol <b>Bocor</b> di kiri bawah.'); },
   ()=>{ blocks(3); setView(3); setTab('sebaran'); },
-  ()=>{ blocks(4); setView(4); readoutNow('Kejadian celah PM2.5','1.730'); caption('<b>87%</b> celah hanya 1 sampai 3 jam, terpanjang 343 jam. Keputusan: tanpa <em>forward fill</em>, target kosong dibuang, fitur kosong diisi median di dalam <em>pipeline</em>.'); },
-  ()=>{ blocks(5); setView(5); readoutNow('Baris latih','246.798'); caption('Hasil Tahap 2: <b>246.798</b> baris latih dengan 29 fitur. <b>82.151</b> baris uji hanya disimpan, belum pernah dibuka.'); }
+  ()=>{ blocks(4); setView(4); readoutNow('Kejadian celah PM2.5','1.730'); caption('<b>87%</b> celah data hanya berdurasi 1 sampai 3 jam (terpanjang 343 jam). Strategi yang diambil: tanpa <em>forward fill</em>, menghapus baris dengan target kosong, serta mengisi fitur kosong memakai median di dalam <em>pipeline</em>.'); },
+  ()=>{ blocks(5); setView(5); readoutNow('Baris latih','246.798'); caption('Hasil Tahap 2: <b>246.798</b> baris latih dengan 29 fitur. <b>82.151</b> baris uji dikunci, belum pernah disentuh.'); }
 ];
 function RESET_HOOK(){ tIdx=106; leak=false; mode=1; $$('#lk button').forEach((b,i)=>b.classList.toggle('on',i===0)); $$('.copy .blk').forEach(b=>b.classList.remove('show','active','seen','old')); $$('.view').forEach(v=>v.classList.remove('on')); $('#dgrid').classList.remove('on'); FB.forEach(e=>{e.style.opacity=0;}); se.classList.remove('go'); sg.classList.remove('go'); }
 
