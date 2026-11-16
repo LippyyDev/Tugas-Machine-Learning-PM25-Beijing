@@ -38,14 +38,14 @@ Nilai kosong ditandai `NA`. `PM2.5` kosong pada 2,08% baris, dan kolom lain 0,08
 
 ![Pembagian data: 9 stasiun latih, 3 stasiun ditahan, uji 20% periode terakhir](../Hasil/Gambar/t3_pembagian_data.png)
 
-Cara membaca gambar: luas kotak sebanding dengan jumlah baris. Baris atas adalah 9 stasiun latih, baris bawah adalah 3 stasiun ditahan. Kolom kiri adalah 80% waktu awal, kolom kanan adalah 20% waktu akhir.
+Cara membaca gambar: luas kotak sebanding dengan jumlah baris. Panah di atas menunjukkan arah waktu, dari 2013-03-01 (data paling lama) ke 2017-02-28 (data paling baru). Baris atas adalah 9 stasiun yang dilatih, baris bawah adalah 3 stasiun yang ditahan. Kolom kiri adalah 80% waktu awal (sebelum 2016-05-12 19:00), kolom kanan adalah 20% waktu akhir (mulai 2016-05-12 19:00). Garis merah adalah batas waktu yang sama untuk semua stasiun.
 
 | Kotak | Isi | Porsi baris | Peran |
 |---|---|---|---|
-| 9 stasiun, 80% awal | Latih | 60% | Melatih model, memilih model, dan *tuning* dengan `TimeSeriesSplit` |
-| 9 stasiun, 20% akhir | Uji | 15% | Menguji peramalan masa depan di stasiun yang sudah dikenal |
-| 3 stasiun, 80% awal | Tidak dipakai | 20% | Sengaja dibuang agar 3 stasiun tetap asing bagi model |
-| 3 stasiun, 20% akhir | Uji | 5% | Menguji stasiun baru sekaligus masa depan |
+| 9 stasiun yang dilatih, 80% awal | LATIH | 60% | Melatih model, memilih model, dan *tuning* (`TimeSeriesSplit`, 5 *fold*, jarak aman 24 jam) |
+| 9 stasiun yang dilatih, 20% akhir | UJI | 15% | Menguji masa depan di stasiun yang ikut dilatih |
+| 3 stasiun yang ditahan, 80% awal | TIDAK DIPAKAI | 20% | Sengaja dibuang supaya model belum pernah melihat 3 stasiun ini sebelum diuji |
+| 3 stasiun yang ditahan, 20% akhir | UJI | 5% | Menguji stasiun yang tidak ikut dilatih, sekaligus masa depan |
 
 Dari 12 stasiun, **9 dipakai untuk melatih model** dan **3 ditahan**: model tidak pernah melihat data 3 stasiun itu. Data waktu dibagi sama untuk semua stasiun: 80% awal untuk latih dan 20% akhir untuk uji. Ini keputusan penulis (16 Nov 2026), belum dikonfirmasi dosen. Aturan dosen hanya menetapkan uji = 20% periode terakhir dan adanya uji di stasiun lain.
 
