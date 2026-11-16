@@ -108,31 +108,48 @@ Tahap 1 dikerjakan sebelum membuka data. Panduan meminta tiga pertanyaan dijawab
 
 ### Tahap 2. Eksplorasi dan praproses
 
-Mengenali data, lalu mengubahnya menjadi tabel masukan (fitur) dan target untuk model.
+**Tujuan:** mengubah data mentah menjadi tabel latihan yang siap dibaca model. Setiap baris tabel berisi dua hal: **fitur** (yang sudah diketahui) dan **target** (yang harus ditebak).
 
-**Fitur dan target.** Fitur adalah kolom masukan yang dibaca model. Target adalah angka yang harus ditebak model. Satu baris tabel berisi fitur yang diukur pada jam t (misalnya pukul 10.00 hari ini) dan target berupa PM2.5 pada jam t+24 (pukul 10.00 besok).
+**Contoh satu baris.** Anggap sekarang Senin pukul 10.00 (disebut jam t).
 
-**Aturan fitur.** Setiap fitur dihitung hanya dari data pada jam t atau sebelum jam t. Tidak ada fitur yang berasal dari jam sesudah t. Alasannya, saat ramalan dibuat di dunia nyata, data sesudah jam t belum ada. Jika sebuah fitur memakai data sesudah jam t, skor model terlihat bagus tetapi model itu tidak bisa dipakai di dunia nyata. Itu disebut kebocoran data.
+- Fitur: semua yang sudah terukur sampai saat ini, misalnya PM2.5 pagi ini, PM10, suhu, angin, dan PM2.5 kemarin.
+- Target: PM2.5 pada Selasa pukul 10.00 (jam t+24), yang belum terjadi.
 
-Ada 29 fitur (pada tahap pilot untuk stasiun Tiantan, dibuat ulang untuk stasiun lain di desain 9/3):
+Model belajar dari banyak baris seperti ini: dari fitur pada jam t, tebak target 24 jam kemudian.
 
-| Kelompok | Isi | Jumlah |
-|---|---|---|
-| Kondisi pada jam t | PM2.5, PM10, SO2, NO2, CO, O3, suhu, tekanan, titik embun, hujan, kecepatan angin | 11 |
-| Riwayat PM2.5 (*lag*) | nilai PM2.5 pada 1, 2, 3, 6, 12, 24, dan 48 jam sebelum jam t | 7 |
-| Rata-rata bergulir | rata-rata PM2.5 selama 6, 24, dan 72 jam sebelum dan termasuk jam t | 3 |
-| Arah angin | diubah menjadi sinus dan kosinus | 2 |
-| Kalender | jam, hari, dan bulan, masing-masing sebagai sinus dan kosinus, agar pukul 23.00 tercatat dekat dengan pukul 00.00 | 6 |
+**Aturan terpenting: fitur tidak boleh memakai data sesudah jam t.** Saat ramalan dibuat di dunia nyata, data sesudah jam t memang belum ada. Jika sebuah fitur memakainya, skor model terlihat bagus tetapi model itu tidak bisa dipakai sungguhan. Inilah yang disebut *kebocoran data*.
 
-Yang dilakukan di tahap ini:
+#### Isi tabel: 29 fitur
 
-1. **Mengenali data (EDA).** PM2.5 miring ke kanan, jadi episode polusi tinggi akan mendominasi RMSE. Rata-rata tertinggi terjadi di bulan Desember dan pada pukul 23.00. Nilai PM2.5 yang kosong pada data latih Tiantan 2,08%, dengan celah terpanjang 24 jam. Nilai ekstrem 999 dipertahankan.
-2. **Menyimpan data uji sejak awal.** Data mulai 12 Mei 2016 disisihkan sebelum eksplorasi dan tidak dibuka.
-3. **Membuat fitur dan target** seperti tabel di atas. Baris latih yang targetnya jatuh di periode uji (24 jam terakhir sebelum batas) dibuang.
-4. **Menangani nilai hilang.** Baris yang targetnya kosong dibuang. Fitur yang kosong diisi median, dan median itu dihitung dari data latih saja. Nilai dari jam sesudah celah tidak dipakai untuk mengisi.
-5. **Menjustifikasi dua pilihan.** Pengisian nilai hilang dengan beberapa batas jam dibandingkan, dan hasilnya tidak berbeda nyata, sehingga dipilih cara paling sederhana (tanpa *forward fill*). Pada tahap pilot, Dingling dipilih sebagai stasiun uji karena distribusi PM2.5-nya paling berbeda dari Tiantan, tetapi hasil uji pada data latih tidak membuktikan Dingling paling sulit diramal. Pada desain 9/3 (16 Nov 2026), peran ini digantikan 3 stasiun asing, yaitu Dingling, Wanliu, dan Shunyi (ditetapkan LIP 16 Nov 2026, dasarnya aturan di *notebook* 02.2).
+| Kelompok | Isi | Jumlah | Mengapa dipakai |
+|---|---|---|---|
+| Kondisi pada jam t | PM2.5, PM10, SO2, NO2, CO, O3, suhu, tekanan, titik embun, hujan, kecepatan angin | 11 | Keadaan udara dan cuaca saat ini |
+| Riwayat PM2.5 (*lag*) | PM2.5 pada 1, 2, 3, 6, 12, 24, dan 48 jam sebelum jam t | 7 | PM2.5 cenderung mirip dengan beberapa jam atau hari sebelumnya |
+| Rata-rata bergulir | rata-rata PM2.5 selama 6, 24, dan 72 jam terakhir (jam t ikut dihitung, jam sesudahnya tidak) | 3 | Gambaran tren jangka pendek sampai menengah |
+| Arah angin | diubah menjadi sinus dan kosinus | 2 | Arah berbentuk lingkaran (0 derajat sama dengan 360 derajat), jadi dipecah menjadi dua angka agar nilai yang berdekatan tetap tampak dekat |
+| Kalender | jam, hari, dan bulan, masing-masing sebagai sinus dan kosinus | 6 | Pola yang berulang. Dengan sinus dan kosinus, pukul 23.00 tercatat dekat dengan pukul 00.00 |
 
-Hasilnya: 27.443 baris latih dengan 29 fitur, dan 6.896 baris uji yang disimpan tanpa dibuka.
+Tabel ini dibuat dari stasiun Tiantan pada tahap pilot. Pada desain 9 stasiun latih dan 3 stasiun asing (bagian 2), fitur yang sama dibuat untuk setiap stasiun.
+
+#### Langkah yang dikerjakan
+
+1. **Mengenali data (EDA).** Temuan pada data latih Tiantan:
+   - PM2.5 miring ke kanan: kebanyakan jam bernilai rendah, tetapi ada episode polusi sangat tinggi. Episode ini menghasilkan galat besar sehingga akan mendominasi RMSE.
+   - Rata-rata tertinggi terjadi di bulan Desember dan pada pukul 23.00.
+   - PM2.5 kosong pada 2,08% jam, dalam 313 celah. Celah terpanjang 24 jam.
+   - Nilai ekstrem 999 dipertahankan.
+2. **Menyisihkan data uji sejak awal.** Data mulai 12 Mei 2016 dipisahkan sebelum eksplorasi dan tidak dibuka.
+3. **Membuat fitur dan target** seperti tabel di atas.
+4. **Membuang baris latih yang targetnya masuk periode uji.** Contoh: baris pukul 20.00 tanggal 11 Mei 2016 punya target pukul 20.00 tanggal 12 Mei, padahal batas uji adalah 12 Mei pukul 19.00. Baris seperti ini (24 jam terakhir sebelum batas) dibuang supaya data latih tidak mengintip periode uji.
+5. **Menangani nilai hilang.**
+   - Baris yang targetnya kosong dibuang, karena tidak ada jawaban untuk dipelajari.
+   - Fitur yang kosong diisi median, dan median itu dihitung dari data latih saja.
+   - Nilai dari jam sesudah celah tidak dipakai untuk mengisi, karena itu sama dengan mengintip masa depan.
+6. **Menjustifikasi dua pilihan.**
+   - *Forward fill*: pengisian celah sampai beberapa batas jam dibandingkan, dan hasilnya tidak berbeda nyata (selisihnya sebanding dengan derau antar pengulangan). Maka dipilih cara paling sederhana, yaitu tanpa *forward fill*.
+   - Stasiun uji: pada pilot, Dingling dipilih karena distribusi PM2.5-nya paling berbeda dari Tiantan. Namun uji pada data latih tidak membuktikan Dingling paling sulit diramal. Pada desain 9 stasiun latih dan 3 stasiun asing (16 Nov 2026), peran ini diganti tiga stasiun asing, yaitu Dingling, Wanliu, dan Shunyi (ditetapkan LIP, dasarnya aturan di *notebook* 02.2).
+
+**Hasil (pilot Tiantan):** 27.443 baris latih dengan 29 fitur, dan 6.896 baris uji yang disimpan tanpa dibuka. Angka untuk desain 9/3 baru ada setelah *notebook* dijalankan ulang.
 
 ### Tahap 3. Skema validasi
 
