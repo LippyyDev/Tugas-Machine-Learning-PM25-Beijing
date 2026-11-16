@@ -21,7 +21,7 @@ Jenis tugasnya adalah **regresi deret waktu**: model menebak sebuah angka (PM2.5
 | Periode | 1 Maret 2013 sampai 28 Februari 2017 |
 | Ukuran | 420.768 baris (12 stasiun × 35.064 jam) |
 | Isi | PM2.5, polutan lain (PM10, SO2, NO2, CO, O3), dan cuaca (suhu, tekanan, titik embun, hujan, angin) |
-| Nilai hilang | PM2.5 hilang sekitar 2,08%, karena sensor kadang tidak mencatat |
+| Nilai hilang | PM2.5 kosong pada 2,08% baris, karena sensor kadang tidak mencatat |
 | Stasiun utama | **Tiantan** (untuk membangun dan memilih model) |
 | Stasiun uji | **Dingling** (untuk menguji apakah model masih bagus di tempat lain) |
 
@@ -33,14 +33,14 @@ Jenis tugasnya adalah **regresi deret waktu**: model menebak sebuah angka (PM2.5
 
 Tiga tantangan wajib dari dosen:
 
-1. **Nilai hilang pada sensor.** Data yang kosong harus ditangani tanpa "mengintip" masa depan.
+1. **Nilai hilang pada sensor.** Data yang kosong tidak boleh diisi dengan nilai dari jam sesudahnya.
 2. **Validasi berurutan waktu.** Data tidak boleh diacak, karena model hanya boleh belajar dari masa lalu untuk menebak masa depan.
 3. **Uji di stasiun lain.** Model dari satu stasiun dicoba di stasiun berbeda untuk melihat apakah kinerjanya turun (pergeseran distribusi).
 
 ## 4. Tujuan
 
 1. Membangun model peramalan PM2.5 24 jam ke depan yang dievaluasi dengan **jujur dan bebas kebocoran data**.
-2. Menunjukkan seberapa jauh model lebih baik dari tebakan paling sederhana (*baseline*).
+2. Mengukur seberapa jauh model lebih baik dari tebakan paling sederhana, yaitu menganggap PM2.5 besok sama dengan PM2.5 sekarang (*baseline*).
 3. Menguji apakah model tetap andal di stasiun lain.
 4. Menganalisis kapan dan mengapa model salah, termasuk siapa yang dirugikan.
 
@@ -52,9 +52,9 @@ Yang dinilai dosen bukan skor tertinggi. Model sederhana yang dievaluasi dengan 
 
 ```
 Tahap 1          Tahap 2           Tahap 3            Tahap 4
-Rumusan    →    Eksplorasi   →    Aturan ujian  →    Tebakan
-masalah         dan rapikan       (validasi)         pembanding
-                data                                 (baseline)
+Rumusan    →    Eksplorasi   →    Cara menguji  →    Model acuan
+masalah         dan rapikan       model              (baseline)
+                data              (validasi)
                                                          │
                                           Pertemuan 13 (cek bersama dosen)
                                                          │
@@ -64,7 +64,7 @@ lanjutan         akhir pada        dan etika
 dan tuning       data uji
 ```
 
-Urutannya penting. Aturan ujian (tahap 3) dibuat **sebelum** model dibangun, supaya hasil model tidak bisa memengaruhi aturannya.
+Urutannya penting. Cara menguji model (tahap 3) ditetapkan **sebelum** model dibangun, supaya hasil model tidak bisa mengubah cara pengujiannya.
 
 ### Tahap 1. Rumusan masalah dan metrik (selesai sebagian)
 
@@ -75,22 +75,43 @@ Menentukan apa yang diramal, untuk siapa, dan bagaimana mengukurnya.
 
 ### Tahap 2. Eksplorasi dan praproses (selesai)
 
-Mengenali data, lalu menyiapkannya menjadi fitur untuk model.
-- Fitur hanya memakai informasi sampai jam sekarang: nilai PM2.5 lampau (*lag*), rata-rata bergulir, kalender, cuaca, arah angin. Ada 29 fitur.
-- Data hilang tidak diisi dengan nilai dari masa depan. Hasil perbandingan menunjukkan pilihan pengisian tidak berbeda nyata, jadi dipilih yang paling sederhana: tanpa *forward fill*.
-- Stasiun uji dipilih Dingling karena pola PM2.5-nya paling berbeda dari Tiantan.
+Mengenali data, lalu mengubahnya menjadi tabel masukan (fitur) dan target untuk model.
+
+**Fitur dan target.** Fitur adalah kolom masukan yang dibaca model. Target adalah angka yang harus ditebak model. Satu baris tabel berisi fitur yang diukur pada jam t (misalnya pukul 10.00 hari ini) dan target berupa PM2.5 pada jam t+24 (pukul 10.00 besok).
+
+**Aturan fitur.** Setiap fitur dihitung hanya dari data pada jam t atau sebelum jam t. Tidak ada fitur yang berasal dari jam sesudah t. Alasannya, saat ramalan dibuat di dunia nyata, data sesudah jam t belum ada. Jika sebuah fitur memakai data sesudah jam t, skor model terlihat bagus tetapi model itu tidak bisa dipakai di dunia nyata. Itu disebut kebocoran data.
+
+Ada 29 fitur untuk stasiun Tiantan:
+
+| Kelompok | Isi | Jumlah |
+|---|---|---|
+| Kondisi pada jam t | PM2.5, PM10, SO2, NO2, CO, O3, suhu, tekanan, titik embun, hujan, kecepatan angin | 11 |
+| Riwayat PM2.5 (*lag*) | nilai PM2.5 pada 1, 2, 3, 6, 12, 24, dan 48 jam sebelum jam t | 7 |
+| Rata-rata bergulir | rata-rata PM2.5 selama 6, 24, dan 72 jam sebelum dan termasuk jam t | 3 |
+| Arah angin | diubah menjadi sinus dan kosinus | 2 |
+| Kalender | jam, hari, dan bulan, masing-masing sebagai sinus dan kosinus, agar pukul 23.00 tercatat dekat dengan pukul 00.00 | 6 |
+
+Yang dilakukan di tahap ini:
+
+1. **Mengenali data (EDA).** PM2.5 miring ke kanan, jadi episode polusi tinggi akan mendominasi RMSE. Rata-rata tertinggi terjadi di bulan Desember dan pada pukul 23.00. Nilai PM2.5 yang kosong pada data latih Tiantan 2,08%, dengan celah terpanjang 24 jam. Nilai ekstrem 999 dipertahankan.
+2. **Menyimpan data uji sejak awal.** Data mulai 12 Mei 2016 disisihkan sebelum eksplorasi dan tidak dibuka.
+3. **Membuat fitur dan target** seperti tabel di atas. Baris latih yang targetnya jatuh di periode uji (24 jam terakhir sebelum batas) dibuang.
+4. **Menangani nilai hilang.** Baris yang targetnya kosong dibuang. Fitur yang kosong diisi median, dan median itu dihitung dari data latih saja. Nilai dari jam sesudah celah tidak dipakai untuk mengisi.
+5. **Menjustifikasi dua pilihan.** Pengisian nilai hilang dengan beberapa batas jam dibandingkan, dan hasilnya tidak berbeda nyata, sehingga dipilih cara paling sederhana (tanpa *forward fill*). Dingling dipilih sebagai stasiun uji karena distribusi PM2.5-nya paling berbeda dari Tiantan. Hasil uji pada data latih tidak membuktikan Dingling paling sulit diramal.
+
+Hasilnya: 27.443 baris latih dengan 29 fitur, dan 6.896 baris uji yang disimpan tanpa dibuka.
 
 ### Tahap 3. Skema validasi (selesai)
 
-Membuat "aturan ujian" yang adil.
+Menetapkan cara menguji model supaya skornya jujur.
 - Data diurutkan menurut waktu. **20% terakhir disimpan sebagai data uji** (mulai 12 Mei 2016) dan hanya dibuka satu kali di akhir.
-- Sisanya (80%) dipakai untuk memilih model dengan `TimeSeriesSplit` 5 lipatan, dengan jarak aman 24 jam agar tidak ada tumpang tindih antara data latih dan validasi.
-- Semua praproses dilakukan di dalam *pipeline*, sehingga hanya belajar dari data latih.
-- Kelemahan yang diakui: hanya 5 lipatan, simpangan baku antar lipatan besar, dan ringkasan statistik periode uji pernah terlihat (tidak dipakai untuk keputusan apa pun).
+- Sisanya (80%) dipakai untuk memilih model dengan `TimeSeriesSplit` 5 lipatan, dengan jarak aman 24 jam. Target sebuah baris latih adalah PM2.5 24 jam sesudahnya, jadi tanpa jarak, target baris latih terakhir bisa jatuh di periode validasi. Jarak 24 jam mencegah hal itu.
+- Pengisian nilai hilang dan penskalaan dihitung dari data latih saja pada setiap lipatan, tidak dari data validasi atau data uji. Ini dilakukan dengan menaruhnya di dalam *pipeline*.
+- Kelemahan yang diakui: hanya 5 lipatan, simpangan baku antar lipatan besar, dan statistik ringkas periode uji pernah dilihat (7 dan 15 Nov 2026), tetapi tidak dipakai untuk memilih fitur, model, atau pengaturan.
 
 ### Tahap 4. *Baseline* (selesai sebagian)
 
-Titik acuan: model apa pun harus lebih baik dari sini.
+Hasil acuan. Model lanjutan baru dianggap berguna jika RMSE-nya lebih kecil dari angka ini.
 
 | Model | RMSE (rata-rata ± sd antar lipatan) |
 |---|---|
