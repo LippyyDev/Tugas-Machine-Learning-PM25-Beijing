@@ -2,17 +2,37 @@
 
 Ringkasan versi mudah dibaca. Angka diambil dari hasil eksekusi *notebook* pada data latih. Data uji belum pernah dibuka.
 
-## 1. Topik
+## 1. Topik dan studi kasus
 
 **Meramalkan konsentrasi PM2.5 di Beijing, 24 jam ke depan.**
 
-PM2.5 adalah partikel debu sangat halus (diameter 2,5 mikrometer atau kurang) yang bisa masuk ke paru-paru. Semakin tinggi konsentrasinya, semakin berbahaya bagi kesehatan. Jika kita bisa meramalkan nilainya untuk besok, warga punya waktu untuk memutuskan apakah perlu memakai masker atau mengurangi aktivitas di luar ruangan.
+PM2.5 adalah partikel debu sangat halus (diameter 2,5 mikrometer atau kurang) yang bisa masuk ke paru-paru. Semakin tinggi konsentrasinya, semakin berbahaya bagi kesehatan.
 
 Jenis tugasnya adalah **regresi deret waktu**: model menebak sebuah angka (PM2.5) dari data yang urut menurut waktu.
 
-## 2. Dataset
+### Studi kasus (skenario ilustrasi)
+
+Bayangkan seorang warga Beijing pada pukul 10.00 yang ingin tahu apakah besok pukul 10.00 aman untuk berolahraga di luar ruangan atau mengantar anak ke sekolah dengan berjalan kaki. Ia tidak butuh tahu PM2.5 sekarang, karena itu bisa dilihat di aplikasi. Ia butuh perkiraan untuk besok, supaya punya waktu menyiapkan masker atau mengubah rencana.
+
+Dari skenario ini kita tahu apa yang harus dibuat: sebuah model yang pada pukul 10.00 hari ini menebak PM2.5 pada pukul 10.00 besok, yaitu 24 jam ke depan.
+
+Agar model bisa belajar menebak, ia butuh contoh dari masa lalu. Setiap contoh berisi kondisi udara dan cuaca pada satu jam, beserta PM2.5 yang terukur 24 jam sesudahnya. Semakin banyak dan semakin beragam contohnya, semakin baik model belajar pola, misalnya kapan polusi cenderung naik. Contoh seperti itu tersedia di dataset berikut.
+
+## 2. Dataset: sumber contoh untuk model
 
 **Beijing Multi-Site Air Quality** dari UCI (https://archive.ics.uci.edu/dataset/501).
+
+Kebutuhan studi kasus dan bagian dataset yang memenuhinya:
+
+| Kebutuhan studi kasus | Yang ada di dataset |
+|---|---|
+| Riwayat PM2.5 untuk dipelajari polanya | Kolom PM2.5, satu nilai per jam |
+| Kondisi udara lain yang ikut memengaruhi | Kolom PM10, SO2, NO2, CO, dan O3 |
+| Kondisi cuaca yang ikut memengaruhi | Kolom suhu, tekanan, titik embun, hujan, dan angin |
+| Tempat yang berbeda (untuk menguji apakah model berlaku di tempat lain) | 12 stasiun pemantau di Beijing |
+| Waktu yang cukup panjang untuk mengenali pola musim dan jam | 4 tahun data, dari 1 Maret 2013 sampai 28 Februari 2017 |
+
+Ringkasan isi dataset:
 
 | Hal | Isi |
 |---|---|
@@ -24,6 +44,8 @@ Jenis tugasnya adalah **regresi deret waktu**: model menebak sebuah angka (PM2.5
 | Nilai hilang | PM2.5 kosong pada 2,08% baris, karena sensor kadang tidak mencatat |
 | Stasiun utama | **Tiantan** (untuk membangun dan memilih model) |
 | Stasiun uji | **Dingling** (untuk menguji apakah model masih bagus di tempat lain) |
+
+Dataset ini berisi pengukuran, bukan data pribadi warga.
 
 ## 3. Rumusan masalah
 
