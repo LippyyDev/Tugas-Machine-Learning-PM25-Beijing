@@ -69,12 +69,11 @@ Keluaran *notebook*: sembilan grafik di `Hasil/Gambar/`, enam tabel di `Hasil/Ta
 
 ## Tahap 4. *Baseline*
 
-Validasi 5 *fold* pada data latih Tiantan, tanpa menyentuh data uji. Baris validasi yang PM2.5 jam *t*-nya kosong (428 dari 22.865) dibuang dari kedua model supaya dibandingkan pada baris yang sama.
+Validasi 5 *fold* pada data latih Tiantan, tanpa menyentuh data uji. Baris validasi yang PM2.5 jam *t*-nya kosong (428 dari 22.865) dibuang karena *naive forecast* tidak bisa meramal tanpa nilai itu.
 
 | Model | RMSE rata-rata ± sd | MAE rata-rata ± sd |
 |---|---|---|
 | *Naive forecast* (PM2.5 jam *t+24* = PM2.5 jam *t*) | 86,97 ± 25,19 | 59,96 ± 16,96 |
-| Regresi linear (*pipeline* 04.3, pembanding [Usulan]) | 73,38 ± 19,73 | 55,20 ± 12,73 |
 
-- Regresi linear lebih baik dari *naive* pada kelima *fold*. RMSE per *fold* sama-sama naik turun mengikuti periode (*fold* 1, 3, dan 5 lebih tinggi), jadi simpangan baku yang besar kemungkinan berasal dari beda periode antar *fold* (belum diuji penyebabnya).
+- RMSE per *fold* naik turun mengikuti periode (*fold* 1, 3, dan 5 lebih tinggi), jadi simpangan baku yang besar kemungkinan berasal dari beda periode antar *fold* (belum diuji penyebabnya).
 - Ini hasil validasi data latih, bukan data uji. Skor uji dibuka satu kali di akhir.

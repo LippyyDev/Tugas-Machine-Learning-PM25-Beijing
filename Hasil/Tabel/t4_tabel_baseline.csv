@@ -1,3 +1,2 @@
 ,RMSE rata-rata,RMSE sd,MAE rata-rata,MAE sd
 Naive forecast,86.97,25.19,59.96,16.96
-Regresi linear,73.38,19.73,55.2,12.73

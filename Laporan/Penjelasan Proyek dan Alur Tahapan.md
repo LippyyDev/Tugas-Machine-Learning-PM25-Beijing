@@ -166,9 +166,8 @@ Hasil acuan. Model lanjutan baru dianggap berguna jika RMSE-nya lebih kecil dari
 | Model | RMSE (rata-rata ± sd antar lipatan) |
 |---|---|
 | *Naive forecast* (tebak PM2.5 besok sama dengan sekarang) | 86,97 ± 25,19 |
-| Regresi linear (pembanding tambahan) | 73,38 ± 19,73 |
 
-Regresi linear lebih baik dari *naive* di kelima lipatan. Angka ini hasil pada data latih, bukan data uji.
+Angka ini hasil pada data latih, bukan data uji.
 
 ### Tahap 5. Model lanjutan dan *tuning*
 

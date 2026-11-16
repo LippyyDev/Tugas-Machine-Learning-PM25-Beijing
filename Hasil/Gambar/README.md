@@ -13,5 +13,5 @@ Sembilan grafik dari *notebook* (`Notebook/Tahap 2 EDA dan Praproses.ipynb`), sa
 | `t2_05_nilai_hilang_per_kolom.png` | Praproses nilai hilang | Persen jam kosong per kolom |
 | `t2_06_panjang_celah.png` | Praproses nilai hilang | Lama data PM2.5 kosong berturut-turut |
 | `t3_01_lipatan_validasi.png` | Skema validasi | Lima lipatan `TimeSeriesSplit` dan posisi data uji |
-| `t4_01_baseline_rmse_per_fold.png` | *Baseline* | RMSE *naive forecast* dan regresi linear di tiap *fold* |
+| `t4_01_baseline_rmse_per_fold.png` | *Baseline* | RMSE *naive forecast* di tiap *fold* |
 | `t4_02_pemeriksaan_desain.png` | Uji kebocoran | Ringkasan enam pemeriksaan desain 9/3 |
