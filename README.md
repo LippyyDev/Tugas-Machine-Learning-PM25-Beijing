@@ -7,6 +7,7 @@ Proyek individu mata kuliah Pembelajaran Mesin, S2 Teknik Informatika, Universit
 - **Dataset:** [Beijing Multi-Site Air Quality (UCI)](https://archive.ics.uci.edu/dataset/501), 12 stasiun, data per jam, Maret 2013 sampai Februari 2017
 - **Jenis tugas:** regresi deret waktu
 - **Tantangan wajib:** nilai hilang pada sensor, validasi berurutan waktu, uji model di stasiun lain (pergeseran distribusi)
+- **Desain evaluasi (16 Nov 2026):** 9 stasiun latih dan 3 stasiun ditahan, uji = 20% periode terakhir dari 12 stasiun. Status [Usulan], menunggu konfirmasi dosen
 
 ## Struktur folder
 

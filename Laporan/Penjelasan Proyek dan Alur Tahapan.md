@@ -34,11 +34,13 @@ Nilai kosong ditandai `NA`. `PM2.5` kosong pada 2,08% baris, dan kolom lain 0,08
 
 **Peran kolom di proyek:** target adalah `PM2.5` pada jam t+24 (nilai `PM2.5` yang digeser 24 jam). Fitur berasal dari polutan dan cuaca pada jam t, riwayat `PM2.5`, dan kalender dari bulan, hari, dan jam. Kolom `No` tidak dipakai.
 
-### Tiantan dan Dingling
+### Stasiun latih dan stasiun ditahan
 
-**Tiantan** adalah stasiun utama. Model dilatih dan dipilih dengan 80% data awalnya, lalu diuji dengan 20% terakhir. Alasan dipilih: datanya lengkap, rata-rata PM2.5-nya (82,2) dekat dengan rata-rata 12 stasiun (80,2), dan punya banyak jam polusi tinggi. Ini keputusan penulis, bukan aturan dosen.
+Dari 12 stasiun, **9 dipakai untuk melatih model** dan **3 ditahan**: model tidak pernah melihat data 3 stasiun itu. Data waktu dibagi sama untuk semua stasiun: 80% awal untuk latih dan 20% akhir untuk uji. Ini keputusan penulis (16 Nov 2026), belum dikonfirmasi dosen. Aturan dosen hanya menetapkan uji = 20% periode terakhir dan adanya uji di stasiun lain.
 
-**Dingling** adalah stasiun uji. Model dari Tiantan dicoba di sini tanpa dilatih ulang, untuk melihat apakah model masih akurat di tempat lain. Dingling dipilih karena distribusi PM2.5-nya paling berbeda dari Tiantan (rata-rata 67,0), tetapi belum terbukti paling sulit diramal.
+Uji akhir dilakukan pada 20% periode terakhir dari semua 12 stasiun, dilaporkan terpisah: (1) 9 stasiun latih, untuk melihat apakah model bagus meramal masa depan, dan (2) 3 stasiun ditahan, untuk melihat apakah model masih bagus di stasiun yang belum pernah dilihat. Selisih galat keduanya menunjukkan pergeseran distribusi. Tiga stasiun ditahan belum ditetapkan. Rencananya dipilih satu yang jauh, satu sedang, dan satu dekat dari stasiun latih berdasarkan data latih saja. Tiantan dan Dingling dipakai pada tahap awal sebagai percobaan (pilot), dan hasilnya dihitung ulang untuk desain ini.
+
+Pembagian murni per stasiun pada seluruh periode tidak dipakai karena jam yang sama muncul di data latih dan uji. PM2.5 antar stasiun saling berkaitan pada jam yang sama (korelasi median 0,89), sehingga model bisa seolah-olah "mengintip" jawabannya.
 
 ## 3. Rumusan masalah
 
@@ -87,7 +89,7 @@ Tahap 1 dikerjakan sebelum membuka data. Panduan meminta tiga pertanyaan dijawab
 
 | Pertanyaan | Jawaban di proyek ini |
 |---|---|
-| Apa yang diramal? | PM2.5 pada 24 jam ke depan (jam t+24) di stasiun pemantau Beijing. Model dibangun di Tiantan dan dicoba di Dingling untuk melihat apakah berlaku di tempat lain |
+| Apa yang diramal? | PM2.5 pada 24 jam ke depan (jam t+24) di stasiun pemantau Beijing. Model dilatih dari 9 stasiun dan dicoba di 3 stasiun yang ditahan untuk melihat apakah berlaku di tempat lain |
 | Untuk siapa? | Warga dan otoritas kesehatan lingkungan |
 | Keputusan apa yang diambil dari ramalan? | Membatasi paparan, misalnya aktivitas di luar ruangan dan pemakaian masker |
 | Kesalahan mana yang paling merugikan? | Galat besar, terutama ramalan yang terlalu rendah saat polusi tinggi |
@@ -101,7 +103,7 @@ Mengenali data, lalu mengubahnya menjadi tabel masukan (fitur) dan target untuk 
 
 **Aturan fitur.** Setiap fitur dihitung hanya dari data pada jam t atau sebelum jam t. Tidak ada fitur yang berasal dari jam sesudah t. Alasannya, saat ramalan dibuat di dunia nyata, data sesudah jam t belum ada. Jika sebuah fitur memakai data sesudah jam t, skor model terlihat bagus tetapi model itu tidak bisa dipakai di dunia nyata. Itu disebut kebocoran data.
 
-Ada 29 fitur untuk stasiun Tiantan:
+Ada 29 fitur (pada tahap pilot untuk stasiun Tiantan, dibuat ulang untuk stasiun lain di desain 9/3):
 
 | Kelompok | Isi | Jumlah |
 |---|---|---|
@@ -117,7 +119,7 @@ Yang dilakukan di tahap ini:
 2. **Menyimpan data uji sejak awal.** Data mulai 12 Mei 2016 disisihkan sebelum eksplorasi dan tidak dibuka.
 3. **Membuat fitur dan target** seperti tabel di atas. Baris latih yang targetnya jatuh di periode uji (24 jam terakhir sebelum batas) dibuang.
 4. **Menangani nilai hilang.** Baris yang targetnya kosong dibuang. Fitur yang kosong diisi median, dan median itu dihitung dari data latih saja. Nilai dari jam sesudah celah tidak dipakai untuk mengisi.
-5. **Menjustifikasi dua pilihan.** Pengisian nilai hilang dengan beberapa batas jam dibandingkan, dan hasilnya tidak berbeda nyata, sehingga dipilih cara paling sederhana (tanpa *forward fill*). Dingling dipilih sebagai stasiun uji karena distribusi PM2.5-nya paling berbeda dari Tiantan. Hasil uji pada data latih tidak membuktikan Dingling paling sulit diramal.
+5. **Menjustifikasi dua pilihan.** Pengisian nilai hilang dengan beberapa batas jam dibandingkan, dan hasilnya tidak berbeda nyata, sehingga dipilih cara paling sederhana (tanpa *forward fill*). Pada tahap pilot, Dingling dipilih sebagai stasiun uji karena distribusi PM2.5-nya paling berbeda dari Tiantan, tetapi hasil uji pada data latih tidak membuktikan Dingling paling sulit diramal. Pada desain 9/3 (16 Nov 2026), peran ini digantikan 3 stasiun ditahan yang belum ditetapkan.
 
 Hasilnya: 27.443 baris latih dengan 29 fitur, dan 6.896 baris uji yang disimpan tanpa dibuka.
 
@@ -146,7 +148,7 @@ Minimal dua model yang lebih kuat (misalnya *random forest* dan *gradient boosti
 
 ### Tahap 6. Evaluasi dan diagnosis
 
-Memeriksa apakah model terlalu sederhana (*underfitting*) atau terlalu menghafal (*overfitting*) dengan *learning curve*. Setelah model final dipilih, **data uji dibuka satu kali**, di Tiantan dan Dingling. Jika skornya jauh lebih buruk dari validasi, model tidak disetel ulang. Selisihnya dilaporkan dan dianalisis.
+Memeriksa apakah model terlalu sederhana (*underfitting*) atau terlalu menghafal (*overfitting*) dengan *learning curve*. Setelah model final dipilih, **data uji dibuka satu kali**, untuk 9 stasiun latih dan 3 stasiun ditahan. Jika skornya jauh lebih buruk dari validasi, model tidak disetel ulang. Selisihnya dilaporkan dan dianalisis.
 
 ### Tahap 7. Analisis kesalahan dan etika
 

@@ -5,12 +5,25 @@ Berisi inti hasil tiap tahap, diperbarui setiap satu tahap selesai. Rincian leng
 | Tahap | Status |
 |---|---|
 | 1. Proposal dan rumusan masalah | Selesai sebagian (draf selesai, menunggu konfirmasi dosen) |
-| 2. EDA dan praproses | Selesai (dasar keputusan *forward fill* dan stasiun uji ada di *notebook* 04.6 dan 04.7) |
-| 3. Skema validasi | Selesai (skema, pengecekan otomatis, alasan, dan keterbatasan ada di *notebook* bagian 03). Penjaga pembukaan data uji ada di bagian 03.3 dan protokol [Usulan, menunggu persetujuan] di `Protokol Evaluasi Data Uji.md`. Penjaga hanya mencegah pembukaan ganda yang tidak disengaja, dan baru teruji saat data uji dibuka. Literatur pendukung: lihat `Proposal/Catatan Verifikasi Referensi.md` (aturan `gap` sama dengan horizon belum punya sumber *peer review* yang terbaca) |
-| 4. *Baseline* | Selesai sebagian (hasil validasi ada, belum dibahas dengan dosen) |
+| 2. EDA dan praproses | Selesai untuk Tiantan (pilot), perlu diperluas ke desain 9/3 (dasar keputusan *forward fill* dan stasiun uji ada di *notebook* 04.6 dan 04.7) |
+| 3. Skema validasi | Desain direvisi 16 Nov 2026, implementasi masih skema Tiantan (skema, pengecekan otomatis, alasan, dan keterbatasan ada di *notebook* bagian 03). Penjaga pembukaan data uji ada di bagian 03.3 dan protokol [Usulan, menunggu persetujuan] di `Protokol Evaluasi Data Uji.md`. Penjaga hanya mencegah pembukaan ganda yang tidak disengaja, dan baru teruji saat data uji dibuka. Literatur pendukung: lihat `Proposal/Catatan Verifikasi Referensi.md` (aturan `gap` sama dengan horizon belum punya sumber *peer review* yang terbaca) |
+| 4. *Baseline* | Selesai sebagian, hasil pilot Tiantan (hasil validasi ada, belum dibahas dengan dosen) |
 | 5. Model lanjutan dan *tuning* | Belum dikerjakan |
 | 6. Evaluasi dan diagnosis | Belum dikerjakan |
 | 7. Analisis kesalahan dan etika | Belum dikerjakan |
+
+## Revisi desain evaluasi (16 Nov 2026)
+
+Keputusan LIP 16 Nov 2026 menggantikan skema "latih di Tiantan, uji di Dingling" (opsi A) dengan desain berikut. Status: [Usulan], belum dikonfirmasi dosen. Panduan dosen hanya menetapkan uji = 20% periode terakhir dan tantangan "uji model di stasiun lain".
+
+- **Desain:** 9 stasiun latih dan 3 stasiun ditahan. Waktu 80% awal untuk latih, 20% akhir untuk uji, dengan satu stempel waktu batas untuk semua stasiun. Uji final dibuka satu kali pada 20% akhir dari 12 stasiun, dilaporkan terpisah untuk 9 stasiun latih dan 3 stasiun ditahan.
+- **Porsi baris:** latih 60%, uji 20%, tidak dipakai 20% (80% awal dari 3 stasiun ditahan, sengaja tidak dipakai agar stasiun itu tetap asing bagi model).
+- **Tiga stasiun ditahan belum ditetapkan.** Aturan [Usulan]: satu jauh, satu sedang, satu dekat dari gabungan stasiun latih, berdasarkan jarak distribusi PM2.5 pada 80% data awal, dikunci sebelum 20% akhir dibuka. Kandidat awal Dingling, Huairou, Dongsi (dihitung terhadap Tiantan, harus dihitung ulang).
+- **Pembagian murni per stasiun pada seluruh periode ditolak:** jam yang sama muncul di data latih dan uji, dan korelasi PM2.5 antar stasiun pada jam yang sama median 0,89, sehingga bocor lewat waktu. Besar kebocoran belum diukur.
+- **Syarat teknis:** *fold* dibuat dari stempel waktu unik, `gap` 24 jam dihitung per jam, dan data tidak dipotong menurut urutan stasiun.
+- **Pemeriksaan data mentah (16 Nov 2026, dari 12 CSV di repo):** setiap stasiun 35.064 baris, rentang waktu identik, tanpa duplikat waktu. Jumlah PM2.5 kosong berbeda antar stasiun (382 di Wanliu sampai 953 di Huairou, seluruh periode).
+- **Dampak:** hasil Tahap 2 sampai 4 di bawah adalah hasil pilot Tiantan dan perlu dihitung ulang untuk desain ini. Dasar pemilihan Dingling (bagian Tahap 2) tetap berguna sebagai bahan memilih stasiun ditahan, tetapi Dingling tidak lagi otomatis stasiun uji.
+- **Belum diputuskan:** identitas stasiun sebagai fitur, dan jawaban dosen atas desain ini. Bila dosen menolak, kembali ke opsi A+ (latih Tiantan, uji beberapa stasiun).
 
 ## Tahap 1. Proposal
 
@@ -19,8 +32,8 @@ Berisi inti hasil tiap tahap, diperbarui setiap satu tahap selesai. Rincian leng
 - **Metrik utama:** RMSE, karena galat besar paling merugikan, terutama ramalan terlalu rendah saat konsentrasi tinggi. Pendamping: MAE.
 - **Validasi:** data diurutkan menurut waktu, 20% terakhir sebagai data uji (dibuka satu kali), `TimeSeriesSplit` pada 80% awal.
 - ***Baseline*:** *naive forecast*. Model lanjutan dan pembanding tambahan belum ditentukan.
-- **Tiga tantangan:** nilai hilang (imputasi kausal di dalam *pipeline*), validasi berurutan waktu (tanpa kebocoran), pergeseran distribusi (latih dan validasi di satu stasiun utama, uji model akhir di stasiun lain pada periode uji yang sama).
-- **Keputusan yang sudah ditetapkan:** horizon 24 jam (alasan: waktu bagi warga untuk membatasi paparan), skema uji stasiun lain berupa latih di satu stasiun lalu uji di stasiun lain, nilai ekstrem 999 dipertahankan, stasiun utama Tiantan. Ditambah 15 Nov 2026: stasiun uji Dingling dan tanpa *forward fill* (dasar di tahap 2).
+- **Tiga tantangan:** nilai hilang (imputasi kausal di dalam *pipeline*), validasi berurutan waktu (tanpa kebocoran), pergeseran distribusi (rencana awal: latih dan validasi di satu stasiun utama, uji di stasiun lain. Diganti 16 Nov 2026 menjadi 9 stasiun latih dan 3 stasiun ditahan, lihat bagian Revisi desain evaluasi).
+- **Keputusan yang sudah ditetapkan:** horizon 24 jam (alasan: waktu bagi warga untuk membatasi paparan), skema uji stasiun lain berupa latih di satu stasiun lalu uji di stasiun lain, nilai ekstrem 999 dipertahankan, stasiun utama Tiantan. Ditambah 15 Nov 2026: stasiun uji Dingling dan tanpa *forward fill* (dasar di tahap 2). Skema uji stasiun lain dan stasiun uji Dingling digantikan desain 9 stasiun latih dan 3 stasiun ditahan pada 16 Nov 2026.
 - **Referensi:** [1] Cui dkk. 2023; [2] Hewamalage dkk. 2023; [3] Hua dkk. 2024; [4] Kapoor dan Narayanan 2023; [5] Lones 2024 (detail dan status verifikasi ada di `Proposal/Catatan Verifikasi Referensi.md`).
 
 ## Tahap 2. EDA dan praproses
@@ -40,7 +53,7 @@ Keluaran *notebook*: sepuluh grafik di `Hasil/Gambar/` (sembilan EDA bernama `t2
 - **Penutupan celah kebocoran:** baris latih yang targetnya jatuh di periode uji (24 jam terakhir) dibuang.
 - **Nilai hilang pada fitur (keputusan 15 Nov 2026: tanpa *forward fill*):** target yang hilang dibuang, fitur hilang diisi median di dalam *pipeline* per *fold*. Interpolasi tidak dipakai karena melihat nilai sesudahnya. Pada berkas latih, 23 dari 29 fitur masih punya sel kosong, tertinggi `CO` 3,20%.
 - **Dasar keputusan *forward fill*:** pengisian 0, 1, 3, 6, 12, dan 24 jam dibandingkan pada 5 *fold* data latih Tiantan (`TimeSeriesSplit(gap=24)`, Ridge dan `HistGradientBoostingRegressor`). Ridge: RMSE 73,42 sampai 73,49. HGB: 76,81 sampai 77,34, dengan derau antar *seed* sekitar 0,6 pada pengaturan yang sama. Tidak ada beda yang bisa dibedakan dari derau, jadi dipilih yang paling sederhana. Analisis ini ada di *notebook* bagian 04.6 (tabel `Hasil/Tabel/t2_tabel_ffill.csv`) dan angkanya sama dengan hasil skrip sebelumnya. Pada analisis pertama tanpa jarak aman, HGB tampak lebih baik 1,2 tanpa pengisian. Keunggulan itu mengecil menjadi 0,3 setelah jarak aman 24 jam dipasang, sehingga alasan tersebut tidak dipakai.
-- **Stasiun uji: Dingling (keputusan 15 Nov 2026).** Dasarnya hanya distribusi PM2.5 data latih yang paling berbeda dari Tiantan (rata-rata 67,0, jarak Wasserstein 15,2, KS 0,115, korelasi per jam 0,80). Pada uji transfer (latih di Tiantan, validasi di stasiun lain, data latih saja), biaya transfer semua stasiun kecil: Dingling +0,33% (Ridge) dan −2,74% (HGB), dalam simpangan baku antar *fold*. Jadi Dingling **tidak terbukti paling sulit**, dan hasil di data uji nanti dilaporkan apa adanya. Perhitungannya ada di *notebook* bagian 04.7 (`t2_tabel_distribusi_stasiun.csv` dan `t2_tabel_transfer.csv`).
+- **Stasiun uji: Dingling (keputusan 15 Nov 2026, digantikan desain 9/3 pada 16 Nov 2026; analisis ini tetap menjadi bahan memilih stasiun ditahan).** Dasarnya hanya distribusi PM2.5 data latih yang paling berbeda dari Tiantan (rata-rata 67,0, jarak Wasserstein 15,2, KS 0,115, korelasi per jam 0,80). Pada uji transfer (latih di Tiantan, validasi di stasiun lain, data latih saja), biaya transfer semua stasiun kecil: Dingling +0,33% (Ridge) dan −2,74% (HGB), dalam simpangan baku antar *fold*. Jadi Dingling **tidak terbukti paling sulit**, dan hasil di data uji nanti dilaporkan apa adanya. Perhitungannya ada di *notebook* bagian 04.7 (`t2_tabel_distribusi_stasiun.csv` dan `t2_tabel_transfer.csv`).
 - **Belum dikerjakan:** penamaan *notebook* akhir (`D082261018_Muhammad Alif Qadri_ProyekML.ipynb`).
 
 ## Tahap 3. Skema validasi
