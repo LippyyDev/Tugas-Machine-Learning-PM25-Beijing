@@ -34,22 +34,22 @@ Nilai kosong ditandai `NA`. `PM2.5` kosong pada 2,08% baris, dan kolom lain 0,08
 
 **Peran kolom di proyek:** target adalah `PM2.5` pada jam t+24 (nilai `PM2.5` yang digeser 24 jam). Fitur berasal dari polutan dan cuaca pada jam t, riwayat `PM2.5`, dan kalender dari bulan, hari, dan jam. Kolom `No` tidak dipakai.
 
-### Stasiun latih dan stasiun ditahan
+### Stasiun latih dan stasiun asing
 
-![Pembagian data: 9 stasiun latih, 3 stasiun ditahan, uji 20% periode terakhir](../Hasil/Gambar/t3_pembagian_data.png)
+![Pembagian data: 9 stasiun latih, 3 stasiun asing, uji 20% periode terakhir](../Hasil/Gambar/t3_pembagian_data.png)
 
-Cara membaca gambar: luas kotak sebanding dengan jumlah baris. Panah di atas menunjukkan arah waktu, dari 2013-03-01 (data paling lama) ke 2017-02-28 (data paling baru). Baris atas adalah 9 stasiun yang dilatih, baris bawah adalah 3 stasiun yang ditahan. Kolom kiri adalah 80% waktu awal (sebelum 2016-05-12 19:00), kolom kanan adalah 20% waktu akhir (mulai 2016-05-12 19:00). Garis merah adalah batas waktu yang sama untuk semua stasiun.
+Cara membaca gambar: luas kotak sebanding dengan jumlah baris. Panah di atas menunjukkan arah waktu, dari 2013-03-01 (data paling lama) ke 2017-02-28 (data paling baru). Baris atas adalah 9 stasiun latih, baris bawah adalah 3 stasiun asing. Kolom kiri adalah 80% waktu awal (sebelum 2016-05-12 19:00), kolom kanan adalah 20% waktu akhir (mulai 2016-05-12 19:00). Garis merah adalah batas waktu yang sama untuk semua stasiun.
 
 | Kotak | Isi | Porsi baris | Peran |
 |---|---|---|---|
-| 9 stasiun yang dilatih, 80% awal | LATIH | 60% | Melatih model, memilih model, dan *tuning* (`TimeSeriesSplit`, 5 *fold*, jarak aman 24 jam) |
-| 9 stasiun yang dilatih, 20% akhir | UJI | 15% | Menguji masa depan di stasiun yang ikut dilatih |
-| 3 stasiun yang ditahan, 80% awal | TIDAK DIPAKAI | 20% | Sengaja dibuang supaya model belum pernah melihat 3 stasiun ini sebelum diuji |
-| 3 stasiun yang ditahan, 20% akhir | UJI | 5% | Menguji stasiun yang tidak ikut dilatih, sekaligus masa depan |
+| 9 stasiun latih, 80% awal | LATIH | 60% | Melatih model, memilih model, dan *tuning* (`TimeSeriesSplit`, 5 *fold*, jarak aman 24 jam) |
+| 9 stasiun latih, 20% akhir | UJI | 15% | Menguji masa depan di stasiun yang ikut dilatih |
+| 3 stasiun asing, 80% awal | TIDAK DIPAKAI | 20% | Sengaja dibuang supaya model belum pernah melihat 3 stasiun ini sebelum diuji |
+| 3 stasiun asing, 20% akhir | UJI | 5% | Menguji stasiun yang tidak ikut dilatih, sekaligus masa depan |
 
-Dari 12 stasiun, **9 dipakai untuk melatih model** dan **3 ditahan**: model tidak pernah melihat data 3 stasiun itu. Data waktu dibagi sama untuk semua stasiun: 80% awal untuk latih dan 20% akhir untuk uji. Ini keputusan penulis (16 Nov 2026), belum dikonfirmasi dosen. Aturan dosen hanya menetapkan uji = 20% periode terakhir dan adanya uji di stasiun lain.
+Dari 12 stasiun, **9 dipakai untuk melatih model** dan **3 asing**: model tidak pernah melihat data 3 stasiun itu. Data waktu dibagi sama untuk semua stasiun: 80% awal untuk latih dan 20% akhir untuk uji. Ini keputusan penulis (16 Nov 2026), belum dikonfirmasi dosen. Aturan dosen hanya menetapkan uji = 20% periode terakhir dan adanya uji di stasiun lain.
 
-Uji akhir dilakukan pada 20% periode terakhir dari semua 12 stasiun, dilaporkan terpisah: (1) 9 stasiun latih, untuk melihat apakah model bagus meramal masa depan, dan (2) 3 stasiun ditahan, untuk melihat apakah model masih bagus di stasiun yang belum pernah dilihat. Selisih galat keduanya menunjukkan pergeseran distribusi. Tiga stasiun ditahan dipilih dengan aturan: satu yang jauh, satu sedang, dan satu dekat dari stasiun lain berdasarkan data periode latih saja. Hasilnya Dingling, Wanliu, dan Shunyi, yang sudah ditetapkan LIP (16 Nov 2026). Tiantan dan Dingling dipakai pada tahap awal sebagai percobaan (pilot), dan hasilnya dihitung ulang untuk desain ini.
+Uji akhir dilakukan pada 20% periode terakhir dari semua 12 stasiun, dilaporkan terpisah: (1) 9 stasiun latih, untuk melihat apakah model bagus meramal masa depan, dan (2) 3 stasiun asing, untuk melihat apakah model masih bagus di stasiun yang belum pernah dilihat. Selisih galat keduanya menunjukkan pergeseran distribusi. Tiga stasiun asing dipilih dengan aturan: satu yang jauh, satu sedang, dan satu dekat dari stasiun lain berdasarkan data periode latih saja. Hasilnya Dingling, Wanliu, dan Shunyi, yang sudah ditetapkan LIP (16 Nov 2026). Tiantan dan Dingling dipakai pada tahap awal sebagai percobaan (pilot), dan hasilnya dihitung ulang untuk desain ini.
 
 Pembagian murni per stasiun pada seluruh periode tidak dipakai karena jam yang sama muncul di data latih dan uji. PM2.5 antar stasiun saling berkaitan pada jam yang sama (korelasi median 0,89), sehingga model bisa seolah-olah "mengintip" jawabannya.
 
@@ -100,7 +100,7 @@ Tahap 1 dikerjakan sebelum membuka data. Panduan meminta tiga pertanyaan dijawab
 
 | Pertanyaan | Jawaban di proyek ini |
 |---|---|
-| Apa yang diramal? | PM2.5 pada 24 jam ke depan (jam t+24) di stasiun pemantau Beijing. Model dilatih dari 9 stasiun dan dicoba di 3 stasiun yang ditahan untuk melihat apakah berlaku di tempat lain |
+| Apa yang diramal? | PM2.5 pada 24 jam ke depan (jam t+24) di stasiun pemantau Beijing. Model dilatih dari 9 stasiun dan dicoba di 3 stasiun asing untuk melihat apakah berlaku di tempat lain |
 | Untuk siapa? | Warga dan otoritas kesehatan lingkungan |
 | Keputusan apa yang diambil dari ramalan? | Membatasi paparan, misalnya aktivitas di luar ruangan dan pemakaian masker |
 | Kesalahan mana yang paling merugikan? | Galat besar, terutama ramalan yang terlalu rendah saat polusi tinggi |
@@ -130,7 +130,7 @@ Yang dilakukan di tahap ini:
 2. **Menyimpan data uji sejak awal.** Data mulai 12 Mei 2016 disisihkan sebelum eksplorasi dan tidak dibuka.
 3. **Membuat fitur dan target** seperti tabel di atas. Baris latih yang targetnya jatuh di periode uji (24 jam terakhir sebelum batas) dibuang.
 4. **Menangani nilai hilang.** Baris yang targetnya kosong dibuang. Fitur yang kosong diisi median, dan median itu dihitung dari data latih saja. Nilai dari jam sesudah celah tidak dipakai untuk mengisi.
-5. **Menjustifikasi dua pilihan.** Pengisian nilai hilang dengan beberapa batas jam dibandingkan, dan hasilnya tidak berbeda nyata, sehingga dipilih cara paling sederhana (tanpa *forward fill*). Pada tahap pilot, Dingling dipilih sebagai stasiun uji karena distribusi PM2.5-nya paling berbeda dari Tiantan, tetapi hasil uji pada data latih tidak membuktikan Dingling paling sulit diramal. Pada desain 9/3 (16 Nov 2026), peran ini digantikan 3 stasiun ditahan, yaitu Dingling, Wanliu, dan Shunyi (ditetapkan LIP 16 Nov 2026, dasarnya aturan di *notebook* 02.2).
+5. **Menjustifikasi dua pilihan.** Pengisian nilai hilang dengan beberapa batas jam dibandingkan, dan hasilnya tidak berbeda nyata, sehingga dipilih cara paling sederhana (tanpa *forward fill*). Pada tahap pilot, Dingling dipilih sebagai stasiun uji karena distribusi PM2.5-nya paling berbeda dari Tiantan, tetapi hasil uji pada data latih tidak membuktikan Dingling paling sulit diramal. Pada desain 9/3 (16 Nov 2026), peran ini digantikan 3 stasiun asing, yaitu Dingling, Wanliu, dan Shunyi (ditetapkan LIP 16 Nov 2026, dasarnya aturan di *notebook* 02.2).
 
 Hasilnya: 27.443 baris latih dengan 29 fitur, dan 6.896 baris uji yang disimpan tanpa dibuka.
 
@@ -159,7 +159,7 @@ Minimal dua model yang lebih kuat (misalnya *random forest* dan *gradient boosti
 
 ### Tahap 6. Evaluasi dan diagnosis
 
-Memeriksa apakah model terlalu sederhana (*underfitting*) atau terlalu menghafal (*overfitting*) dengan *learning curve*. Setelah model final dipilih, **data uji dibuka satu kali**, untuk 9 stasiun latih dan 3 stasiun ditahan. Jika skornya jauh lebih buruk dari validasi, model tidak disetel ulang. Selisihnya dilaporkan dan dianalisis.
+Memeriksa apakah model terlalu sederhana (*underfitting*) atau terlalu menghafal (*overfitting*) dengan *learning curve*. Setelah model final dipilih, **data uji dibuka satu kali**, untuk 9 stasiun latih dan 3 stasiun asing. Jika skornya jauh lebih buruk dari validasi, model tidak disetel ulang. Selisihnya dilaporkan dan dianalisis.
 
 ### Tahap 7. Analisis kesalahan dan etika
 

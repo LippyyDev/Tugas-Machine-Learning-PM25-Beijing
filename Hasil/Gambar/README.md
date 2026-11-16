@@ -13,5 +13,5 @@ Sebelas gambar: satu diagram pembagian data (`t3_`), sembilan EDA tahap 2 (isi s
 | `t2_07_autokorelasi.png` | Autokorelasi PM2.5 |
 | `t2_08_rata_rata_per_stasiun.png` | Rata-rata PM2.5 per stasiun |
 | `t2_09_bulanan_antarstasiun.png` | Rata-rata bulanan antarstasiun |
-| `t3_pembagian_data.png` | Diagram pembagian data: 9 stasiun latih, 3 stasiun ditahan, uji 20% periode terakhir |
+| `t3_pembagian_data.png` | Diagram pembagian data: 9 stasiun latih, 3 stasiun asing, uji 20% periode terakhir |
 | `t4_01_baseline_rmse_per_fold.png` | RMSE *naive forecast* dan regresi linear di tiap *fold* validasi data latih |
