@@ -118,14 +118,14 @@ dan tuning       data uji
 
 Urutannya penting. Cara menguji model (tahap 3) ditetapkan **sebelum** model dibangun, supaya hasil model tidak bisa mengubah cara pengujiannya.
 
-### Tahap 1. Rumusan masalah dan metrik (selesai sebagian)
+### Tahap 1. Rumusan masalah dan metrik
 
 Menentukan apa yang diramal, untuk siapa, dan bagaimana mengukurnya.
 - Target: PM2.5 pada jam t+24. Metrik utama: RMSE.
 - Keputusan: horizon 24 jam, stasiun utama Tiantan, nilai ekstrem 999 dipertahankan.
-- Proposal tertulis sudah ada dengan lima referensi. Belum: persetujuan dosen dan versi PDF.
+- Keluaran: proposal tertulis dengan lima referensi.
 
-### Tahap 2. Eksplorasi dan praproses (selesai)
+### Tahap 2. Eksplorasi dan praproses
 
 Mengenali data, lalu mengubahnya menjadi tabel masukan (fitur) dan target untuk model.
 
@@ -153,7 +153,7 @@ Yang dilakukan di tahap ini:
 
 Hasilnya: 27.443 baris latih dengan 29 fitur, dan 6.896 baris uji yang disimpan tanpa dibuka.
 
-### Tahap 3. Skema validasi (selesai)
+### Tahap 3. Skema validasi
 
 Menetapkan cara menguji model supaya skornya jujur.
 - Data diurutkan menurut waktu. **20% terakhir disimpan sebagai data uji** (mulai 12 Mei 2016) dan hanya dibuka satu kali di akhir.
@@ -161,7 +161,7 @@ Menetapkan cara menguji model supaya skornya jujur.
 - Pengisian nilai hilang dan penskalaan dihitung dari data latih saja pada setiap lipatan, tidak dari data validasi atau data uji. Ini dilakukan dengan menaruhnya di dalam *pipeline*.
 - Kelemahan yang diakui: hanya 5 lipatan, simpangan baku antar lipatan besar, dan statistik ringkas periode uji pernah dilihat (7 dan 15 Nov 2026), tetapi tidak dipakai untuk memilih fitur, model, atau pengaturan.
 
-### Tahap 4. *Baseline* (selesai sebagian)
+### Tahap 4. *Baseline*
 
 Hasil acuan. Model lanjutan baru dianggap berguna jika RMSE-nya lebih kecil dari angka ini.
 
@@ -170,28 +170,16 @@ Hasil acuan. Model lanjutan baru dianggap berguna jika RMSE-nya lebih kecil dari
 | *Naive forecast* (tebak PM2.5 besok sama dengan sekarang) | 86,97 ± 25,19 |
 | Regresi linear (pembanding tambahan) | 73,38 ± 19,73 |
 
-Regresi linear lebih baik dari *naive* di kelima lipatan. Ini hasil pada data latih, bukan data uji. Belum: dibahas di Pertemuan 13 dan dicek dosen.
+Regresi linear lebih baik dari *naive* di kelima lipatan. Angka ini hasil pada data latih, bukan data uji.
 
-### Tahap 5. Model lanjutan dan *tuning* (belum dikerjakan)
+### Tahap 5. Model lanjutan dan *tuning*
 
 Minimal dua model yang lebih kuat (misalnya *random forest* dan *gradient boosting*), disetel dengan validasi silang pada data latih. Data uji tetap tidak disentuh.
 
-### Tahap 6. Evaluasi dan diagnosis (belum dikerjakan)
+### Tahap 6. Evaluasi dan diagnosis
 
 Memeriksa apakah model terlalu sederhana (*underfitting*) atau terlalu menghafal (*overfitting*) dengan *learning curve*. Setelah model final dipilih, **data uji dibuka satu kali**, di Tiantan dan Dingling. Jika skornya jauh lebih buruk dari validasi, model tidak disetel ulang. Selisihnya dilaporkan dan dianalisis.
 
-### Tahap 7. Analisis kesalahan dan etika (belum dikerjakan)
+### Tahap 7. Analisis kesalahan dan etika
 
 Mencari di mana model paling sering salah (jam, musim, stasiun, rentang konsentrasi), fitur mana yang paling berpengaruh, dan siapa yang dirugikan jika ramalan terlalu rendah. Model dipakai sebagai alat bantu peringatan, bukan pengambil keputusan otomatis.
-
-## 6. Posisi saat ini
-
-| Tahap | Status |
-|---|---|
-| 1. Rumusan masalah | Selesai sebagian (menunggu dosen dan PDF) |
-| 2. Eksplorasi dan praproses | Selesai |
-| 3. Skema validasi | Selesai |
-| 4. *Baseline* | Selesai sebagian (belum dibahas dengan dosen) |
-| 5 sampai 7 | Belum dikerjakan |
-
-Berikutnya: Pertemuan 13 (maksimal 5 slide tentang tahap 1 sampai 4), lalu tahap 5.
