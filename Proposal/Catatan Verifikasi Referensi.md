@@ -25,7 +25,7 @@ Dikeluarkan karena tidak memenuhi syarat: Albelali dan Ahmed (arXiv 2512.06932, 
 ## Yang harus dicek manual oleh LIP
 
 1. ~~Kuartil [1] dan [2] langsung di scimagojr.com~~ Sudah dicek 16 Nov 2026 lewat halaman SCImago, hasil di bagian paling bawah berkas ini.
-2. Teks lengkap [1] sebelum mengutip hasil atau temuannya.
+2. ~~Teks lengkap [1]~~ Sudah dibaca 16 Nov 2026 (lihat bagian paling bawah). Hasil numerik [1] tetap tidak dikutip.
 3. Kebutuhan laporan akhir: minimal 5 referensi, 3 di antaranya artikel 5 tahun terakhir. Proposal ini baru memuat 3, sisanya dapat diambil dari kandidat di atas setelah diverifikasi, ditambah teori dasar berlabel [Teori Dasar] jika perlu.
 
 ## Literatur untuk skema validasi dan kebocoran data (dicek 15 November 2026)
@@ -61,7 +61,7 @@ Tidak didukung oleh sumber yang berhasil dibaca:
 ### Tambahan yang harus dicek manual oleh LIP
 
 1. ~~Kuartil [4] dan [5] (*Patterns*) di scimagojr.com~~ Sudah dicek 16 Nov 2026, hasil di bagian paling bawah berkas ini. Kuartil SJR dan CiteScore bisa berbeda, jadi sebutkan satu sumber dan tahun cek di laporan.
-2. Isi bagian "Don't ignore temporal dependencies in time series data" dan bagian data uji pada versi *Patterns* [5].
+2. ~~Isi bagian temporal dan data uji pada versi *Patterns* [5]~~ Sudah dibaca dari PDF versi terbit (PMC11573893), lihat bagian paling bawah.
 3. Jumlah referensi laporan akhir: dengan [4] dan [5] terverifikasi metadata, daftar sekarang 5 butir (1 sampai 5) ditambah dokumentasi *scikit-learn*, dan kuartil [1], [2], [4], [5] sudah dicek di SCImago (lihat bagian bawah). Yang tersisa: teks lengkap [1] dan isi versi terbit [5].
 
 ## Pengecekan kuartil langsung di SCImago (16 November 2026)
@@ -76,3 +76,17 @@ Sumber: halaman jurnal di scimagojr.com (SCImago Journal Rank, berbasis data Sco
 | *PLOS ONE* | [3] (2024) | SJR 0,803, Q1 | Sudah dicek sebelumnya (catatan di atas), tidak diulang | |
 
 Yang masih belum dicek: indeksasi pada daftar sumber Scopus langsung, teks lengkap [1], dan isi bagian temporal serta data uji pada versi terbit [5].
+
+## Pembacaan teks lengkap kelima PDF unggahan penulis (16 November 2026)
+
+Kelima berkas dibaca dari PDF yang diunggah penulis (teks diekstrak lalu dicari per klaim). Metadata cocok dengan yang tercatat di atas. Yang dinilai hanya klaim yang benar-benar dipakai proyek, bukan seluruh isi makalah.
+
+| No | Klaim yang dipakai proyek | Terbaca di PDF | Status klaim |
+|---|---|---|---|
+| [1] Cui dkk. 2023, *Atmos. Pollut. Res.* 14, 101833 | *Dataset* 12 stasiun Beijing per jam, model Transformer dan CNN-LSTM-Attention | Cocok (halaman 1 sampai 2). Pembagian data latih Jan 2013 sampai Feb 2015 dan prediksi Jan 2016 sampai Feb 2017. Tidak terbaca: nilai hilang, horizon, validasi berurutan, uji stasiun lain, nama UCI. Abstrak dan isi tidak konsisten soal periode prediksi | Terverifikasi untuk tujuan, data, dan model. Bukan rujukan skema validasi |
+| [2] Hewamalage dkk. 2023, *DMKD* 37(2), 788 sampai 832 | Evaluasi keliru menghasilkan kesimpulan semu, kebocoran lewat partisi dan praproses | Bagian 3.5 dan kesimpulan: kebocoran pada deret waktu lebih mudah terjadi, termasuk lewat penghalusan, dekomposisi, dan normalisasi atas seluruh deret sebelum pembagian. Ada eksperimen *random walk* yang menunjukkan hasil menjadi terlalu baik bila bocor. Penyebutan `gap` atau horizon sebagai jarak pemisah tidak saya temukan | Terverifikasi. Mendukung praproses di dalam *pipeline* per *fold*, tidak mendukung aturan `gap` = horizon |
+| [3] Hua dkk. 2024, *PLOS ONE* 19(9), e0306303 | Ulasan dan evaluasi delapan metode imputasi pada data kualitas udara | Abstrak: delapan metode (mean, median, kNNI, MICE, SAITS, BRITS, MRNN, Transformer) pada beberapa *dataset* kota di dunia. Kesimpulan: SAITS galat terendah, BRITS kedua. Penulis mengakui hanya menguji data hilang acak. *Dataset* Beijing berasal dari rujukan lain (Du dkk., SAITS), tidak disebut sebagai UCI. Tidak membahas kebocoran atau validasi berurutan | Terverifikasi untuk cakupan studi. Jangan dikutip untuk kebocoran atau untuk memilih metode imputasi pada proyek ini |
+| [4] Kapoor dan Narayanan 2023, *Patterns* 4, 100804 | Kebocoran data meluas dan menghasilkan hasil terlalu optimistis | Cocok: sedikitnya 294 makalah di 17 bidang, taksonomi delapan jenis kebocoran, usulan *model info sheet*, studi kasus prediksi perang saudara. Bukan khusus deret waktu | Terverifikasi |
+| [5] Lones 2024, *Patterns* 5, 101046 | Ketergantungan temporal, kebocoran statistik skala dan imputasi, data uji dipakai sekali | Cocok dengan PDF versi terbit (PMC11573893, 11 Okt 2024, *tutorial*). Tidak memuat istilah gap, horizon, purging, atau embargo | Terverifikasi untuk tiga klaim itu |
+
+Sisa yang belum terverifikasi: indeksasi pada daftar sumber Scopus langsung (kuartil dicek lewat SCImago, bukan daftar Scopus), dan aturan `gap` sama dengan horizon yang tetap tanpa sumber *peer review*.
