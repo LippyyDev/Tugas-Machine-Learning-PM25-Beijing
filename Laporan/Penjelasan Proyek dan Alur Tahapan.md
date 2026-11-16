@@ -75,7 +75,18 @@ Satuan mengikuti dokumentasi UCI: polutan dalam mikrogram per meter kubik, suhu 
 | Pembentuk waktu dan tempat | `year`, `month`, `day`, `hour`, dan `station` |
 | Tidak dipakai | `No` |
 
-Nilai kosong ditandai `NA` di berkas CSV. Stasiun utama untuk membangun model adalah **Tiantan**, dan stasiun uji adalah **Dingling**. Dataset ini berisi pengukuran, bukan data pribadi warga.
+Nilai kosong ditandai `NA` di berkas CSV. Dataset ini berisi pengukuran, bukan data pribadi warga.
+
+### Mengapa Tiantan, dan untuk apa stasiun lain
+
+**Tiantan (stasiun utama).** Model dibangun di sini: 80% data awal untuk melatih dan memilih model, 20% terakhir untuk menguji. Tiantan dipilih karena datanya lengkap (PM2.5 kosong 2,1%, hampir sama dengan rata-rata semua stasiun yaitu 2,08%), rata-rata PM2.5-nya 82,2 dekat dengan rata-rata 12 stasiun (80,2), dan punya banyak jam polusi tinggi (594 jam di atas 300). Pilihan ini keputusan penulis, bukan aturan dosen.
+
+**Stasiun lain (Dingling).** Model dari Tiantan tidak dilatih ulang, hanya dicoba di sini pada periode uji yang sama. Tujuannya melihat apakah model masih akurat di tempat lain, karena di dunia nyata model dipakai di lokasi yang polanya berbeda. Ini menjawab tantangan wajib tentang pergeseran distribusi. Dingling dipilih karena distribusi PM2.5-nya paling berbeda dari Tiantan (rata-rata 67,0 dibanding 82,2). Pada data latih, Dingling belum terbukti paling sulit diramal, jadi hasilnya di data uji dilaporkan apa adanya.
+
+| Stasiun | Dipakai untuk | Data uji |
+|---|---|---|
+| Tiantan | Melatih, memilih, dan menguji model | 20% terakhir |
+| Dingling | Menguji model dari Tiantan di tempat lain, tanpa melatih ulang | Periode 20% terakhir yang sama |
 
 ## 3. Rumusan masalah
 
