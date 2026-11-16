@@ -117,6 +117,15 @@ Tahap 1 dikerjakan sebelum membuka data. Panduan meminta tiga pertanyaan dijawab
 
 Model belajar dari banyak baris seperti ini: dari fitur pada jam t, tebak target 24 jam kemudian.
 
+```
+ Senin 10.00 (jam t)                                  Selasa 10.00 (jam t+24)
+        │                                                      │
+        ▼                                                      ▼
+ FITUR: yang sudah terukur                            TARGET: PM2.5 yang
+ (PM2.5 sekarang, PM10, suhu,    ── 24 jam ke depan ─▶ ingin ditebak
+  angin, PM2.5 kemarin, dst.)                          (belum terjadi)
+```
+
 **Aturan terpenting: fitur tidak boleh memakai data sesudah jam t.** Saat ramalan dibuat di dunia nyata, data sesudah jam t memang belum ada. Jika sebuah fitur memakainya, skor model terlihat bagus tetapi model itu tidak bisa dipakai sungguhan. Inilah yang disebut *kebocoran data*.
 
 #### Isi tabel: 29 fitur
@@ -129,15 +138,19 @@ Model belajar dari banyak baris seperti ini: dari fitur pada jam t, tebak target
 | Arah angin | diubah menjadi sinus dan kosinus | 2 | Arah berbentuk lingkaran (0 derajat sama dengan 360 derajat), jadi dipecah menjadi dua angka agar nilai yang berdekatan tetap tampak dekat |
 | Kalender | jam, hari, dan bulan, masing-masing sebagai sinus dan kosinus | 6 | Pola yang berulang. Dengan sinus dan kosinus, pukul 23.00 tercatat dekat dengan pukul 00.00 |
 
-Tabel ini dibuat dari stasiun Tiantan pada tahap pilot. Pada desain 9 stasiun latih dan 3 stasiun asing (bagian 2), fitur yang sama dibuat untuk setiap stasiun.
+Fitur yang sama dibuat untuk tiap stasiun (9 stasiun latih dan 3 stasiun asing, lihat bagian 2), masing-masing dihitung hanya dari data stasiun itu sendiri.
 
 #### Langkah yang dikerjakan
 
-1. **Mengenali data (EDA).** Temuan pada data latih Tiantan:
-   - PM2.5 miring ke kanan: kebanyakan jam bernilai rendah, tetapi ada episode polusi sangat tinggi. Episode ini menghasilkan galat besar sehingga akan mendominasi RMSE.
-   - Rata-rata tertinggi terjadi di bulan Desember dan pada pukul 23.00.
-   - PM2.5 kosong pada 2,08% jam, dalam 313 celah. Celah terpanjang 24 jam.
-   - Nilai ekstrem 999 dipertahankan.
+1. **Mengenali data (EDA).** Temuan pada data latih 9 stasiun:
+   - PM2.5 miring ke kanan: kebanyakan jam bernilai rendah (median 57), tetapi ada jam bernilai sangat tinggi yang menarik rata-rata ke 81. Jam sangat tinggi ini menghasilkan galat besar sehingga akan mendominasi RMSE.
+   - Rata-rata tertinggi terjadi di bulan Desember (terendah Agustus) dan pada pukul 21.00 (terendah pukul 16.00).
+   - PM2.5 kosong pada 2,16% jam. Nilai ekstrem 999 dipertahankan.
+
+![Sebaran PM2.5 per jam pada data latih: median 57, rata-rata 81, ekor panjang ke kanan](../Hasil/Gambar/t2_04_sebaran_pm25.png)
+
+*Cara membaca:* tinggi batang adalah jumlah jam. Sebagian besar jam ada di sisi kiri (udara relatif bersih), dan sedikit jam di sisi kanan (polusi parah) menarik rata-rata ke kanan.
+
 2. **Menyisihkan data uji sejak awal.** Data mulai 12 Mei 2016 dipisahkan sebelum eksplorasi dan tidak dibuka.
 3. **Membuat fitur dan target** seperti tabel di atas.
 4. **Membuang baris latih yang targetnya masuk periode uji.** Contoh: baris pukul 20.00 tanggal 11 Mei 2016 punya target pukul 20.00 tanggal 12 Mei, padahal batas uji adalah 12 Mei pukul 19.00. Baris seperti ini (24 jam terakhir sebelum batas) dibuang supaya data latih tidak mengintip periode uji.
@@ -145,11 +158,15 @@ Tabel ini dibuat dari stasiun Tiantan pada tahap pilot. Pada desain 9 stasiun la
    - Baris yang targetnya kosong dibuang, karena tidak ada jawaban untuk dipelajari.
    - Fitur yang kosong diisi median, dan median itu dihitung dari data latih saja.
    - Nilai dari jam sesudah celah tidak dipakai untuk mengisi, karena itu sama dengan mengintip masa depan.
+
+![Lama data PM2.5 kosong berturut-turut pada data latih: 87% kejadian hanya 1 sampai 3 jam](../Hasil/Gambar/t2_06_panjang_celah.png)
+
+*Cara membaca:* tiap batang adalah jumlah kejadian kosong menurut lamanya. Ada 1.730 kejadian, median 1 jam, terpanjang 343 jam. Kebanyakan celah pendek, tetapi celah panjang yang jarang terjadi tetap perlu diperhatikan.
 6. **Menjustifikasi dua pilihan.**
    - *Forward fill*: pengisian celah sampai beberapa batas jam dibandingkan, dan hasilnya tidak berbeda nyata (selisihnya sebanding dengan derau antar pengulangan). Maka dipilih cara paling sederhana, yaitu tanpa *forward fill*.
    - Stasiun uji: pada pilot, Dingling dipilih karena distribusi PM2.5-nya paling berbeda dari Tiantan. Namun uji pada data latih tidak membuktikan Dingling paling sulit diramal. Pada desain 9 stasiun latih dan 3 stasiun asing (16 Nov 2026), peran ini diganti tiga stasiun asing, yaitu Dingling, Wanliu, dan Shunyi (ditetapkan LIP, dasarnya aturan di *notebook* 02.2).
 
-**Hasil (pilot Tiantan):** 27.443 baris latih dengan 29 fitur, dan 6.896 baris uji yang disimpan tanpa dibuka. Angka untuk desain 9/3 baru ada setelah *notebook* dijalankan ulang.
+**Hasil:** 246.798 baris latih (9 stasiun) dengan 29 fitur, dan 82.151 baris uji yang disimpan tanpa dibuka (61.686 dari stasiun latih dan 20.465 dari stasiun asing).
 
 ### Tahap 3. Skema validasi
 
@@ -159,15 +176,23 @@ Menetapkan cara menguji model supaya skornya jujur.
 - Pengisian nilai hilang dan penskalaan dihitung dari data latih saja pada setiap lipatan, tidak dari data validasi atau data uji. Ini dilakukan dengan menaruhnya di dalam *pipeline*.
 - Kelemahan yang diakui: hanya 5 lipatan, simpangan baku antar lipatan besar, dan statistik ringkas periode uji pernah dilihat (7 dan 15 Nov 2026), tetapi tidak dipakai untuk memilih fitur, model, atau pengaturan.
 
+![Lima lipatan validasi berurutan waktu dan posisi data uji](../Hasil/Gambar/t3_01_lipatan_validasi.png)
+
+*Cara membaca:* tiap baris satu lipatan. Biru adalah data untuk belajar, oranye adalah data untuk menguji di lipatan itu, selalu lebih baru dari yang biru. Abu-abu adalah data uji akhir yang belum dibuka.
+
 ### Tahap 4. *Baseline*
 
 Hasil acuan. Model lanjutan baru dianggap berguna jika RMSE-nya lebih kecil dari angka ini.
 
 | Model | RMSE (rata-rata ± sd antar lipatan) |
 |---|---|
-| *Naive forecast* (tebak PM2.5 besok sama dengan sekarang) | 86,97 ± 25,19 |
+| *Naive forecast* (tebak PM2.5 besok sama dengan sekarang) | 86,82 ± 24,70 |
 
-Angka ini hasil pada data latih, bukan data uji.
+Angka ini hasil pada data latih (9 stasiun), bukan data uji.
+
+![RMSE naive forecast di tiap lipatan validasi: 102, 62, 104, 58, 109](../Hasil/Gambar/t4_01_baseline_rmse_per_fold.png)
+
+*Cara membaca:* makin pendek batang, makin kecil galatnya. Lipatan 1, 3, dan 5 (validasi mencakup musim dingin) galatnya sekitar 100, sedangkan lipatan 2 dan 4 (musim hangat) sekitar 60. Simpangan baku yang besar kemungkinan terutama mencerminkan beda musim, bukan model yang tidak stabil.
 
 ### Tahap 5. Model lanjutan dan *tuning*
 
