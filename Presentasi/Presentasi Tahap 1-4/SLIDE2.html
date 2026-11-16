@@ -206,7 +206,9 @@ svg.vz{display:block;width:100%;height:526px}
     </div>
     <div class="vwrap">
       <div class="view" id="v-time"><svg class="vz" id="svg-time" viewBox="0 0 942 526"></svg></div>
-      <div class="view" id="v-met"><svg class="vz" id="svg-met" viewBox="0 0 942 526"></svg></div>
+      <div class="view" id="v-met"><svg class="vz" id="svg-met" viewBox="0 0 942 526"></svg>
+        <div class="sw" id="mpre" style="position:absolute;left:70px;top:480px"><button data-p="awal" class="on">Awal</button><button data-p="stabil">Stabil: 25 ×4</button><button data-p="ekstrem">Meleset ekstrem: 0, 0, 0, 100</button></div>
+      </div>
       <div class="view" id="v-err"><svg class="vz" id="svg-err" viewBox="0 0 942 526"></svg></div>
       <div class="view" id="v-tan"><svg class="vz" id="svg-tan" viewBox="0 0 942 526"></svg></div>
       <div class="view" id="v-sent"><div class="sent" id="sent"></div></div>
@@ -380,55 +382,78 @@ tx(eg,'Porsi = jumlah galat kelompok itu dibagi jumlah seluruh galat, pada ukura
 
 /* ═════════ View: RMSE dan MAE pada contoh hipotetis (bukan data) ═════════ */
 const sm = $('#svg-met'); const mg = mk('g',{},sm);
-const MB={x0:74,x1:512,y0:84,y1:414,vmax:160};
+const MB={x0:70,x1:326,y0:84,y1:414,vmax:160};
 const myv=v=>MB.y1-v/MB.vmax*(MB.y1-MB.y0);
 const GAL=[10,10,10,100];
-tx(mg,'CONTOH HIPOTETIS · GALAT TIAP PREDIKSI (µg/m³)',[MB.x0,46],14,'#80849a',{'letter-spacing':'.12em'});
+const PRESET={awal:[10,10,10,100],stabil:[25,25,25,25],ekstrem:[0,0,0,100]};
+const bx=i=>MB.x0+14+i*62;                  // posisi x batang
+const SQK=0.8;                               // piksel per satuan galat untuk sisi persegi
+const SQW=[46,46,46,120], SQ0=396;           // lebar slot persegi
+const sqc=i=>SQ0+SQW.slice(0,i).reduce((a,b)=>a+b,0)+SQW[i]/2;
+tx(mg,'TINGGI BATANG = GALAT',[MB.x0,46],14,'#80849a',{'letter-spacing':'.12em'});
+tx(mg,'LUAS = GALAT KUADRAT',[SQ0,46],14,'#80849a',{'letter-spacing':'.12em'});
+tx(mg,'CONTOH HIPOTETIS',[668,46],14,'#ffc266',{'letter-spacing':'.12em'});
 for(const v of [0,50,100,150]){
   mk('line',{x1:MB.x0,x2:MB.x1,y1:myv(v),y2:myv(v),stroke:v===0?'rgba(255,255,255,.28)':'rgba(255,255,255,.07)'},mg);
   tx(mg,v,[MB.x0-12,myv(v)+1],14,'#80849a',{'text-anchor':'end','dominant-baseline':'central'});
 }
-const mBar=[], mVal=[];
+mk('line',{x1:SQ0,x2:SQ0+SQW.reduce((a,b)=>a+b,0),y1:MB.y1,y2:MB.y1,stroke:'rgba(255,255,255,.28)'},mg);
+// arsiran selisih RMSE dan MAE
+const mZone=mk('rect',{x:MB.x0,width:MB.x1-MB.x0,fill:'#ffc266','fill-opacity':.2},mg);
+const mZoneT=mk('text',{x:MB.x0+8,fill:'#ffc266','font-size':12,'font-family':MONO,'letter-spacing':'.06em','dominant-baseline':'central'},mg);
+mZoneT.appendChild(document.createTextNode('+ PENALTI '));
+const mZoneI=document.createElementNS('http://www.w3.org/2000/svg','tspan'); mZoneI.setAttribute('font-style','italic'); mZoneI.textContent='OUTLIER'; mZoneT.appendChild(mZoneI);
+const mBar=[], mVal=[], mSq=[], mSqV=[];
 GAL.forEach((v,i)=>{
-  const x=MB.x0+34+i*104;
-  const r=mk('rect',{x:x,width:64,fill:i===3?'#ffc266':'#7db4ff','fill-opacity':i===3?.9:.55},mg); mBar.push(r);
-  mVal.push(tx(mg,'',[x+32,0],20,'#f1f2f6',{'text-anchor':'middle','font-weight':500}));
-  tx(mg,'prediksi '+(i+1),[x+32,MB.y1+26],14,'#80849a',{'text-anchor':'middle'});
+  const x=bx(i), c=i===3?'#ffc266':'#7db4ff';
+  mBar.push(mk('rect',{x:x,width:44,fill:c,'fill-opacity':i===3?.9:.55},mg));
+  mVal.push(tx(mg,'',[x+22,0],18,'#f1f2f6',{'text-anchor':'middle','font-weight':500}));
+  tx(mg,'ke-'+(i+1),[x+22,MB.y1+26],14,'#80849a',{'text-anchor':'middle'});
+  mSq.push(mk('rect',{fill:c,'fill-opacity':i===3?.6:.4,stroke:c,'stroke-width':1.5},mg));
+  mSqV.push(tx(mg,'',[sqc(i),MB.y1+26],14,i===3?'#ffc266':'#80849a',{'text-anchor':'middle'}));
 });
 const mHandle=mk('circle',{r:11,fill:'#0a0b10',stroke:'#ffc266','stroke-width':3,style:'cursor:ns-resize'},mg);
-tx(mg,'SERET UJUNG BATANG KUNING KE ATAS ATAU BAWAH',[(MB.x0+MB.x1)/2,484],13,'#ffc266',{'text-anchor':'middle','letter-spacing':'.1em'});
+tx(mg,'SERET UJUNG BATANG KUNING KE ATAS ATAU BAWAH',[MB.x0,466],13,'#ffc266',{'letter-spacing':'.1em'});
 const mLnR=mk('line',{x1:MB.x0,x2:MB.x1,stroke:'#ffc266','stroke-width':2,'stroke-dasharray':'7 6'},mg);
 const mLnA=mk('line',{x1:MB.x0,x2:MB.x1,stroke:'#c4dcff','stroke-width':2,'stroke-dasharray':'7 6'},mg);
-const mTR=tx(mg,'RMSE',[MB.x1+10,0],15,'#ffc266',{'font-weight':500,'dominant-baseline':'auto'});
-const mTA=tx(mg,'MAE',[MB.x1+10,0],15,'#c4dcff',{'font-weight':500,'dominant-baseline':'hanging'});
+const mTR=tx(mg,'RMSE',[MB.x1+8,0],15,'#ffc266',{'font-weight':500,'dominant-baseline':'auto'});
+const mTA=tx(mg,'MAE',[MB.x1+8,0],15,'#c4dcff',{'font-weight':500,'dominant-baseline':'hanging'});
 // kartu hasil
-function mCard(y,name,rule,col){
-  mk('rect',{x:598,y:y,width:300,height:150,rx:4,class:'tcard'},mg); mk('rect',{x:598,y:y,width:4,height:150,fill:col},mg);
-  tx(mg,name,[622,y+38],16,col,{'letter-spacing':'.16em','font-weight':500});
-  tx(mg,rule,[622,y+66],17,'#c4c7d4',{'font-family':'Space Grotesk,Segoe UI,sans-serif'});
-  return tx(mg,'',[622,y+122],52,'#f1f2f6',{'font-weight':500});
+function mCard(y,name,rules,col){
+  mk('rect',{x:668,y:y,width:232,height:150,rx:4,class:'tcard'},mg); mk('rect',{x:668,y:y,width:4,height:150,fill:col},mg);
+  tx(mg,name,[690,y+36],16,col,{'letter-spacing':'.16em','font-weight':500});
+  rules.forEach((r,k)=>tx(mg,r,[690,y+62+k*21],16,'#c4c7d4',{'font-family':'Space Grotesk,Segoe UI,sans-serif'}));
+  return tx(mg,'',[690,y+132],52,'#f1f2f6',{'font-weight':500});
 }
-const mvA=mCard(84,'MAE','rata-rata dari galat','#c4dcff');
-const mvR=mCard(266,'RMSE','akar dari rata-rata galat kuadrat','#ffc266');
-['RMSE selalu sama atau lebih besar','dari MAE. Makin tidak merata','galatnya, makin lebar selisihnya.'].forEach((t,k)=>tx(mg,t,[598,452+k*22],14,'#80849a'));
+const mvA=mCard(84,'MAE',['rata-rata dari galat'],'#c4dcff');
+const mvR=mCard(266,'RMSE',['akar dari rata-rata','galat kuadrat'],'#ffc266');
+['RMSE selalu sama atau','lebih besar dari MAE. Makin','tidak merata galatnya,','makin lebar selisihnya.'].forEach((t,k)=>tx(mg,t,[668,448+k*20],13,'#80849a'));
 function updMet(){
   GAL.forEach((v,i)=>{
-    const x=+mBar[i].getAttribute('x'), y=myv(v);
-    mBar[i].setAttribute('y',y); mBar[i].setAttribute('height',Math.max(0,MB.y1-y));
-    mVal[i].setAttribute('x',x+32); mVal[i].setAttribute('y',y-10); mVal[i].textContent=v;
-    if(i===3){ mVal[i].setAttribute('y',y-24); mHandle.setAttribute('cx',x+32); mHandle.setAttribute('cy',y); }
+    const x=bx(i), y=myv(v);
+    mBar[i].setAttribute('x',x); mBar[i].setAttribute('y',y); mBar[i].setAttribute('height',Math.max(0,MB.y1-y));
+    mVal[i].setAttribute('x',x+22); mVal[i].setAttribute('y',y-10); mVal[i].textContent=v;
+    if(i===3){ mVal[i].setAttribute('y',y-24); mHandle.setAttribute('cx',x+22); mHandle.setAttribute('cy',y); }
+    const sd=v*SQK;
+    mSq[i].setAttribute('x',sqc(i)-sd/2); mSq[i].setAttribute('y',MB.y1-sd); mSq[i].setAttribute('width',sd); mSq[i].setAttribute('height',sd);
+    mSqV[i].textContent=fmt(v*v);
   });
   const mae=GAL.reduce((a,b)=>a+b,0)/GAL.length, rmse=Math.sqrt(GAL.reduce((a,b)=>a+b*b,0)/GAL.length);
   mLnA.setAttribute('y1',myv(mae)); mLnA.setAttribute('y2',myv(mae)); mLnR.setAttribute('y1',myv(rmse)); mLnR.setAttribute('y2',myv(rmse));
   mTA.setAttribute('y',myv(mae)+5); mTR.setAttribute('y',myv(rmse)-5);
+  const gap=myv(mae)-myv(rmse);
+  mZone.setAttribute('y',myv(rmse)); mZone.setAttribute('height',Math.max(0,gap));
+  mZoneT.setAttribute('y',myv(rmse)+gap/2); mZoneT.style.opacity=gap>=22?1:0;
   mvA.textContent=fd(mae); mvR.textContent=fd(rmse);
+  $$('#mpre button').forEach(b=>b.classList.toggle('on',PRESET[b.dataset.p].every((v,i)=>v===GAL[i])));
 }
 let mDrag=false;
 const mSet=ev=>{const p=svgPt(sm,ev);GAL[3]=Math.max(0,Math.min(150,Math.round((MB.y1-p.y)/(MB.y1-MB.y0)*MB.vmax)));updMet();};
-const mHit=mk('rect',{x:MB.x0+34+3*104-20,y:MB.y0-30,width:104,height:MB.y1-MB.y0+40,fill:'transparent',style:'cursor:ns-resize'},sm);
+const mHit=mk('rect',{x:bx(3)-9,y:MB.y0-30,width:62,height:MB.y1-MB.y0+40,fill:'transparent',style:'cursor:ns-resize'},sm);
 mHit.addEventListener('pointerdown',e=>{mDrag=true;mHit.setPointerCapture(e.pointerId);mSet(e);});
 mHit.addEventListener('pointermove',e=>{if(mDrag)mSet(e);});
 mHit.addEventListener('pointerup',()=>{mDrag=false;}); mHit.addEventListener('pointercancel',()=>{mDrag=false;});
+$$('#mpre button').forEach(b=>b.addEventListener('click',()=>{PRESET[b.dataset.p].forEach((v,i)=>{GAL[i]=v;});updMet();}));
 updMet();
 
 /* ═════════ View 3: tiga tantangan ═════════ */
@@ -485,7 +510,7 @@ const STEPS=[
   ()=>{ blocks(1); setView(1); markOn=true; futureOn=false; placeT(); caption('Geser garis putih untuk menentukan jam <b>t</b>. Data yang tersedia hanya di sisi kiri; kondisi di sisi kanan <b>belum terjadi</b> dan menjadi fokus prediksi.'); },
   ()=>{ blocks(2); setView(2); markOn=true; futureOn=true; placeT(); caption('Cincin kuning menandai <b>target</b> (24 jam ke depan). Pada titik awal, udara terpantau bersih (21 µg/m³), namun melonjak ke 157 keesokan harinya. Silakan geser garis untuk melihat pola jam lainnya.'); },
   ()=>{ blocks(3); setView(3); readoutNow('Metrik utama','RMSE<span class="u">+ MAE</span>'); caption('Tiap bagian kasus punya tempat di kalimat: <b>warga</b> memutuskan <b>membatasi paparan</b>, target <b>PM2.5 jam t+24</b>. Metrik dipilih dari <b>biaya kesalahan</b>, bukan dari kebiasaan.'); },
-  ()=>{ blocks(4); setView(4); readoutNow('Contoh hipotetis','RMSE<span class="u">lawan MAE</span>'); caption('Seret ujung batang kuning. Tiga prediksi tetap meleset 10, satu prediksi makin jauh meleset. <b>RMSE naik jauh lebih cepat daripada MAE.</b> Angka di sini contoh hipotetis, bukan hasil data.'); },
+  ()=>{ blocks(4); setView(4); readoutNow('Contoh hipotetis','RMSE<span class="u">lawan MAE</span>'); caption('Seret batang kuning atau pilih skenario. Luas persegi adalah galat dikuadratkan, sehingga <b>satu galat besar menggelembungkan RMSE</b> (arsiran kuning). Contoh hipotetis, bukan data.'); },
   ()=>{ blocks(5); setView(5); readoutNow('Porsi 5% galat terbesar', fd(PG.top5_porsi_kuadrat)+'%<span class="u">dari RMSE</span>'); caption('Hanya <b>5%</b> galat terbesar menyumbang <b>'+fd(PG.top5_porsi_kuadrat)+'%</b> dari galat kuadrat (dasar RMSE), tetapi <b>'+fd(PG.top5_porsi_mutlak)+'%</b> dari galat mutlak (dasar MAE). RMSE peka terhadap prediksi yang meleset jauh.'); },
   ()=>{ blocks(6); setView(6); readoutNow('Tantangan wajib','3'); caption('Tiga tantangan wajib dari dosen. Ketiganya menentukan rancangan di Tahap 2 dan Tahap 3.'); }
 ];
