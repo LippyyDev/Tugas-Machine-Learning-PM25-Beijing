@@ -24,7 +24,7 @@ Dikeluarkan karena tidak memenuhi syarat: Albelali dan Ahmed (arXiv 2512.06932, 
 
 ## Yang harus dicek manual oleh LIP
 
-1. Kuartil [1] dan [2] langsung di scimagojr.com (sebut tahun cek di laporan).
+1. ~~Kuartil [1] dan [2] langsung di scimagojr.com~~ Sudah dicek 16 Nov 2026 lewat halaman SCImago, hasil di bagian paling bawah berkas ini.
 2. Teks lengkap [1] sebelum mengutip hasil atau temuannya.
 3. Kebutuhan laporan akhir: minimal 5 referensi, 3 di antaranya artikel 5 tahun terakhir. Proposal ini baru memuat 3, sisanya dapat diambil dari kandidat di atas setelah diverifikasi, ditambah teori dasar berlabel [Teori Dasar] jika perlu.
 
@@ -60,6 +60,19 @@ Tidak didukung oleh sumber yang berhasil dibaca:
 
 ### Tambahan yang harus dicek manual oleh LIP
 
-1. Kuartil [4] dan [5] (*Patterns*) di scimagojr.com. Perhatikan bahwa kuartil SJR dan CiteScore bisa berbeda; sebutkan satu sumber dan tahun cek.
+1. ~~Kuartil [4] dan [5] (*Patterns*) di scimagojr.com~~ Sudah dicek 16 Nov 2026, hasil di bagian paling bawah berkas ini. Kuartil SJR dan CiteScore bisa berbeda, jadi sebutkan satu sumber dan tahun cek di laporan.
 2. Isi bagian "Don't ignore temporal dependencies in time series data" dan bagian data uji pada versi *Patterns* [5].
-3. Jumlah referensi laporan akhir: dengan [4] dan [5] terverifikasi metadata, daftar sekarang 5 butir (1 sampai 5) ditambah dokumentasi *scikit-learn*, tetapi [1], [2], [4], [5] masih bersyarat pada cek kuartil.
+3. Jumlah referensi laporan akhir: dengan [4] dan [5] terverifikasi metadata, daftar sekarang 5 butir (1 sampai 5) ditambah dokumentasi *scikit-learn*, dan kuartil [1], [2], [4], [5] sudah dicek di SCImago (lihat bagian bawah). Yang tersisa: teks lengkap [1] dan isi versi terbit [5].
+
+## Pengecekan kuartil langsung di SCImago (16 November 2026)
+
+Sumber: halaman jurnal di scimagojr.com (SCImago Journal Rank, berbasis data Scopus), data SJR 2025, dicek 16 Nov 2026. Saya membaca hasil pencarian atas halaman SCImago, bukan membuka daftar sumber Scopus langsung.
+
+| Jurnal | Referensi | SJR 2025 dan kuartil terbaik | Kuartil pada tahun terbit | Catatan |
+|---|---|---|---|---|
+| *Patterns* | [4] (2023), [5] (2024) | 2,066, Q1 | Decision Sciences (miscellaneous): 2023 Q1, 2024 Q1. Kategori 2025: Multidisciplinary Q1 | SJR 2024 1,527 sama dengan angka agregator sebelumnya. Q1 pada tahun terbit kedua artikel |
+| *Data Mining and Knowledge Discovery* | [2] (2023) | 1,200, Q1 | Tiga kategori (Computer Networks and Communications, Computer Science Applications, Information Systems): 2023 semuanya Q1 | Q1 pada tahun terbit |
+| *Atmospheric Pollution Research* | [1] (2023) | 1,041, Q1 | Tergantung kategori. 2023: Pollution Q1, Atmospheric Science Q2, Waste Management and Disposal Q2 | Ini penyebab agregator menyebut Q1 atau Q2. Tulis kategori yang dipakai di laporan |
+| *PLOS ONE* | [3] (2024) | SJR 0,803, Q1 | Sudah dicek sebelumnya (catatan di atas), tidak diulang | |
+
+Yang masih belum dicek: indeksasi pada daftar sumber Scopus langsung, teks lengkap [1], dan isi bagian temporal serta data uji pada versi terbit [5].
