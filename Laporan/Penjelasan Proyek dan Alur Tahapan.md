@@ -83,10 +83,19 @@ Urutannya penting. Cara menguji model (tahap 3) ditetapkan **sebelum** model dib
 
 ### Tahap 1. Rumusan masalah dan metrik
 
-Menentukan apa yang diramal, untuk siapa, dan bagaimana mengukurnya.
-- Target: PM2.5 pada jam t+24. Metrik utama: RMSE.
-- Keputusan: horizon 24 jam, stasiun utama Tiantan, nilai ekstrem 999 dipertahankan.
-- Keluaran: proposal tertulis dengan lima referensi.
+Tahap 1 dikerjakan sebelum membuka data. Panduan meminta tiga pertanyaan dijawab tertulis (siapa pemakainya, keputusan apa yang diambil, kesalahan mana yang paling merugikan). Di sini ditambah dua baris: apa yang diramal dan bagaimana mengukurnya.
+
+| Pertanyaan | Jawaban di proyek ini |
+|---|---|
+| Apa yang diramal? | PM2.5 pada 24 jam ke depan (jam t+24), di stasiun Tiantan |
+| Untuk siapa? | Warga dan otoritas kesehatan lingkungan |
+| Keputusan apa yang diambil dari ramalan? | Membatasi paparan, misalnya aktivitas di luar ruangan dan pemakaian masker |
+| Kesalahan mana yang paling merugikan? | Galat besar, terutama ramalan yang terlalu rendah saat polusi tinggi |
+| Bagaimana mengukurnya? | **RMSE** sebagai metrik utama, karena menghukum galat besar lebih berat. MAE sebagai pendamping |
+
+Template satu kalimat dari panduan, diisi untuk proyek ini: "Model ini membantu warga dan otoritas kesehatan lingkungan untuk membatasi paparan polusi dengan memprediksi PM2.5 24 jam ke depan dari riwayat PM2.5, polutan lain, dan cuaca. Kesalahan paling mahal adalah galat besar, sehingga metrik utama adalah RMSE."
+
+Keluaran: proposal tertulis dengan lima referensi.
 
 ### Tahap 2. Eksplorasi dan praproses
 
