@@ -8,7 +8,7 @@ Tujuan: membuat pembukaan data uji terjadi satu kali dengan aturan yang sudah di
 
 | Butir | Isi | Sumber |
 |---|---|---|
-| Data uji | 20% periode terakhir (mulai 2016-05-12 19:00, batas sama untuk semua stasiun) dari 12 stasiun: 9 stasiun latih dan 3 stasiun ditahan (belum ditetapkan). `Data/Data Olahan/fitur_uji_Tiantan.csv` hanya hasil pilot dan perlu dibuat ulang untuk desain ini | Pembagian 80/20 dan satu kali buka: [Panduan]. Desain 9/3: keputusan LIP 16 Nov 2026, belum dikonfirmasi dosen |
+| Data uji | 20% periode terakhir (mulai 2016-05-12 19:00, batas sama untuk semua stasiun) dari 12 stasiun: 9 stasiun latih dan 3 stasiun ditahan (belum ditetapkan). Berkas fitur uji hasil pilot Tiantan sudah dihapus (16 Nov 2026) dan dibuat ulang untuk desain ini saat *notebook* dijalankan lagi | Pembagian 80/20 dan satu kali buka: [Panduan]. Desain 9/3: keputusan LIP 16 Nov 2026, belum dikonfirmasi dosen |
 | Satu kali buka | Setelah model final dipilih dari validasi silang, data uji dibuka satu kali | [Panduan] |
 | Skor uji jauh lebih buruk dari skor validasi | Jangan menyetel ulang. Laporkan dan analisis selisihnya | [Panduan] |
 

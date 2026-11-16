@@ -42,7 +42,7 @@ Keputusan LIP 16 Nov 2026 menggantikan skema "latih di Tiantan, uji di Dingling"
 
 Semua angka berasal dari eksekusi `Notebook/Tahap 2 EDA dan Praproses.ipynb` pada stasiun Tiantan dan **hanya memakai data latih**, kecuali disebut lain. *Notebook* dijalankan ulang 15 Nov 2026 setelah keputusan tanpa *forward fill*, jarak aman 24 jam, dan penambahan *baseline* (0 *error*, 10 grafik tertanam). Dua tabel EDA identik dengan eksekusi sebelumnya.
 
-Keluaran *notebook*: sepuluh grafik di `Hasil/Gambar/` (sembilan EDA bernama `t2_`, satu *baseline* bernama `t4_`), enam tabel di `Hasil/Tabel/` (dua EDA, tiga dasar keputusan, satu *baseline*), dan fitur siap pakai (latih dan uji, Tiantan) di `Data/Data Olahan/`. Berkas fitur uji hanya disimpan, tidak dibuka untuk analisis.
+Keluaran *notebook*: sepuluh grafik di `Hasil/Gambar/` (sembilan EDA bernama `t2_`, satu *baseline* bernama `t4_`), enam tabel di `Hasil/Tabel/` (dua EDA, tiga dasar keputusan, satu *baseline*), dan fitur siap pakai (latih dan uji) di `Data/Data Olahan/`. Berkas pilot Tiantan dihapus 16 Nov 2026 supaya *notebook* dijalankan ulang di bawah desain 9/3, sehingga angka tahap 2 sampai 4 di dokumen ini adalah hasil pilot. Berkas fitur uji hanya disimpan, tidak dibuka untuk analisis.
 
 - **Pembagian waktu:** data uji dimulai 2016-05-12 19:00 (20% jam terakhir), disisihkan sebelum eksplorasi dan tidak dibuka. Data latih seluruh stasiun 336.612 baris (80%).
 - **Sebaran PM2.5:** median 59, rata-rata 82,2, miring ke kanan (*skewness* 1,91). Galat besar saat episode polusi tinggi akan mendominasi RMSE.
