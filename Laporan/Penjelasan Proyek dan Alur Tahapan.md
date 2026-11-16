@@ -36,7 +36,9 @@ Nilai kosong ditandai `NA`. `PM2.5` kosong pada 2,08% baris, dan kolom lain 0,08
 
 ### Stasiun latih dan stasiun asing
 
-Data mencakup 2013-03-01 sampai 2017-02-28. Tabel berikut membagi 9 stasiun latih dan 3 stasiun asing menurut waktu: 80% awal adalah sebelum 2016-05-12 19:00, 20% akhir mulai 2016-05-12 19:00, dengan batas waktu yang sama untuk semua stasiun.
+![Pembagian data: 9 stasiun latih, 3 stasiun asing, uji 20% periode terakhir](../Hasil/Gambar/t2_02_pembagian_data.png)
+
+Data mencakup 2013-03-01 sampai 2017-02-28. Gambar dan tabel berikut membagi 9 stasiun latih dan 3 stasiun asing menurut waktu: 80% awal adalah sebelum 2016-05-12 19:00, 20% akhir mulai 2016-05-12 19:00, dengan batas waktu yang sama untuk semua stasiun.
 
 | Kotak | Isi | Porsi baris | Peran |
 |---|---|---|---|

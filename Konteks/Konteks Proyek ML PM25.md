@@ -59,7 +59,7 @@ Proyek meniru alur kerja peneliti: merumuskan masalah, memahami data, merancang 
 
 ### Struktur repositori
 
-Repo: `Tugas-Machine-Learning-PM25-Beijing`. Folder: `Data` (`Data Mentah`, `Data Olahan`), `Notebook`, `Proposal`, `Laporan`, `Presentasi`, `Hasil` (`Tabel`), `Referensi` (PDF referensi berlisensi terbuka), `Konteks`. Penamaan: folder dan dokumen memakai huruf kapital di awal kata dengan spasi, sedangkan berkas keluaran *notebook* memakai huruf kecil dengan garis bawah dan awalan tahap (`t2_`, `t4_`, dan seterusnya). Berkas fitur di `Data/Data Olahan/` dipakai semua tahap sehingga tanpa awalan. *Notebook* tahap 2 ada di `Notebook/Tahap 2 EDA dan Praproses.ipynb`. Ringkasan hasil per tahap ada di `Laporan/Ringkasan Hasil Per Tahapan.md`. Keluaran *notebook* tahap 2: tabel di `Hasil/Tabel/` dan fitur (latih dan uji) di `Data/Data Olahan/`. Grafik dihapus 16 Nov 2026 atas permintaan penulis.
+Repo: `Tugas-Machine-Learning-PM25-Beijing`. Folder: `Data` (`Data Mentah`, `Data Olahan`), `Notebook`, `Proposal`, `Laporan`, `Presentasi`, `Hasil` (`Gambar`, `Tabel`), `Referensi` (PDF referensi berlisensi terbuka), `Konteks`. Penamaan: folder dan dokumen memakai huruf kapital di awal kata dengan spasi, sedangkan berkas keluaran *notebook* memakai huruf kecil dengan garis bawah dan awalan tahap (`t2_`, `t4_`, dan seterusnya). Berkas fitur di `Data/Data Olahan/` dipakai semua tahap sehingga tanpa awalan. *Notebook* tahap 2 ada di `Notebook/Tahap 2 EDA dan Praproses.ipynb`. Ringkasan hasil per tahap ada di `Laporan/Ringkasan Hasil Per Tahapan.md`. Keluaran *notebook* tahap 2: sembilan grafik di `Hasil/Gambar/` (satu per langkah, tanpa nilai PM2.5 data uji), tabel di `Hasil/Tabel/`, dan fitur (latih dan uji) di `Data/Data Olahan/`.
 
 ### Sumber dan berkas dataset
 
@@ -146,7 +146,7 @@ Dosen akan menjalankan ulang dari sel pertama sampai terakhir, jadi urutan harus
 |---|---|
 | 00 | Pengaturan: *import* pustaka, `SEED = 42`, versi pustaka yang dipakai |
 | 01 | Rumusan masalah: sel *markdown* berisi konteks, target, dan metrik utama |
-| 02 | Muat data dan EDA: statistik deskriptif, distribusi target, nilai hilang |
+| 02 | Muat data dan EDA: statistik deskriptif, distribusi target, nilai hilang, grafik |
 | 03 | Pembagian data: pisahkan data uji, simpan, jangan disentuh lagi |
 | 04 | *Pipeline* praproses dan *baseline*: hasil *cross-validation* |
 | 05 | Model lanjutan dan *tuning*: minimal dua model, tabel perbandingan |
