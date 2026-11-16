@@ -9,7 +9,7 @@ Folder ini sengaja kosong sampai `Notebook/Tahap 2 EDA dan Praproses.ipynb` dija
 | `fitur_latih.csv` | 9 stasiun latih, jam *t* dengan target (jam *t*+24) sebelum 2016-05-12 19:00 | 246.798 |
 | `fitur_uji.csv` | 12 stasiun, jam *t* sejak 2016-05-12 19:00, dengan kolom `kelompok_uji` | 82.151 (61.686 stasiun latih, 20.465 stasiun ditahan) |
 
-Baris 3 stasiun ditahan sebelum batas waktu tidak disimpan (tidak dipakai). Tiga stasiun ditahan ditentukan oleh aturan di *notebook* 02.2 (usulan, menunggu persetujuan LIP), dan hasil uji coba 16 Nov 2026 adalah Dingling, Wanliu, dan Shunyi.
+Baris 3 stasiun ditahan sebelum batas waktu tidak disimpan (tidak dipakai). Tiga stasiun ditahan: Dingling, Wanliu, dan Shunyi (keputusan LIP 16 Nov 2026, dikunci di *notebook* 02.2 dan dicek terhadap aturan urutan jarak ke-1, ke-6, dan ke-12).
 
 ## Kolom
 
