@@ -18,34 +18,64 @@ Dari skenario ini kita tahu apa yang harus dibuat: sebuah model yang pada pukul 
 
 Agar model bisa belajar menebak, ia butuh contoh dari masa lalu. Setiap contoh berisi kondisi udara dan cuaca pada satu jam, beserta PM2.5 yang terukur 24 jam sesudahnya. Semakin banyak dan semakin beragam contohnya, semakin baik model belajar pola, misalnya kapan polusi cenderung naik. Contoh seperti itu tersedia di dataset berikut.
 
-## 2. Dataset: sumber contoh untuk model
+## 2. Dataset: kolom-kolomnya
 
 **Beijing Multi-Site Air Quality** dari UCI (https://archive.ics.uci.edu/dataset/501).
 
-Kebutuhan studi kasus dan bagian dataset yang memenuhinya:
+Dataset ini berupa 12 berkas CSV, satu per stasiun pemantau udara di Beijing. Setiap baris adalah satu jam pengukuran. Total 420.768 baris (12 stasiun × 35.064 jam), dari 1 Maret 2013 pukul 00.00 sampai 28 Februari 2017 pukul 23.00. Setiap berkas punya 18 kolom yang sama.
 
-| Kebutuhan studi kasus | Yang ada di dataset |
+### Kolom waktu dan tempat
+
+| Kolom | Arti | Isi |
+|---|---|---|
+| `No` | Nomor urut baris dalam satu stasiun | 1 sampai 35.064 |
+| `year` | Tahun | 2013 sampai 2017 |
+| `month` | Bulan | 1 sampai 12 |
+| `day` | Tanggal | 1 sampai 31 |
+| `hour` | Jam | 0 sampai 23 |
+| `station` | Nama stasiun | 12 nama, misalnya Tiantan dan Dingling |
+
+Kolom `year`, `month`, `day`, dan `hour` digabung menjadi satu penanda waktu. Kolom `No` dan `station` tidak dipakai sebagai fitur.
+
+### Kolom polutan udara
+
+| Kolom | Arti | Rentang nilai | Kosong |
+|---|---|---|---|
+| `PM2.5` | Partikel halus 2,5 mikrometer atau kurang. **Ini yang diramal** | 2 sampai 999 | 2,08% |
+| `PM10` | Partikel 10 mikrometer atau kurang | 2 sampai 999 | 1,53% |
+| `SO2` | Sulfur dioksida | 0,3 sampai 500 | 2,14% |
+| `NO2` | Nitrogen dioksida | 1 sampai 290 | 2,88% |
+| `CO` | Karbon monoksida | 100 sampai 10.000 | 4,92% |
+| `O3` | Ozon | 0,2 sampai 1.071 | 3,16% |
+
+### Kolom cuaca
+
+| Kolom | Arti | Rentang nilai | Kosong |
+|---|---|---|---|
+| `TEMP` | Suhu udara | −19,9 sampai 41,6 | 0,09% |
+| `PRES` | Tekanan udara | 982,4 sampai 1.042,8 | 0,09% |
+| `DEWP` | Suhu titik embun | −43,4 sampai 29,1 | 0,10% |
+| `RAIN` | Curah hujan | 0 sampai 72,5 | 0,09% |
+| `wd` | Arah datangnya angin, 16 kategori (N, NNE, NE, ENE, E, dan seterusnya sampai NNW). Satu-satunya kolom berupa teks | 16 kategori | 0,43% |
+| `WSPM` | Kecepatan angin | 0 sampai 13,2 | 0,08% |
+
+Satuan mengikuti dokumentasi UCI: polutan dalam mikrogram per meter kubik, suhu dan titik embun dalam derajat Celsius, tekanan dalam hPa, hujan dalam mm, kecepatan angin dalam meter per detik. Satuan ini belum dicek ulang pada halaman UCI saat berkas ini disusun. Rentang nilai dan persentase kosong dihitung dari seluruh 420.768 baris.
+
+### Contoh satu baris (Tiantan, 1 Maret 2013 pukul 00.00)
+
+`PM2.5` = 6, `PM10` = 6, `SO2` = 4, `NO2` = 8, `CO` = 300, `O3` = 81, `TEMP` = −0,5, `PRES` = 1024,5, `DEWP` = −21,4, `RAIN` = 0, `wd` = NNW, `WSPM` = 5,7.
+
+### Kolom mana yang dipakai di proyek ini
+
+| Peran | Kolom |
 |---|---|
-| Riwayat PM2.5 untuk dipelajari polanya | Kolom PM2.5, satu nilai per jam |
-| Kondisi udara lain yang ikut memengaruhi | Kolom PM10, SO2, NO2, CO, dan O3 |
-| Kondisi cuaca yang ikut memengaruhi | Kolom suhu, tekanan, titik embun, hujan, dan angin |
-| Tempat yang berbeda (untuk menguji apakah model berlaku di tempat lain) | 12 stasiun pemantau di Beijing |
-| Waktu yang cukup panjang untuk mengenali pola musim dan jam | 4 tahun data, dari 1 Maret 2013 sampai 28 Februari 2017 |
+| **Target** | `PM2.5` pada jam t+24. Ini bukan kolom asli, tetapi nilai `PM2.5` yang digeser 24 jam |
+| Fitur langsung | `PM2.5`, `PM10`, `SO2`, `NO2`, `CO`, `O3`, `TEMP`, `PRES`, `DEWP`, `RAIN`, `WSPM` pada jam t |
+| Fitur turunan | `PM2.5` pada jam-jam sebelumnya, rata-rata bergulir `PM2.5`, `wd` (diubah menjadi angka), dan kalender dari `month`, `day`, `hour` |
+| Pembentuk waktu dan tempat | `year`, `month`, `day`, `hour`, dan `station` |
+| Tidak dipakai | `No` |
 
-Ringkasan isi dataset:
-
-| Hal | Isi |
-|---|---|
-| Sumber data | 12 stasiun pemantau udara di Beijing |
-| Frekuensi | Satu baris per jam |
-| Periode | 1 Maret 2013 sampai 28 Februari 2017 |
-| Ukuran | 420.768 baris (12 stasiun × 35.064 jam) |
-| Isi | PM2.5, polutan lain (PM10, SO2, NO2, CO, O3), dan cuaca (suhu, tekanan, titik embun, hujan, angin) |
-| Nilai hilang | PM2.5 kosong pada 2,08% baris, karena sensor kadang tidak mencatat |
-| Stasiun utama | **Tiantan** (untuk membangun dan memilih model) |
-| Stasiun uji | **Dingling** (untuk menguji apakah model masih bagus di tempat lain) |
-
-Dataset ini berisi pengukuran, bukan data pribadi warga.
+Nilai kosong ditandai `NA` di berkas CSV. Stasiun utama untuk membangun model adalah **Tiantan**, dan stasiun uji adalah **Dingling**. Dataset ini berisi pengukuran, bukan data pribadi warga.
 
 ## 3. Rumusan masalah
 
