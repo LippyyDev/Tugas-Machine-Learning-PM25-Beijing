@@ -376,7 +376,7 @@ QS.forEach((q,i)=>{ const g=rise(st,300+i*160); const y=116+i*128;
   r.addEventListener('pointerenter',()=>r.setAttribute('stroke',AMB)); r.addEventListener('pointerleave',()=>r.setAttribute('stroke',LINE)); });
 
 /* ═════════ Langkah ═════════ */
-const FIG=['Fig. 21 · Peta jalan 7 tahap','Fig. 22 · Rencana tahap 5 sampai 7','Fig. 23 · Kendala yang diakui','Fig. 24 · Yang pasti dan yang ditanyakan'];
+const FIG=['Fig. 22 · Peta jalan 7 tahap','Fig. 23 · Rencana tahap 5 sampai 7','Fig. 24 · Kendala yang diakui','Fig. 25 · Yang pasti dan yang ditanyakan'];
 const VIEWS=['v-peta','v-rencana','v-kendala','v-tutup'];
 function setView(i){ $$('.view').forEach(v=>v.classList.toggle('on',v.id===VIEWS[i])); $('#fig').innerHTML=FIG[i].replace(/^(Fig\. \d+)/,'<b>$1</b>'); tipOff();
   SV.forEach(s=>s.classList.remove('go')); void SV[i].getBoundingClientRect(); setTimeout(()=>SV[i].classList.add('go'),80); }

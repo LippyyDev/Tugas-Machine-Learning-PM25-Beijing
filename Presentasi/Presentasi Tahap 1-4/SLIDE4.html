@@ -454,7 +454,7 @@ OK.forEach((o,i)=>IG.push(itm(74,80+i*80,396,68,BLUE,'ok',o[0],[o[1]],o[2])));
 NG.forEach((o,i)=>IG.push(itm(496,80+i*122,376,108,AMB,'warn',o[0],o[1],o[2])));
 
 /* ═════════ Langkah ═════════ */
-const FIG=['Fig. 11 · Urut waktu atau acak','Fig. 12 · Lima lipatan','Fig. 13 · Jarak aman 24 jam','Fig. 14 · Praproses dalam pipeline','Fig. 15 · Stasiun latih dan asing','Fig. 16 · Dicegah dan diakui'];
+const FIG=['Fig. 12 · Urut waktu atau acak','Fig. 13 · Lima lipatan','Fig. 14 · Jarak aman 24 jam','Fig. 15 · Praproses dalam pipeline','Fig. 16 · Stasiun latih dan asing','Fig. 17 · Dicegah dan diakui'];
 const VIEWS=['v-urut','v-fold','v-gap','v-pipe','v-sta','v-cek'];
 function setView(i){ $$('.view').forEach(v=>v.classList.toggle('on',v.id===VIEWS[i])); $('#fig').innerHTML=FIG[i].replace(/^(Fig\. \d+)/,'<b>$1</b>'); tipOff();
   FR.forEach((r,k)=>{ r.ig.style.transitionDelay=(i===1?(k*140):0)+'ms'; r.ig.style.transform=i===1?'scaleX(1)':'scaleX(0)'; });

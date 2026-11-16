@@ -459,7 +459,7 @@ OUT.forEach((o,i)=>{ const x=44+i*434, g=mk('g',{transform:'translate('+x+',260)
 const conn=mk('path',{d:'M776 172V232H242V256M776 232H676V256',fill:'none',stroke:'#80849a','stroke-width':2,'stroke-dasharray':'5 5'},gf); conn.style.opacity=0; conn.style.transition='opacity .5s ease .8s'; FB.push(conn);
 
 /* ═════════ Langkah ═════════ */
-const FIG=['Fig. 05 · Dataset','Fig. 06 · Satu baris latihan','Fig. 07 · Aturan fitur','Fig. 08 · Apa yang tampak di data','Fig. 09 · Nilai hilang','Fig. 10 · Alur praproses'];
+const FIG=['Fig. 06 · Dataset','Fig. 07 · Satu baris latihan','Fig. 08 · Aturan fitur','Fig. 09 · Apa yang tampak di data','Fig. 10 · Nilai hilang','Fig. 11 · Alur praproses'];
 const VIEWS=['v-data','v-row','v-row','v-eda','v-gap','v-flow'];
 function setView(i){
   $$('.view').forEach(v=>v.classList.toggle('on',v.id===VIEWS[i]));

@@ -388,7 +388,7 @@ let dm=false; const sm2=ev=>{const p=svgPt(sp,ev);setM((p.x-PX0)/PSC);};
 mhit.addEventListener('pointerdown',e=>{dm=true;mhit.setPointerCapture(e.pointerId);sm2(e);}); mhit.addEventListener('pointermove',e=>{if(dm)sm2(e);}); mhit.addEventListener('pointerup',()=>{dm=false;}); mhit.addEventListener('pointercancel',()=>{dm=false;});
 
 /* ═════════ Langkah ═════════ */
-const FIG=['Fig. 17 · Tebakan naive','Fig. 18 · RMSE tiap lipatan','Fig. 19 · RMSE dan MAE','Fig. 20 · Membaca hasil model nanti'];
+const FIG=['Fig. 18 · Tebakan naive','Fig. 19 · RMSE tiap lipatan','Fig. 20 · RMSE dan MAE','Fig. 21 · Membaca hasil model nanti'];
 const VIEWS=['v-naive','v-fold','v-mae','v-pakai'];
 function setView(i){ $$('.view').forEach(v=>v.classList.toggle('on',v.id===VIEWS[i])); $('#fig').innerHTML=FIG[i].replace(/^(Fig\. \d+)/,'<b>$1</b>'); tipOff();
   sf.classList.remove('go'); sm.classList.remove('go'); void sf.getBoundingClientRect();
