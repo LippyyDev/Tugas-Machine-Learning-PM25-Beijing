@@ -13,11 +13,12 @@ Proyek individu mata kuliah Pembelajaran Mesin, S2 Teknik Informatika, Universit
 | Folder | Isi |
 |---|---|
 | `Data` | `Data Mentah`: 12 CSV, satu per stasiun (`Aotizhongxin.csv`, `Changping.csv`, dan seterusnya). `Data Olahan`: fitur hasil tahap 2 (`fitur_latih_Tiantan.csv`, `fitur_uji_Tiantan.csv`) |
-| `Notebook` | *Notebook* utama (struktur bagian 00 sampai 09 sesuai panduan) dan *notebook* tahap 2 (EDA dan praproses) |
-| `Proposal` | Proposal PDF 1 sampai 2 halaman |
+| `Notebook` | *Notebook* tahap 2 (bagian 00 sampai 04: EDA, praproses, validasi, dan *baseline*). Akan diperluas menjadi *notebook* akhir (bagian 05 sampai 09) |
+| `Proposal` | Draf proposal (Markdown) dan catatan verifikasi referensi. PDF 1 sampai 2 halaman belum dibuat |
 | `Laporan` | Laporan akhir PDF 8 sampai 12 halaman, deklarasi penggunaan AI, dan ringkasan hasil per tahapan |
 | `Presentasi` | Slide progres (Pertemuan 13) dan slide akhir (Pertemuan 15) |
 | `Hasil` | Gambar dan tabel keluaran (`Gambar`, `Tabel`) |
+| `Referensi` | PDF referensi [2] sampai [5] berlisensi terbuka beserta daftar pustaka IEEE |
 | `Konteks` | Ringkasan panduan tugas, panduan dosen (PDF), dan catatan kerja |
 
 ## Cara menjalankan

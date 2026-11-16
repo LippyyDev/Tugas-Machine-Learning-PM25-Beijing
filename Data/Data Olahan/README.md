@@ -38,7 +38,7 @@ Fitur hasil tahap 2 untuk stasiun Tiantan, siap dipakai pada tahap berikutnya. D
 - **Nilai kosong pada fitur belum diimputasi.** Tidak ada pengisian (tanpa *forward fill*, keputusan 15 Nov 2026). Pada berkas latih, 23 dari 29 fitur memiliki sel kosong, tertinggi `CO` 3,20%. Kolom `target` tidak ada yang kosong karena baris dengan target hilang sudah dibuang. Sisa nilai kosong diisi median di dalam *pipeline* pada setiap *fold*, jangan dihitung dari seluruh berkas.
 - **`fitur_uji_Tiantan.csv` hanya disimpan.** Berkas ini dibuka satu kali pada evaluasi final. Jangan dipakai untuk memilih fitur, model, atau *hyperparameter*.
 - **Tanpa *forward fill*.** Bila keputusan ini diubah, berkas ini dibuat ulang dengan menjalankan *notebook*.
-- **Hanya Tiantan.** Stasiun uji ditetapkan Dingling. Fiturnya dibuat dengan fungsi `buat_fitur` yang sama di *notebook* saat tahap 7.
+- **Hanya Tiantan.** Stasiun uji ditetapkan Dingling. Fiturnya dibuat dengan fungsi `buat_fitur` yang sama di *notebook* saat tahap 6 (evaluasi final).
 
 ## Catatan
 
