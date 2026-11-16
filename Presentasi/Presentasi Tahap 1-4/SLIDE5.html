@@ -60,6 +60,10 @@ html,body{width:100%;height:100%;background:#050507;overflow:hidden;font-family:
 .blk.active p{color:#e4e6ee}
 .blk.seen{opacity:.5}
 .blk.seen p{font-size:23px}
+.copy{top:262px;height:690px}
+.blk{flex-shrink:0}
+.copy .blk p{font-size:28px;line-height:1.42}
+.copy .blk.seen p{font-size:21px}
 .blk .more{display:inline;opacity:0;transition:opacity .7s ease .15s}
 .blk .more.show{opacity:1}
 
@@ -178,14 +182,14 @@ svg .fade{transition:opacity .45s ease}
   <div class="src">Dasar: Penjelasan Proyek, Tahap 4, hasil eksekusi notebook</div>
 
   <div class="copy">
-    <div class="blk" id="b1"><span class="lbl">01 · Tebakan paling sederhana</span>
-      <p><em>Naive forecast</em>: tebak PM2.5 24 jam lagi <b>sama dengan sekarang</b>. Tidak belajar apa pun, hanya menyalin nilai jam t.</p></div>
-    <div class="blk" id="b2"><span class="lbl">02 · Seberapa meleset</span>
-      <p>RMSE pada 5 lipatan: <b>86,82 ± 24,70</b>. Lipatan 1, 3, dan 5 sekitar 100, lipatan 2 dan 4 sekitar 60.</p></div>
-    <div class="blk" id="b3"><span class="lbl">03 · Ukuran pendamping</span>
-      <p>MAE <b>59,39 ± 16,53</b>. RMSE lebih besar karena meleset jauh dihukum lebih berat, dan itulah yang paling merugikan.</p></div>
-    <div class="blk" id="b4"><span class="lbl">04 · Cara memakai angka ini</span>
-      <p>Model lanjutan baru berguna bila RMSE-nya <b>di bawah 86,82</b> pada lipatan yang sama. Angka ini dari data latih, <b>bukan data uji</b>. <em>Naive</em> 24 jam lemah, jadi mengalahkannya saja belum cukup.</p></div>
+    <div class="blk" id="b1"><span class="lbl">01 · Model Acuan (<em>Persistence Baseline</em>)</span>
+      <p><em>Naive forecast</em> memprediksi kadar PM2.5 pada jam t+24 <b>sama persis dengan kondisi jam t</b>. Pendekatan tanpa pelatihan ini menjadi patokan minimum (<em>floor</em>) sebelum beralih ke model yang lebih kompleks.</p></div>
+    <div class="blk" id="b2"><span class="lbl">02 · Performa Lintas Lipatan (RMSE)</span>
+      <p>Rata-rata RMSE pada 5 <em>fold</em> validasi mencapai <b>86,82 ± 24,70</b> µg/m³. Fluktuasinya cukup lebar: <em>fold</em> 1, 3, dan 5 (validasi mencakup musim dingin) sekitar 100, sedangkan <em>fold</em> 2 dan 4 (musim hangat) sekitar 60.</p></div>
+    <div class="blk" id="b3"><span class="lbl">03 · Metrik Pendamping (MAE)</span>
+      <p>Nilai MAE tercatat <b>59,39 ± 16,53</b> µg/m³. Selisihnya yang lebih rendah dari RMSE mengindikasikan sejumlah kecil galat besar yang memengaruhi RMSE jauh lebih kuat.</p></div>
+    <div class="blk" id="b4"><span class="lbl">04 · Kriteria Keberhasilan Model</span>
+      <p>Model <em>machine learning</em> di tahap berikutnya wajib mencetak RMSE <b>di bawah RMSE <em>naive</em> pada <em>fold</em> yang sama</b>, bukan hanya di bawah rata-rata 86,82. Angka ini dari data latih, <b>bukan data uji</b>. Karena <em>baseline</em> ini lemah, mengalahkannya adalah syarat minimum, bukan tujuan akhir.</p></div>
   </div>
 
   <div class="panel">
@@ -293,10 +297,10 @@ const aDot=mk('circle',{r:9,fill:'rgba(255,194,102,.2)',stroke:AMB,'stroke-width
 const tDot=mk('circle',{r:7.5,fill:'#0a0b10',stroke:'#f1f2f6','stroke-width':2.5},sn);
 const HALO={stroke:'#0a0b0f','stroke-width':5,'paint-order':'stroke'};
 const tLab=tx(sn,'',[0,CY0-20],14,'#f1f2f6',Object.assign({'text-anchor':'middle','letter-spacing':'.12em'}));
-const pLab=tx(sn,'RAMALAN',[0,0],13,BLUE,Object.assign({'letter-spacing':'.1em'},HALO));
+const pLab=tx(sn,'PREDIKSI',[0,0],13,BLUE,Object.assign({'letter-spacing':'.1em'},HALO));
 const aLab=tx(sn,'KENYATAAN',[0,0],13,AMB,Object.assign({'letter-spacing':'.1em'},HALO));
 const eLab=tx(sn,'',[0,0],15,AMB,Object.assign({'font-weight':500},HALO));
-const stat=[['RAMALAN (NILAI JAM T)',BLUE],['KENYATAAN (JAM T+24)',AMB],['MELESET',AMB]].map(([l,c],i)=>{ tx(sn,l,[74+i*268,CY1+54],12,GREY,{'letter-spacing':'.1em'}); return tx(sn,'',[74+i*268,CY1+92],34,c,{'font-weight':500}); });
+const stat=[['PREDIKSI NAIVE (JAM T)',BLUE],['KENYATAAN (JAM T+24)',AMB],['GALAT (',AMB]].map(([l,c],i)=>{ const lt=tx(sn,l,[74+i*268,CY1+54],12,GREY,{'letter-spacing':'.1em'}); if(i===2){ const it=document.createElementNS(SVGNS,'tspan'); it.setAttribute('font-style','italic'); it.textContent='ERROR'; lt.appendChild(it); lt.appendChild(document.createTextNode(')')); } return tx(sn,'',[74+i*268,CY1+92],34,c,{'font-weight':500}); });
 let tIdx=106;
 function placeT(){
   const x=xs(tIdx), x2=xs(tIdx+24), v1=EX[tIdx], v2=EX[tIdx+24], y1=ys(v1), y2=ys(v2), err=Math.abs(v2-v1);
@@ -308,9 +312,9 @@ function placeT(){
   const right=x2>CX1-130, dx=right?-16:16, an=right?'end':'start', far=Math.abs(y1-y2)>=30;
   pLab.setAttribute('x',x2+dx); pLab.setAttribute('y',far?y1+5:(y1<=y2?y1-8:y1+22)); pLab.setAttribute('text-anchor',an);
   aLab.setAttribute('x',x2+dx); aLab.setAttribute('y',far?y2+5:(y1<=y2?y2+22:y2-8)); aLab.setAttribute('text-anchor',an);
-  eLab.setAttribute('x',x2+dx); eLab.setAttribute('y',(y1+y2)/2+5); eLab.setAttribute('text-anchor',an); eLab.textContent=Math.abs(y1-y2)>=80?'MELESET '+fmt(err):'';
+  eLab.setAttribute('x',x2+dx); eLab.setAttribute('y',(y1+y2)/2+5); eLab.setAttribute('text-anchor',an); eLab.textContent=Math.abs(y1-y2)>=80?'GALAT '+fmt(err):'';
   stat[0].textContent=fmt(v1); stat[1].textContent=fmt(v2); stat[2].textContent=fmt(err);
-  readoutNow('Meleset di jam ini',fmt(err)+' <span class="u">µg/m³</span>');
+  readoutNow('Galat di jam ini',fmt(err)+' <span class="u">µg/m³</span>');
 }
 const hit=mk('rect',{x:CX0,y:CY0-30,width:CX1-CX0,height:CY1-CY0+60,fill:'transparent',style:'cursor:ew-resize'},sn);
 let drag=false; const setFromEv=ev=>{const p=svgPt(sn,ev);tIdx=Math.max(T_MIN,Math.min(T_MAX,Math.round((p.x-CX0)/DXH)));placeT();};
@@ -335,7 +339,8 @@ RF.forEach((v,i)=>{ const x=BX0+i*SLOT+(SLOT-BW)/2, h=BY1-by(v), col=WIN[i]?AMB:
 mk('rect',{x:74,y:452,width:14,height:14,fill:AMB,'fill-opacity':.8},sf); tx(sf,'validasi mencakup musim dingin',[96,464],13,'#c4c7d4');
 mk('rect',{x:394,y:452,width:14,height:14,fill:BLUE,'fill-opacity':.8},sf); tx(sf,'validasi musim hangat',[416,464],13,'#c4c7d4');
 mk('line',{x1:620,x2:644,y1:459,y2:459,stroke:'#f1f2f6','stroke-width':1.8,'stroke-dasharray':'5 4'},sf); tx(sf,'rata-rata, pita = ± sd',[654,464],13,'#c4c7d4');
-tx(sf,'Musim diturunkan dari tanggal validasi. Dugaan sebab sd besar: beda musim.',[74,494],13,GREY);
+tx(sf,'Musim diturunkan dari tanggal validasi. Simpangan baku antar fold cukup besar.',[74,490],13,GREY);
+tx(sf,'Dugaan penyebab: perbedaan musim, periode musim dingin memicu lonjakan polusi ekstrem (belum diuji).',[74,510],13,GREY);
 
 /* ═════════ V2: RMSE dan MAE ═════════ */
 const sm=$('#svg-mae'); const MX0=214, MX1=840, MSC=(MX1-MX0)/130, mxv=v=>MX0+v*MSC;
@@ -362,12 +367,13 @@ tx(sm,'Seluruh data latih, 9 stasiun, '+fmt(PG.n_pasang)+' pasangan (bukan per l
 /* ═════════ V3: cara memakai: bandingkan per lipatan ═════════ */
 const sp=$('#svg-pakai'); const PX0=74, PX1=872, PSC=(PX1-PX0)/130, pv=v=>PX0+v*PSC, AY=236;
 mk('line',{x1:PX0,x2:PX1,y1:AY,y2:AY,stroke:'rgba(255,255,255,.3)','stroke-width':2},sp);
-[0,20,40,60,80,100,120].forEach(v=>{ mk('line',{x1:pv(v),x2:pv(v),y1:AY,y2:AY+7,stroke:'rgba(255,255,255,.3)'},sp); tx(sp,v,[pv(v),AY+28],13,GREY,{'text-anchor':'middle'}); });
-tx(sp,'RMSE (µg/m³)',[PX1,AY+54],13,GREY,{'text-anchor':'end','letter-spacing':'.1em'});
+[0,20,40,60,80,100,120].forEach(v=>{ mk('line',{x1:pv(v),x2:pv(v),y1:AY,y2:AY+7,stroke:'rgba(255,255,255,.3)'},sp); tx(sp,v,[pv(v),AY+48],13,GREY,{'text-anchor':'middle'}); });
+tx(sp,'RMSE (µg/m³)',[PX1,AY+68],13,GREY,{'text-anchor':'end','letter-spacing':'.1em'});
 mk('line',{x1:pv(MEAN),x2:pv(MEAN),y1:AY-92,y2:AY,stroke:'#f1f2f6','stroke-width':1.6,'stroke-dasharray':'5 5'},sp);
 tx(sp,'RATA-RATA NAIVE 86,82',[pv(MEAN)+10,AY-84],13,'#f1f2f6',{'letter-spacing':'.08em'});
 const OFFY=[-30,-30,-30,-30,-30];
-RF.forEach((v,i)=>{ mk('circle',{cx:pv(v),cy:AY,r:7.5,fill:i%2===0?AMB:BLUE,'fill-opacity':.9,stroke:'#0a0b10','stroke-width':2},sp); tx(sp,'L'+(i+1),[pv(v),AY-(i===2?40:19)],13,'#c4c7d4',{'text-anchor':'middle'}); });
+const LUP=[true,false,false,true,false];   // L1 atas, L2 bawah, L3 bawah, L4 atas, L5 bawah
+RF.forEach((v,i)=>{ mk('circle',{cx:pv(v),cy:AY,r:6,fill:i%2===0?AMB:BLUE,'fill-opacity':.9,stroke:'#0a0b10','stroke-width':2},sp); tx(sp,'L'+(i+1),[pv(v),LUP[i]?AY-18:AY+27],13,'#c4c7d4',{'text-anchor':'middle'}); });
 tx(sp,'tiap titik = RMSE naive di satu lipatan',[PX0,AY-84],13,GREY);
 const mk0=mk('g',{},sp);
 const mLine=mk('line',{y1:AY-52,y2:AY+14,stroke:BLUE,'stroke-width':3},mk0);
@@ -380,21 +386,25 @@ let mv=70;
 function setM(v){ mv=Math.max(30,Math.min(125,v)); const x=pv(mv);
   mLine.setAttribute('x1',x); mLine.setAttribute('x2',x); mTri.setAttribute('transform','translate('+x+','+(AY-52)+')'); mLab.setAttribute('x',x); mLab.textContent=fd(mv,0);
   const k=RF.filter(r=>mv<r).length;
-  r1.textContent='Bila RMSE model = '+fd(mv,0)+' di semua lipatan, ia mengalahkan naive di '+k+' dari 5 lipatan.';
-  r2.textContent=mv<MEAN?'Rata-rata tampak lebih baik ('+fd(mv,0)+' < 86,82)'+(k<5?', tetapi tidak di setiap lipatan.':', dan di setiap lipatan.'):'Rata-rata belum lebih baik dari naive.';
-  r3.textContent=k<5&&mv<MEAN?'Karena itu bandingkan lipatan demi lipatan, bukan hanya rata-rata.':(k===5?'Aman dibaca: unggul konsisten.':'');
+  const rich=(el,parts)=>{ el.textContent=''; parts.forEach(([t,it])=>{ if(it){ const e=document.createElementNS(SVGNS,'tspan'); e.setAttribute('font-style','italic'); e.textContent=t; el.appendChild(e); } else el.appendChild(document.createTextNode(t)); }); };
+  rich(r1,[['Simulasi RMSE model = '+fd(mv,0)+' → unggul di '+k+' dari 5 '],['fold',1],['.']]);
+  if(mv<MEAN) rich(r2,k===5?[['Unggul konsisten di seluruh musim.']]:[['Rata-rata tampak lebih baik, namun masih kalah di '],['fold',1],[' musim hangat.']]);
+  else rich(r2,[['Rata-rata belum lebih baik dari '],['baseline naive',1],['.']]);
+  if(k<5&&mv<MEAN) rich(r3,[['Karena itu bandingkan '],['fold',1],[' demi '],['fold',1],[', bukan hanya rata-rata.']]);
+  else if(k===5) rich(r3,[['Tetap syarat minimum: '],['naive',1],[' adalah '],['baseline',1],[' yang lemah.']]);
+  else rich(r3,[['']]);
   readoutNow('RMSE contoh',fd(mv,0)+' <span class="u">µg/m³</span>'); }
 let dm=false; const sm2=ev=>{const p=svgPt(sp,ev);setM((p.x-PX0)/PSC);};
 mhit.addEventListener('pointerdown',e=>{dm=true;mhit.setPointerCapture(e.pointerId);sm2(e);}); mhit.addEventListener('pointermove',e=>{if(dm)sm2(e);}); mhit.addEventListener('pointerup',()=>{dm=false;}); mhit.addEventListener('pointercancel',()=>{dm=false;});
 
 /* ═════════ Langkah ═════════ */
-const FIG=['Fig. 18 · Tebakan naive','Fig. 19 · RMSE tiap lipatan','Fig. 20 · RMSE dan MAE','Fig. 21 · Membaca hasil model nanti'];
+const FIG=['Fig. 18 · Prediksi naive','Fig. 19 · RMSE tiap lipatan','Fig. 20 · RMSE dan MAE','Fig. 21 · Membaca hasil model nanti'];
 const VIEWS=['v-naive','v-fold','v-mae','v-pakai'];
 function setView(i){ $$('.view').forEach(v=>v.classList.toggle('on',v.id===VIEWS[i])); $('#fig').innerHTML=FIG[i].replace(/^(Fig\. \d+)/,'<b>$1</b>'); tipOff();
   sf.classList.remove('go'); sm.classList.remove('go'); void sf.getBoundingClientRect();
   if(i===1) setTimeout(()=>sf.classList.add('go'),80); if(i===2) setTimeout(()=>sm.classList.add('go'),80); }
 const STEPS=[
-  ()=>{ blocks(0); setView(0); placeT(); caption('Ramalan <em>naive</em> = nilai sekarang (biru). Kenyataan 24 jam kemudian di lingkaran kuning. Seret garis putih. Korelasi jam t dan t+24 hanya <b>0,40</b>.'); },
+  ()=>{ blocks(0); setView(0); placeT(); caption('Prediksi <em>naive</em> menyalin nilai jam t secara datar (biru). Kenyataan 24 jam kemudian di lingkaran kuning. Seret garis putih. Korelasi jam t dan t+24 hanya <b>0,40</b>.'); },
   ()=>{ blocks(1); setView(1); readoutNow('RMSE rata-rata','86,82 <span class="u">±</span> 24,70'); caption('RMSE <em>naive</em> per lipatan, data latih 9 stasiun. Validasi musim dingin sekitar <b>100</b>, musim hangat sekitar <b>60</b>. Arahkan kursor ke batang.'); },
   ()=>{ blocks(2); setView(2); readoutNow('MAE rata-rata','59,39 <span class="u">±</span> 16,53'); caption('RMSE memberi bobot besar pada galat besar, jadi lebih tinggi dari MAE. Cocok di sini: meleset jauh saat polusi tinggi paling merugikan.'); },
   ()=>{ blocks(3); setView(3); setM(70); caption('Target model lanjutan: <b>di bawah 86,82</b>. Geser penanda biru: rata-rata bisa tampak lebih baik padahal kalah di lipatan musim hangat.'); }
