@@ -26,7 +26,7 @@ Dikeluarkan karena tidak memenuhi syarat: Albelali dan Ahmed (arXiv 2512.06932, 
 
 1. ~~Kuartil [1] dan [2] langsung di scimagojr.com~~ Sudah dicek 16 Nov 2026 lewat halaman SCImago, hasil di bagian paling bawah berkas ini.
 2. ~~Teks lengkap [1]~~ Sudah dibaca 16 Nov 2026 (lihat bagian paling bawah). Hasil numerik [1] tetap tidak dikutip.
-3. Kebutuhan laporan akhir: minimal 5 referensi, 3 di antaranya artikel 5 tahun terakhir. Proposal ini baru memuat 3, sisanya dapat diambil dari kandidat di atas setelah diverifikasi, ditambah teori dasar berlabel [Teori Dasar] jika perlu.
+3. Kebutuhan laporan akhir: minimal 5 referensi, 3 di antaranya artikel 5 tahun terakhir. Proposal kini memuat 5 (ditambah [4] dan [5] pada 16 Nov 2026), sisanya dapat diambil dari kandidat di atas setelah diverifikasi, ditambah teori dasar berlabel [Teori Dasar] jika perlu.
 
 ## Literatur untuk skema validasi dan kebocoran data (dicek 15 November 2026)
 
