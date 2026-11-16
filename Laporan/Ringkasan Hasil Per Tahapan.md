@@ -14,8 +14,6 @@ Berisi inti hasil tiap tahap, diperbarui setiap satu tahap selesai. Rincian leng
 
 ## Revisi desain evaluasi (16 Nov 2026)
 
-![Pembagian data: 9 stasiun latih, 3 stasiun asing, uji 20% periode terakhir](../Hasil/Gambar/t3_pembagian_data.png)
-
 Keputusan LIP 16 Nov 2026 menggantikan skema "latih di Tiantan, uji di Dingling" (opsi A) dengan desain berikut. Status: [Usulan], belum dikonfirmasi dosen. Panduan dosen hanya menetapkan uji = 20% periode terakhir dan tantangan "uji model di stasiun lain".
 
 - **Desain:** 9 stasiun latih dan 3 stasiun asing. Waktu 80% awal untuk latih, 20% akhir untuk uji, dengan satu stempel waktu batas untuk semua stasiun. Uji final dibuka satu kali pada 20% akhir dari 12 stasiun, dilaporkan terpisah untuk 9 stasiun latih dan 3 stasiun asing.
@@ -42,7 +40,7 @@ Keputusan LIP 16 Nov 2026 menggantikan skema "latih di Tiantan, uji di Dingling"
 
 Semua angka berasal dari eksekusi `Notebook/Tahap 2 EDA dan Praproses.ipynb` pada stasiun Tiantan dan **hanya memakai data latih**, kecuali disebut lain. *Notebook* dijalankan ulang 15 Nov 2026 setelah keputusan tanpa *forward fill*, jarak aman 24 jam, dan penambahan *baseline* (0 *error*, 10 grafik tertanam). Dua tabel EDA identik dengan eksekusi sebelumnya.
 
-Keluaran *notebook*: enam grafik praproses di `Hasil/Gambar/` (bernama `t2_`), enam tabel di `Hasil/Tabel/` (dua EDA, tiga dasar keputusan, satu *baseline*), dan fitur siap pakai (latih dan uji) di `Data/Data Olahan/`. Berkas pilot Tiantan dihapus 16 Nov 2026 supaya *notebook* dijalankan ulang di bawah desain 9/3, sehingga angka tahap 2 sampai 4 di dokumen ini adalah hasil pilot. Berkas fitur uji hanya disimpan, tidak dibuka untuk analisis.
+Keluaran *notebook*: enam tabel di `Hasil/Tabel/` (dua EDA, tiga dasar keputusan, satu *baseline*), dan fitur siap pakai (latih dan uji) di `Data/Data Olahan/`. Berkas pilot Tiantan dihapus 16 Nov 2026 supaya *notebook* dijalankan ulang di bawah desain 9/3, sehingga angka tahap 2 sampai 4 di dokumen ini adalah hasil pilot. Berkas fitur uji hanya disimpan, tidak dibuka untuk analisis.
 
 - **Pembagian waktu:** data uji dimulai 2016-05-12 19:00 (20% jam terakhir), disisihkan sebelum eksplorasi dan tidak dibuka. Data latih seluruh stasiun 336.612 baris (80%).
 - **Sebaran PM2.5:** median 59, rata-rata 82,2, miring ke kanan (*skewness* 1,91). Galat besar saat episode polusi tinggi akan mendominasi RMSE.
