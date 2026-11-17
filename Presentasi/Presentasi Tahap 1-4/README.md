@@ -19,7 +19,7 @@ Maju di langkah terakhir pindah ke slide berikutnya, mundur di langkah pertama k
 
 | No | Slide | Waktu | Langkah | Isi utama | Sumber di Penjelasan Proyek |
 |---|---|---|---|---|---|
-| 1 | Judul | 0,5 mnt | 1 | Judul "Peramalan PM2.5 Beijing 24 Jam ke Depan", satu baris teks kecil empat tahap (rumusan masalah, eksplorasi dan praproses, skema validasi, *baseline*) tanpa kotak, penyaji, NIM, siluet kota Beijing dari garis kotak berkelir samar di belakang animasi *time series*, tiga gambar meme (kakek di depan, emoji jempol dan *social credit* di belakangnya, tidak sejajar) dengan balon ucapan kecil | |
+| 1 | Judul | 0,5 mnt | 1 | Judul "Peramalan PM2.5 Beijing 24 Jam ke Depan", satu baris teks kecil empat tahap (rumusan masalah, eksplorasi dan praproses, skema validasi, *baseline*) tanpa kotak, penyaji, NIM, gambar garis SVG gerbang Tiananmen (ikon Beijing) yang samar di belakang animasi *time series*, tiga gambar meme (kakek di depan, emoji jempol dan *social credit* di belakangnya, tidak sejajar) dengan balon ucapan kecil | |
 | 2 | Tahap 1: rumusan masalah dan metrik | 1,5 | 7 | Mengalir dari PM2.5 dan deret waktu, studi kasus warga, yang diramal (jam t+24), rumusan satu kalimat, RMSE dan MAE (contoh sederhana lalu data nyata), tiga tantangan | Tahap 1 |
 | 3 | Tahap 2: eksplorasi dan praproses | 2,5 | 6 | 12 × 35.064 = 420.768 baris, satu baris latihan dengan 29 fitur, aturan fitur (aman atau bocor), EDA, nilai hilang, alur praproses | Tahap 2 |
 | 4 | Tahap 3: skema validasi | 2,5 | 6 | Berurutan lawan acak, lima lipatan, jarak aman 24 jam, praproses di dalam *pipeline*, 9 stasiun latih dan 3 asing, yang dicegah dan yang diakui | Tahap 3 |
