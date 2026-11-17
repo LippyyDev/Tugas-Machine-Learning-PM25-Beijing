@@ -24,7 +24,7 @@ Maju di langkah terakhir pindah ke slide berikutnya, mundur di langkah pertama k
 | 3 | Tahap 2: eksplorasi dan praproses | 2,5 | 6 | 12 × 35.064 = 420.768 baris, satu baris latihan dengan 29 fitur, aturan fitur (aman atau bocor), EDA, nilai hilang, alur praproses | Tahap 2 |
 | 4 | Tahap 3: skema validasi | 2,5 | 6 | Berurutan lawan acak, lima lipatan, jarak aman 24 jam, praproses di dalam *pipeline*, 9 stasiun latih dan 3 asing, yang dicegah dan yang diakui | Tahap 3 |
 | 5 | Tahap 4: *baseline* | 1,5 | 4 | *Naive forecast*, RMSE 86,82 ± 24,70 per lipatan, RMSE dan MAE, cara membaca hasil model nanti | Tahap 4 |
-| 6 | Rencana dan kendala | 1,5 | 4 | Peta jalan 7 tahap, rencana tahap 5 sampai 7 dan gerbang data uji, lima kendala, pertanyaan untuk dosen | Tahap 5 sampai 7, bagian kelemahan |
+| 6 | Ringkasan hasil Tahap 1 sampai 4 | 1,5 | 5 | Satu langkah per tahap (alasan memilih RMSE, 246.798 baris latih dan 82.151 baris uji dengan 29 fitur, lima lipatan dengan jeda 24 jam, RMSE *naive* per lipatan) dan satu petak ringkasan yang bisa diklik. Tanpa rencana tahap 5 sampai 7 | Tahap 1 sampai 4, hasil eksekusi *notebook* |
 
 Total 10 menit.
 
@@ -32,6 +32,7 @@ Total 10 menit.
 
 * Slide 2 kini 7 langkah (sebelumnya 5), jadi mungkin butuh lebih dari 1,5 menit. Sesuaikan jatah waktu atau pangkas langkah saat latihan.
 * Panduan dosen membatasi slide progres Pertemuan 13 hingga 5 slide. Presentasi ini 6 halaman karena memakai satu slide judul. Konfirmasikan apakah slide judul dihitung.
-* Desain 9 stasiun latih dan 3 stasiun asing adalah keputusan penulis (16 Nov 2026) dan belum dikonfirmasi dosen. Slide 4 dan 6 menandainya.
-* Tiga pertanyaan di slide 6 (Fig. 25) adalah usulan penulis presentasi, bukan ketentuan dosen.
+* Desain 9 stasiun latih dan 3 stasiun asing adalah keputusan penulis (16 Nov 2026) dan belum dikonfirmasi dosen. Slide 4 dan 6 menandainya (usulan penulis, belum dikonfirmasi dosen).
+* Slide 6 hanya merangkum hasil Tahap 1 sampai 4 (permintaan penulis 17 Nov 2026): rencana tahap 5 sampai 7, daftar kendala, dan tiga pertanyaan untuk dosen dihapus dari slide. Pengakuan bahwa statistik ringkas periode uji pernah terlihat tetap ada di Fig. 26.
+* Slide 6 kini 5 langkah dalam jatah 1,5 menit, sama seperti slide 2 yang perlu dilatih waktunya.
 * Nama dosen tidak dicantumkan karena belum tertulis di sumber.

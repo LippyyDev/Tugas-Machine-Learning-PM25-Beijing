@@ -219,7 +219,7 @@ function frame(){
 frame();
 
 /* ═════════ Progres, animasi masuk, kontrol ═════════ */
-const GROUPS=[["Pembuka", 1], ["Tahap 1", 1], ["Tahap 2", 1], ["Tahap 3", 1], ["Tahap 4", 1], ["Rencana", 1]];
+const GROUPS=[["Pembuka", 1], ["Tahap 1", 1], ["Tahap 2", 1], ["Tahap 3", 1], ["Tahap 4", 1], ["Ringkasan", 1]];
 (function(){ const p=$('#prog'); GROUPS.forEach(([n,c])=>{const s=document.createElement('div');s.className='seg';s.style.flex=c;s.innerHTML='<div class="bar"><i></i></div><span>'+n+'</span>';p.appendChild(s);}); })();
 function progress(frac){
   let start=0;
