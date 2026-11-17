@@ -195,7 +195,7 @@ svg.vz{display:block;width:100%;height:526px}
     <div class="blk" id="b5"><span class="lbl">05 · RMSE dan MAE</span>
       <p><b>Galat</b> mengukur selisih antara prediksi dan realita. <b>MAE</b> menghitung rata-rata selisih secara merata, sedangkan <b>RMSE</b> mengkuadratkan galatnya terlebih dahulu, sehingga satu prediksi yang meleset jauh mendapat penalti jauh lebih berat. <b>Semakin rendah nilai keduanya, semakin akurat model.</b> Selisih RMSE dan MAE yang kecil menandakan tidak ada prediksi yang meleset terlalu jauh (<em>outlier</em>).</p></div>
     <div class="blk" id="b6"><span class="lbl">06 · Pada data nyata</span>
-      <p>Saat diuji dengan <em>baseline naive</em> pada data latih, <b>5% galat paling ekstrem</b> menyumbang hampir separuh total nilai RMSE, namun hanya seperlima pada MAE. Karena itu, <b>RMSE</b> dipilih sebagai metrik utama.</p></div>
+      <p>Saat diuji dengan <em>baseline naive</em> pada data latih, <b>5% galat paling ekstrem</b> menyumbang hampir separuh total galat kuadrat (dasar RMSE), namun hanya seperlima total galat mutlak (dasar MAE). Karena itu, <b>RMSE</b> dipilih sebagai metrik utama.</p></div>
     <div class="blk" id="b7"><span class="lbl">07 · Tiga tantangan wajib</span>
       <p>Ada tiga kendala utama yang harus diselesaikan: menangani <b>data sensor yang kosong</b>, menjaga <b>validasi tetap berurutan waktu</b>, serta menguji ketahanan model pada <b>stasiun baru</b> (<em>distribution shift</em>).</p></div>
   </div>
@@ -376,8 +376,8 @@ function fillBar(b,on){
   b.v1.textContent=on?fd(100-b.share)+'%':''; b.v2.textContent=on?fd(b.share)+'%':'';
   b.v1.style.opacity=on?1:0; b.v2.style.opacity=on?1:0;
 }
-mk('rect',{x:BARX,y:366,width:16,height:16,fill:'#ffc266'},eg); tx(eg,'5% galat terbesar',[BARX+26,379],17,'#c4c7d4',{'font-family':'Space Grotesk,Segoe UI,sans-serif'});
-mk('rect',{x:BARX+230,y:366,width:16,height:16,fill:'#7db4ff','fill-opacity':.55},eg); tx(eg,'95% galat lainnya',[BARX+256,379],17,'#c4c7d4',{'font-family':'Space Grotesk,Segoe UI,sans-serif'});
+mk('rect',{x:BARX+230,y:366,width:16,height:16,fill:'#ffc266'},eg); tx(eg,'5% galat terbesar',[BARX+256,379],17,'#c4c7d4',{'font-family':'Space Grotesk,Segoe UI,sans-serif'});
+mk('rect',{x:BARX,y:366,width:16,height:16,fill:'#7db4ff','fill-opacity':.55},eg); tx(eg,'95% galat lainnya',[BARX+26,379],17,'#c4c7d4',{'font-family':'Space Grotesk,Segoe UI,sans-serif'});
 tx(eg,fmt(PG.n_pasang)+' pasangan jam (t, t+24), 9 stasiun latih, seluruh data latih. Bukan hasil per lipatan.',[BARX,430],14,'#80849a');
 tx(eg,'Porsi = jumlah galat kelompok itu dibagi jumlah seluruh galat, pada ukuran masing-masing.',[BARX,454],14,'#80849a');
 
@@ -535,7 +535,7 @@ const STEPS=[
   ()=>{ blocks(2); setView(2); markOn=true; futureOn=true; placeT(); caption('Cincin kuning menandai <b>target</b> (24 jam ke depan). Pada titik awal, udara terpantau bersih (21 µg/m³), namun melonjak ke 157 keesokan harinya. Silakan geser garis untuk melihat pola jam lainnya.'); },
   ()=>{ blocks(3); setView(3); readoutNow('Metrik utama','RMSE<span class="u">+ MAE</span>'); caption('Tiap bagian kasus punya tempat di kalimat: <b>warga</b> memutuskan <b>membatasi paparan</b>, target <b>PM2.5 jam t+24</b>. Metrik dipilih dari <b>biaya kesalahan</b>, bukan dari kebiasaan.'); },
   ()=>{ blocks(4); setView(4); readoutNow('Contoh hipotetis','RMSE<span class="u">lawan MAE</span>'); caption('Seret batang kuning atau pilih skenario, rumus di kanan ikut berubah. Luas persegi adalah galat dikuadratkan, sehingga <b>satu galat besar menggelembungkan RMSE</b>. Contoh hipotetis, bukan data.'); },
-  ()=>{ blocks(5); setView(5); readoutNow('Porsi 5% galat terbesar', fd(PG.top5_porsi_kuadrat)+'%<span class="u">dari RMSE</span>'); caption('Hanya <b>5%</b> galat terbesar menyumbang <b>'+fd(PG.top5_porsi_kuadrat)+'%</b> dari galat kuadrat (dasar RMSE), tetapi <b>'+fd(PG.top5_porsi_mutlak)+'%</b> dari galat mutlak (dasar MAE). RMSE peka terhadap prediksi yang meleset jauh.'); },
+  ()=>{ blocks(5); setView(5); readoutNow('Porsi 5% galat terbesar', fd(PG.top5_porsi_kuadrat)+'%<span class="u">dari galat kuadrat</span>'); caption('Hanya <b>5%</b> galat terbesar menyumbang <b>'+fd(PG.top5_porsi_kuadrat)+'%</b> dari galat kuadrat (dasar RMSE), tetapi <b>'+fd(PG.top5_porsi_mutlak)+'%</b> dari galat mutlak (dasar MAE). RMSE peka terhadap prediksi yang meleset jauh.'); },
   ()=>{ blocks(6); setView(6); readoutNow('Tantangan wajib','3'); caption('Tiga tantangan wajib dari dosen. Ketiganya menentukan rancangan di Tahap 2 dan Tahap 3.'); }
 ];
 function RESET_HOOK(){ tIdx=82; futureOn=false; markOn=true; $$('.copy .blk').forEach(b=>b.classList.remove('show','active','seen','old')); $$('.view').forEach(v=>v.classList.remove('on')); fillBar(BAR1,false); fillBar(BAR2,false); $('#sent').classList.remove('go'); $$('#svg-tan .tc').forEach(g=>{g.style.opacity=0;}); }
