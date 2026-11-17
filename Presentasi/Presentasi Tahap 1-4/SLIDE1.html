@@ -31,6 +31,10 @@ html,body{width:100%;height:100%;background:#050507;overflow:hidden;font-family:
     var(--bg);
 }
 #net{position:absolute;inset:0;width:1920px;height:1080px}
+#haze{position:absolute;inset:0;width:1920px;height:1080px;pointer-events:none;background:radial-gradient(1000px 700px at 78% 84%,rgba(255,160,70,.32),transparent 70%),radial-gradient(820px 560px at 56% 22%,rgba(200,160,120,.16),transparent 72%)}
+.pmnote{margin-top:30px;font-family:var(--mono);font-size:16px;letter-spacing:.08em;color:var(--mute);opacity:0;animation:fadeup .8s ease 1.9s forwards}
+.pmnote b{color:var(--amber,#ffc266);font-weight:500}
+@keyframes fadeup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .veil{position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,5,7,.92) 0%,rgba(5,5,7,.74) 48%,rgba(5,5,7,.1) 100%);pointer-events:none}
 
 /* ───────── Isi ───────── */
@@ -72,13 +76,13 @@ h1 .w{display:inline-block;opacity:0}
 /* ───────── Meme pembuka ─────────
    Foto kakek di kanan (rata margin 1824). Dua kartu diletakkan di belakangnya, mengintip dari sisi kiri atas dan kanan bawah. */
 .meme{position:absolute;opacity:0;display:block;transform:none}
-.m-emoji,.m-credit{border-radius:16px;border:1px solid rgba(255,255,255,.2);box-shadow:0 14px 36px rgba(0,0,0,.45);object-fit:cover}
-.m-emoji{left:1250px;top:640px;width:262px;height:262px}
-.m-credit{left:1636px;top:796px;width:268px;height:181px}
-.m-kakek{left:1384px;top:488px;width:440px;height:521px;-webkit-mask-image:linear-gradient(to bottom,#000 76%,transparent 99%);mask-image:linear-gradient(to bottom,#000 76%,transparent 99%)}
-.m-bubble{left:1360px;bottom:600px;width:464px;padding:16px 24px 17px;border:1px solid rgba(125,180,255,.6);border-radius:18px;background:#0d1522;color:var(--text);font-size:25px;font-weight:500;line-height:1.38;letter-spacing:-.005em}
+.m-emoji,.m-credit{border-radius:18px;border:1px solid rgba(255,255,255,.2);box-shadow:0 16px 40px rgba(0,0,0,.5);object-fit:cover}
+.m-emoji{left:1060px;top:600px;width:330px;height:330px}
+.m-credit{left:1572px;top:758px;width:334px;height:225px}
+.m-kakek{left:1290px;top:372px;width:550px;height:651px;-webkit-mask-image:linear-gradient(to bottom,#000 78%,transparent 99%);mask-image:linear-gradient(to bottom,#000 78%,transparent 99%)}
+.m-bubble{left:1252px;bottom:722px;width:572px;padding:20px 30px 21px;border:1px solid rgba(125,180,255,.6);border-radius:22px;background:#0d1522;color:var(--text);font-size:31px;font-weight:500;line-height:1.36;letter-spacing:-.005em}
 .m-bubble em{font-style:italic;color:var(--accent-bright)}
-.m-bubble::after{content:"";position:absolute;left:290px;bottom:-12px;width:20px;height:20px;background:#0d1522;border-right:1px solid rgba(125,180,255,.6);border-bottom:1px solid rgba(125,180,255,.6);transform:rotate(45deg)}
+.m-bubble::after{content:"";position:absolute;left:300px;bottom:-14px;width:24px;height:24px;background:#0d1522;border-right:1px solid rgba(125,180,255,.6);border-bottom:1px solid rgba(125,180,255,.6);transform:rotate(45deg)}
 .play .meme{animation:pop .6s cubic-bezier(.2,.75,.25,1) var(--d,2.4s) forwards}
 @keyframes pop{from{opacity:0;transform:translateY(40px) scale(.94)}to{opacity:1;transform:none}}
 
@@ -124,6 +128,7 @@ h1 .w{display:inline-block;opacity:0}
 <div class="edge-hint l" id="eh-l"></div><div class="edge-hint r" id="eh-r"></div>
 <div id="stage">
   <canvas id="net" width="1920" height="1080"></canvas>
+  <canvas id="haze" width="1920" height="1080"></canvas>
   <div class="veil"></div>
 
   <div class="header">
@@ -148,6 +153,7 @@ h1 .w{display:inline-block;opacity:0}
       <b>Muhammad Alif Qadri</b>
       <span id="nim">NIM: D082261018</span><span id="mk">Mata kuliah: Pembelajaran Mesin</span>
     </div>
+    <div class="pmnote"><b>PM2.5</b> = partikel halus berdiameter ≤ 2,5 µm, jauh lebih kecil dari lebar rambut</div>
   </div>
 
   <img class="meme m-emoji" style="--d:2.4s" src="ASET/meme-emoji-jempol.jpg" alt="Meme: emoji kuning berpeci hitam mengacungkan jempol">
@@ -296,6 +302,15 @@ const EDGE_PREV=null, EDGE_NEXT=()=>leave(NEXT_SLIDE);
   document.addEventListener('mouseleave',()=>{L.classList.remove('on');R.classList.remove('on');document.documentElement.style.cursor='';});
   addEventListener('click',e=>{ if(e.target.closest('#dock'))return; const z=zoneOf(e.clientX); if(z<0)EDGE_PREV(); else if(z>0)EDGE_NEXT(); });
 })();
+</script>
+<script>
+(()=>{ const c=document.getElementById('haze'), x=c.getContext('2d'); const W=1920,H=1080;
+  const P=[...Array(230)].map(()=>{ const big=Math.random()<.14; return {x:Math.random()*W,y:Math.random()*H,r:big?10+Math.random()*16:1.6+Math.random()*5,vx:.15+Math.random()*.55,vy:(Math.random()-.5)*.18,a:big?.12+Math.random()*.12:.25+Math.random()*.45,ph:Math.random()*6.28}; });
+  function draw(t){ x.clearRect(0,0,W,H);
+    P.forEach(p=>{ p.x+=p.vx; p.y+=p.vy+Math.sin(t/1800+p.ph)*.08; if(p.x>W+20){p.x=-20;p.y=Math.random()*H;} if(p.y<-20)p.y=H+20; if(p.y>H+20)p.y=-20;
+      const g=x.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r); g.addColorStop(0,'rgba(255,190,110,'+p.a+')'); g.addColorStop(1,'rgba(255,190,110,0)'); x.fillStyle=g; x.beginPath(); x.arc(p.x,p.y,p.r,0,6.283); x.fill(); });
+    requestAnimationFrame(draw); }
+  requestAnimationFrame(draw); })();
 </script>
 </body>
 </html>
