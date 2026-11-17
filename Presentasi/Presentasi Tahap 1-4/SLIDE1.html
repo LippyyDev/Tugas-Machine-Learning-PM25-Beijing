@@ -69,13 +69,18 @@ h1 .w{display:inline-block;opacity:0}
 @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 @keyframes word{from{opacity:0;transform:translateY(26px);filter:blur(8px)}to{opacity:1;transform:none;filter:blur(0)}}
 
-/* ───────── Meme pembuka ───────── */
-.meme{position:absolute;opacity:0;transform:rotate(var(--r,0deg));display:block}
-.m-kakek{left:1486px;top:532px;height:484px;width:auto;-webkit-mask-image:linear-gradient(to bottom,#000 74%,transparent 98%);mask-image:linear-gradient(to bottom,#000 74%,transparent 98%)}
-.m-emoji{left:1262px;top:548px;width:206px;height:206px;border-radius:16px;border:1px solid rgba(255,255,255,.2);box-shadow:0 14px 34px rgba(0,0,0,.5);--r:-5deg}
-.m-credit{left:1172px;top:790px;width:292px;height:auto;border-radius:12px;border:1px solid rgba(255,255,255,.2);box-shadow:0 14px 34px rgba(0,0,0,.5);--r:3deg}
-.play .meme{animation:pop .6s cubic-bezier(.2,.75,.25,1) var(--d,2.6s) forwards}
-@keyframes pop{from{opacity:0;transform:translateY(46px) rotate(var(--r,0deg)) scale(.92)}to{opacity:1;transform:rotate(var(--r,0deg))}}
+/* ───────── Meme pembuka: semua lurus dan sejajar ─────────
+   Kolom kartu (x 1255) dan foto kakek (rata kanan margin 1824) memakai atas dan bawah yang sama (y 626 sampai 1006). */
+.meme{position:absolute;opacity:0;display:block;transform:none}
+.m-kakek{left:1503px;top:626px;width:321px;height:380px;-webkit-mask-image:linear-gradient(to bottom,#000 76%,transparent 99%);mask-image:linear-gradient(to bottom,#000 76%,transparent 99%)}
+.m-emoji,.m-credit{left:1255px;width:218px;border-radius:14px;border:1px solid rgba(255,255,255,.2);box-shadow:0 12px 30px rgba(0,0,0,.45);object-fit:cover}
+.m-emoji{top:626px;height:218px}
+.m-credit{top:860px;height:146px}
+.m-bubble{left:1255px;top:508px;width:569px;padding:16px 26px 17px;border:1px solid rgba(125,180,255,.6);border-radius:18px;background:#0d1522;color:var(--text);font-size:23px;font-weight:500;line-height:1.38;letter-spacing:-.005em}
+.m-bubble em{font-style:italic;color:var(--accent-bright)}
+.m-bubble::after{content:"";position:absolute;left:372px;bottom:-12px;width:20px;height:20px;background:#0d1522;border-right:1px solid rgba(125,180,255,.6);border-bottom:1px solid rgba(125,180,255,.6);transform:rotate(45deg)}
+.play .meme{animation:pop .6s cubic-bezier(.2,.75,.25,1) var(--d,2.4s) forwards}
+@keyframes pop{from{opacity:0;transform:translateY(40px) scale(.94)}to{opacity:1;transform:none}}
 
 /* ───────── Footer ───────── */
 .footer{position:absolute;left:96px;right:96px;bottom:44px;height:62px;display:flex;align-items:flex-end;justify-content:space-between}
@@ -145,9 +150,10 @@ h1 .w{display:inline-block;opacity:0}
     </div>
   </div>
 
-  <img class="meme m-emoji" style="--d:2.6s" src="ASET/meme-emoji-jempol.jpg" alt="Meme: emoji kuning berpeci hitam mengacungkan jempol">
-  <img class="meme m-credit" style="--d:2.8s" src="ASET/meme-social-credit.jpg" alt="Meme: tambah 30.000.000 social credit">
-  <img class="meme m-kakek" style="--d:3s" src="ASET/meme-kakek.png" alt="Meme: kakek berjanggut putih panjang, latar belakang dihapus">
+  <img class="meme m-emoji" style="--d:2.4s" src="ASET/meme-emoji-jempol.jpg" alt="Meme: emoji kuning berpeci hitam mengacungkan jempol">
+  <img class="meme m-credit" style="--d:2.55s" src="ASET/meme-social-credit.jpg" alt="Meme: tambah 30.000.000 social credit">
+  <img class="meme m-kakek" style="--d:2.7s" src="ASET/meme-kakek.png" alt="Meme: kakek berjanggut putih panjang, latar belakang dihapus">
+  <div class="meme m-bubble" style="--d:3s">Validasi berurutan waktu, data uji dikunci. Kamu layak +30.000.000 <em>social credit</em>!</div>
 
   <div class="footer">
     <div class="prog" id="prog"></div>
