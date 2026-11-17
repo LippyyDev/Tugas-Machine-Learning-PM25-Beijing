@@ -69,6 +69,14 @@ h1 .w{display:inline-block;opacity:0}
 @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 @keyframes word{from{opacity:0;transform:translateY(26px);filter:blur(8px)}to{opacity:1;transform:none;filter:blur(0)}}
 
+/* ───────── Meme pembuka ───────── */
+.meme{position:absolute;opacity:0;transform:rotate(var(--r,0deg));display:block}
+.m-kakek{left:1486px;top:532px;height:484px;width:auto;-webkit-mask-image:linear-gradient(to bottom,#000 74%,transparent 98%);mask-image:linear-gradient(to bottom,#000 74%,transparent 98%)}
+.m-emoji{left:1262px;top:548px;width:206px;height:206px;border-radius:16px;border:1px solid rgba(255,255,255,.2);box-shadow:0 14px 34px rgba(0,0,0,.5);--r:-5deg}
+.m-credit{left:1172px;top:790px;width:292px;height:auto;border-radius:12px;border:1px solid rgba(255,255,255,.2);box-shadow:0 14px 34px rgba(0,0,0,.5);--r:3deg}
+.play .meme{animation:pop .6s cubic-bezier(.2,.75,.25,1) var(--d,2.6s) forwards}
+@keyframes pop{from{opacity:0;transform:translateY(46px) rotate(var(--r,0deg)) scale(.92)}to{opacity:1;transform:rotate(var(--r,0deg))}}
+
 /* ───────── Footer ───────── */
 .footer{position:absolute;left:96px;right:96px;bottom:44px;height:62px;display:flex;align-items:flex-end;justify-content:space-between}
 .prog{display:flex;gap:8px;width:1000px}
@@ -136,6 +144,10 @@ h1 .w{display:inline-block;opacity:0}
       <span id="nim">NIM: D082261018</span><span id="mk">Mata kuliah: Pembelajaran Mesin</span>
     </div>
   </div>
+
+  <img class="meme m-emoji" style="--d:2.6s" src="ASET/meme-emoji-jempol.jpg" alt="Meme: emoji kuning berpeci hitam mengacungkan jempol">
+  <img class="meme m-credit" style="--d:2.8s" src="ASET/meme-social-credit.jpg" alt="Meme: tambah 30.000.000 social credit">
+  <img class="meme m-kakek" style="--d:3s" src="ASET/meme-kakek.png" alt="Meme: kakek berjanggut putih panjang, latar belakang dihapus">
 
   <div class="footer">
     <div class="prog" id="prog"></div>

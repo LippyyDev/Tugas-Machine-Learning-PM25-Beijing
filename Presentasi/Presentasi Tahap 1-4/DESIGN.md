@@ -17,7 +17,7 @@ Gaya mengikuti presentasi Tugas Besar Algoritma Komputasi (repo `LippyyDev/Tugas
 |---|---|
 | `SLIDE1.html` sampai `SLIDE6.html` | Satu slide satu berkas (HTML, CSS, JS sendiri) |
 | `INDEX.html` | Daftar slide dengan pratinjau; daftar `SLIDES` berisi judul, menit, berkas |
-| `ASET/` | `LOGO-UNHAS.png`, `tema.css`, `tema.js` (tema terang atau gelap dan transisi tirai) |
+| `ASET/` | `LOGO-UNHAS.png`, `tema.css`, `tema.js` (tema terang atau gelap dan transisi tirai), `meme-kakek.png` (latar dihapus dengan model segmentasi `isnet-general-use` dari *library* rembg, lalu alfa rendah dibersihkan), `meme-emoji-jempol.jpg`, `meme-social-credit.jpg` (dua gambar terakhir dipakai apa adanya dari unggahan penulis) |
 | `Skrip/bangun_data_slide.py` | Menghitung data yang ditampilkan, hanya dari data latih |
 | `Skrip/data_slide.json` | Keluaran skrip di atas (kurva contoh, sebaran, per bulan, per jam, porsi galat) |
 | `vercel.json` | Alamat pendek `/slide1` sampai `/slide6` bila di-*deploy* |
