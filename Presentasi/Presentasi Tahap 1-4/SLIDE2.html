@@ -156,6 +156,8 @@ svg.vz{display:block;width:100%;height:526px}
 .copy{top:262px;height:690px}
 .copy .blk p{font-size:28px;line-height:1.42}
 .copy .blk.seen p{font-size:21px}
+.copy .blk{flex-shrink:0}
+.copy #b5.active p{font-size:25px;line-height:1.4}
 .sent{position:absolute;left:44px;right:70px;top:44px;font-size:27px;line-height:2.6;color:var(--body)}
 .sent .t{position:relative;display:inline;padding:2px 8px 3px;border-radius:3px;color:var(--text);font-weight:500;border-bottom:2px solid var(--accent);background:rgba(125,180,255,.1);box-decoration-break:clone;-webkit-box-decoration-break:clone}
 .sent .t i{position:absolute;left:0;top:-23px;font-style:normal;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);white-space:nowrap}
@@ -191,7 +193,7 @@ svg.vz{display:block;width:100%;height:526px}
     <div class="blk" id="b4"><span class="lbl">04 · Satu kalimat</span>
       <p>Seluruh skenario tadi kita padatkan menjadi <b>satu rumusan utuh</b> yang mengikat enam elemen kunci: pengguna, keputusan, target, fitur, risiko kesalahan terbesar, hingga metrik evaluasi.</p></div>
     <div class="blk" id="b5"><span class="lbl">05 · RMSE dan MAE</span>
-      <p><b>Galat</b> mengukur selisih antara prediksi dan realita. <b>MAE</b> menghitung rata-rata selisih secara merata, sedangkan <b>RMSE</b> mengkuadratkan galatnya terlebih dahulu, sehingga satu prediksi yang meleset jauh mendapat penalti jauh lebih berat.</p></div>
+      <p><b>Galat</b> mengukur selisih antara prediksi dan realita. <b>MAE</b> menghitung rata-rata selisih secara merata, sedangkan <b>RMSE</b> mengkuadratkan galatnya terlebih dahulu, sehingga satu prediksi yang meleset jauh mendapat penalti jauh lebih berat. <b>Semakin rendah nilai keduanya, semakin akurat model.</b> Selisih RMSE dan MAE yang kecil menandakan tidak ada prediksi yang meleset terlalu jauh (<em>outlier</em>).</p></div>
     <div class="blk" id="b6"><span class="lbl">06 · Pada data nyata</span>
       <p>Saat diuji dengan <em>baseline naive</em> pada data latih, <b>5% galat paling ekstrem</b> menyumbang hampir separuh total nilai RMSE, namun hanya seperlima pada MAE. Karena itu, <b>RMSE</b> dipilih sebagai metrik utama.</p></div>
     <div class="blk" id="b7"><span class="lbl">07 · Tiga tantangan wajib</span>
