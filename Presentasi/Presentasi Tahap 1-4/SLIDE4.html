@@ -365,7 +365,9 @@ const sx=g=>SX0+SXW*g/GMAX;
 tx(sg,'0',[sx(0),SY+28],13,GREY,{'text-anchor':'middle'}); tx(sg,'24 jam = horizon prediksi',[sx(24),SY+28],13,'#c4dcff',{'text-anchor':'middle'}); tx(sg,'36',[sx(36),SY+28],13,GREY,{'text-anchor':'middle'});
 tx(sg,'JEDA AMAN (JAM)',[SX0,SY-24],13,GREY,{'letter-spacing':'.1em'});
 const sH=mk('circle',{r:11,fill:'#0a0b10',stroke:'#c4dcff','stroke-width':3,style:'cursor:ew-resize'},sg);
+const sArr=mk('path',{fill:'none',stroke:'#c4dcff','stroke-width':1.8,'stroke-linecap':'round','stroke-linejoin':'round',style:'pointer-events:none'},sg);
 const sHit=mk('rect',{x:SX0-14,y:SY-22,width:SXW+28,height:44,fill:'transparent',style:'cursor:ew-resize'},sg);
+sHit.addEventListener('pointerenter',()=>{sH.setAttribute('r',13);sH.setAttribute('stroke','#fff');}); sHit.addEventListener('pointerleave',()=>{if(!dragG){sH.setAttribute('r',11);sH.setAttribute('stroke','#c4dcff');}});
 const rsV=tx(sg,'',[872,SY-4],44,AMB,{'text-anchor':'end','font-weight':500}), rsL=tx(sg,'',[872,SY+26],14,GREY,{'text-anchor':'end'});
 let gGap=0;
 function setGap(g){ gGap=g;
@@ -373,8 +375,8 @@ function setGap(g){ gGap=g;
   cV.forEach((r,i)=>setX(r,NTR+g+i));
   const leak=Math.max(0,24-g);
   tg.forEach((r,j)=>{ const lk=j>=g; r.setAttribute('fill',lk?AMB:BLUE); r.setAttribute('fill-opacity',lk?.95:.35); });
-  lblV.setAttribute('x',CXS+(NTR+g)*CP); lblG.setAttribute('x',CXS+(NTR+g/2)*CP); lblG.style.opacity=g>0?1:0;
-  sH.setAttribute('cx',sx(g)); sH.setAttribute('cy',SY); sFill.setAttribute('x2',sx(g));
+  lblV.setAttribute('x',CXS+(NTR+g)*CP); if(g>=13){lblG.setAttribute('text-anchor','middle'); lblG.setAttribute('x',CXS+(NTR+g/2)*CP);} else {lblG.setAttribute('text-anchor','start'); lblG.setAttribute('x',CXS+NTR*CP+10);} lblG.style.opacity=g>0?1:0;
+  sH.setAttribute('cx',sx(g)); sH.setAttribute('cy',SY); { const c=sx(g); sArr.setAttribute('d','M'+(c-3)+' '+(SY-4)+'L'+(c-6.5)+' '+SY+'L'+(c-3)+' '+(SY+4)+'M'+(c+3)+' '+(SY-4)+'L'+(c+6.5)+' '+SY+'L'+(c+3)+' '+(SY+4)); } sFill.setAttribute('x2',sx(g));
   rsV.textContent=leak; rsV.setAttribute('fill',leak>0?AMB:BLUE); rsL.textContent=leak>0?'baris bocor ke validasi':'baris bocor · Zona aman';
   readoutNow('Target bocor ke validasi',leak+' <span class="u">baris</span>'); }
 let dragG=false; const setG=ev=>{const p=svgPt(sg,ev);clearRuns();setGap(Math.max(0,Math.min(GMAX,Math.round((p.x-SX0)/SXW*GMAX))));};
@@ -468,7 +470,7 @@ function setView(i){ $$('.view').forEach(v=>v.classList.toggle('on',v.id===VIEWS
 const STEPS=[
   ()=>{ blocks(0); setView(0); setUrut('seq'); },
   ()=>{ blocks(1); setView(1); fsel=-1; selFold(-1); },
-  ()=>{ blocks(2); setView(2); setGap(0); caption('Tanpa jeda, target dari 24 baris latih terakhir <b>jatuh di validasi</b> (kuning). Geser penggeser ke <b>24</b> dan semuanya aman. Penggeser berjalan sendiri dulu.'); later(()=>{ let g=0; ticker=setInterval(()=>{ g++; setGap(g); if(g>=24){clearInterval(ticker);ticker=null;} },110); },900); },
+  ()=>{ blocks(2); setView(2); setGap(0); caption('Tanpa jeda, target dari 24 baris latih terakhir <b>jatuh di validasi</b> (kuning). Geser penggeser ke <b>24</b> dan semuanya aman. Penggeser berjalan otomatis, atau seret untuk mencoba.'); later(()=>{ let g=0; ticker=setInterval(()=>{ g++; setGap(g); if(g>=24){clearInterval(ticker);ticker=null;} },110); },900); },
   ()=>{ blocks(3); setView(3); setPipe('salah'); later(()=>setPipe('benar'),2600); },
   ()=>{ blocks(4); setView(4); hlRole(null); },
   ()=>{ blocks(5); setView(5); readoutNow('Dicegah · batasan','5 <span class="u">·</span> 3'); caption(CAPD); }
