@@ -148,7 +148,8 @@ svg.vz{display:block;width:100%;height:526px}
 .view.on{opacity:1;pointer-events:auto}
 .tt{position:absolute;pointer-events:none;font-family:var(--mono);font-size:15px;background:#07080b;border:1px solid var(--accent);color:var(--text);padding:7px 12px;border-radius:3px;white-space:nowrap;opacity:0;transition:opacity .15s ease;z-index:6}
 .tt.on{opacity:1}
-.tt .hs{display:block;margin-top:6px;font-size:13px;color:var(--mute)}
+.tt .hs{display:block;margin-top:7px;font-size:14px;color:var(--body)}
+.tt .hs b{color:var(--accent-bright);font-weight:600}
 .tt small em{font-style:italic}
 .tt small{display:block;font-size:12px;letter-spacing:.1em;color:var(--mute);text-transform:uppercase}
 .sw{display:flex;gap:0;border:1px solid var(--line);border-radius:3px;overflow:hidden}
@@ -363,11 +364,11 @@ tx(gC,'29 FITUR',[BX,BY-12],13,'#80849a',{'letter-spacing':'.14em'});
 tx(gC,'ARAHKAN KURSOR KE TIAP KELOMPOK',[CX1,BY-12],13,'#7db4ff',{'letter-spacing':'.1em','text-anchor':'end'});
 const KEYS=['now','lag','roll','wind','cal'];
 const HTIP={
-  now:'<small>11 fitur · kondisi jam t</small>PM2.5, PM10, SO2, NO2, CO, O3,<br>suhu, tekanan, titik embun,<br>hujan, kecepatan angin<br><span class="hs">Indikator langsung keadaan atmosfer<br>saat prediksi dibuat</span>',
-  lag:'<small>7 fitur · <em>lag</em> PM2.5</small>t-1, t-2, t-3, t-6, t-12, t-24, t-48 jam<br><span class="hs">Menangkap momentum: polusi sedang<br>naik atau turun</span>',
-  roll:'<small>3 fitur · rata-rata bergulir</small>Rata-rata PM2.5 selama 6, 24, dan<br>72 jam terakhir (jam t ikut dihitung)<br><span class="hs">Meredam fluktuasi sesaat dan<br>menangkap tren beberapa hari</span>',
-  wind:'<small>2 fitur · arah angin</small>Sinus dan kosinus dari arah 0° sampai 360°<br><span class="hs">Agar 359° dekat dengan 1°,<br>bukan berjauhan seperti angka 359 dan 1</span>',
-  cal:'<small>6 fitur · kalender</small>Jam, hari dalam pekan, dan bulan,<br>masing-masing sinus dan kosinus<br><span class="hs">Agar pukul 23.00 bersebelahan dengan 00.00,<br>bukan berjauhan seperti angka 23 dan 0</span>'
+  now:'<small>11 fitur · kondisi jam t</small>6 polutan (PM2.5, PM10, SO2, NO2, CO, O3)<br>dan 5 cuaca (suhu, tekanan, titik embun,<br>hujan, kecepatan angin) pada jam t<br><span class="hs"><b>Peran:</b> gambaran langsung situasi<br>atmosfer saat prediksi dibuat</span>',
+  lag:'<small>7 fitur · <em>lag</em> PM2.5</small>Nilai PM2.5 dari 1, 2, 3, 6, 12, 24, dan 48 jam<br>sebelum jam t, dijadikan kolom baru<br><span class="hs"><b>Peran:</b> memberi tahu arah gerak,<br>polusi sedang menanjak atau melandai</span>',
+  roll:'<small>3 fitur · rata-rata bergulir</small>Rata-rata PM2.5 selama 6, 24, dan 72 jam<br>terakhir (berhenti di jam t)<br><span class="hs"><b>Peran:</b> meredam fluktuasi sesaat dan<br>menangkap tren beberapa hari terakhir</span>',
+  wind:'<small>2 fitur · arah angin</small>Kolom teks <em>wd</em> (16 arah, N, NE, SW, dst.)<br>diubah jadi sudut 0° sampai 360°,<br>lalu dipecah menjadi sinus dan kosinus<br><span class="hs"><b>Peran:</b> agar 359° dekat dengan 1°,<br>bukan berjauhan seperti angka 359 dan 1</span>',
+  cal:'<small>6 fitur · kalender</small>Jam, hari dalam pekan, dan bulan,<br>masing-masing menjadi sinus dan kosinus<br><span class="hs"><b>Peran:</b> agar pukul 23.00 bersebelahan dengan<br>00.00 dan pola musim bulanan tertangkap</span>'
 };
 let hov=null;
 const compHit=[];
