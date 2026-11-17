@@ -186,7 +186,7 @@ svg .selr{transition:fill .25s ease,stroke .25s ease,fill-opacity .25s ease}
     <div class="blk" id="b2"><span class="lbl">02 · Tahap 2: Eksplorasi dan praproses</span>
       <p>Dari 420.768 baris (12 stasiun) terbentuk 29 fitur yang hanya memakai data sampai jam t: <b>246.798</b> baris latih dari 9 stasiun dan <b>82.151</b> baris uji yang dikunci. Jam dengan PM2.5 kosong 2,16%, dibiarkan tanpa <em>forward fill</em>.</p></div>
     <div class="blk" id="b3"><span class="lbl">03 · Tahap 3: Skema validasi</span>
-      <p>Uji memakai 20% jam terakhir (mulai 12 Mei 2016 pukul 19.00). Validasi memakai <em>TimeSeriesSplit</em> 5 lipatan dengan jeda 24 jam, 4.671 jam per lipatan. Tiga stasiun baru (Dingling, Wanliu, Shunyi) hanya untuk uji: usulan penulis, belum dikonfirmasi dosen.</p></div>
+      <p>Uji memakai 20% jam terakhir (mulai 12 Mei 2016 pukul 19.00). Validasi memakai <em>TimeSeriesSplit</em> 5 lipatan dengan jeda 24 jam, 4.671 jam per lipatan. Tiga stasiun baru (Dingling, Wanliu, Shunyi) hanya untuk uji.</p></div>
     <div class="blk" id="b4"><span class="lbl">04 · Tahap 4: <em>Baseline</em></span>
       <p>RMSE <em>naive forecast</em> rata-rata <b>86,82 ± 24,70</b> µg/m³ dan MAE 59,39 ± 16,53 pada data latih. RMSE per lipatan berkisar 57,7 sampai 108,8, jadi model lanjutan dinilai lipatan demi lipatan.</p></div>
     <div class="blk" id="b5"><span class="lbl">05 · Status data uji</span>
@@ -345,9 +345,9 @@ tx(s2,'TAHAP 3 · SKEMA VALIDASI',[74,52],12,BLUE,{'letter-spacing':'.14em'});
 (function(){ const g=rise(s2,950);
   R(g,74,396,392,108); tx(g,'9 STASIUN LATIH',[90,420],12,BLUE,{'letter-spacing':'.12em'});
   lines(g,['Aotizhongxin · Changping · Dongsi · Guanyuan','Gucheng · Huairou · Nongzhanguan · Tiantan','Wanshouxigong'],90,446,22,14,SOFT);
-  R(g,480,396,392,108,{stroke:AMB,'stroke-opacity':.55}); tx(g,'3 STASIUN BARU · HANYA UJI',[496,420],12,AMB,{'letter-spacing':'.12em'});
+  R(g,480,396,392,108); tx(g,'3 STASIUN BARU · HANYA UJI',[496,420],12,BLUE,{'letter-spacing':'.12em'});
   tx(g,'Dingling · Wanliu · Shunyi',[496,452],22,WHITE,{'font-family':SANS,'font-weight':500});
-  tx(g,'USULAN PENULIS, BELUM DIKONFIRMASI DOSEN',[496,484],11,AMB,{'letter-spacing':'.08em'}); })();
+ })();
 
 /* ═════════ V3: hasil tahap 4, RMSE baseline per lipatan ═════════ */
 const s3=SV[3];

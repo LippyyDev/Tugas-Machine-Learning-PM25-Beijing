@@ -32,7 +32,7 @@ Total 10 menit.
 
 * Slide 2 kini 7 langkah (sebelumnya 5), jadi mungkin butuh lebih dari 1,5 menit. Sesuaikan jatah waktu atau pangkas langkah saat latihan.
 * Panduan dosen membatasi slide progres Pertemuan 13 hingga 5 slide. Presentasi ini 6 halaman karena memakai satu slide judul. Konfirmasikan apakah slide judul dihitung.
-* Desain 9 stasiun latih dan 3 stasiun asing adalah keputusan penulis (16 Nov 2026) dan belum dikonfirmasi dosen. Slide 4 dan 6 menandainya (usulan penulis, belum dikonfirmasi dosen).
+* Desain 9 stasiun latih dan 3 stasiun asing adalah keputusan penulis (16 Nov 2026) dan belum dikonfirmasi dosen. Penanda "usulan penulis, belum dikonfirmasi dosen" di slide 4 dan 6 dihapus atas permintaan penulis (17 Nov 2026), jadi statusnya tidak lagi terlihat di slide dan perlu disampaikan lisan atau di laporan.
 * Slide 6 hanya merangkum hasil Tahap 1 sampai 4 (permintaan penulis 17 Nov 2026): rencana tahap 5 sampai 7, daftar kendala, dan tiga pertanyaan untuk dosen dihapus dari slide. Pengakuan bahwa statistik ringkas periode uji pernah terlihat tetap ada di Fig. 26.
 * Slide 6 kini 5 langkah dalam jatah 1,5 menit, sama seperti slide 2 yang perlu dilatih waktunya.
 * Nama dosen tidak dicantumkan karena belum tertulis di sumber.
