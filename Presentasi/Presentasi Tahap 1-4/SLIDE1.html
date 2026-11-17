@@ -69,16 +69,16 @@ h1 .w{display:inline-block;opacity:0}
 @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 @keyframes word{from{opacity:0;transform:translateY(26px);filter:blur(8px)}to{opacity:1;transform:none;filter:blur(0)}}
 
-/* ───────── Meme pembuka: semua lurus dan sejajar ─────────
-   Kolom kartu (x 1255) dan foto kakek (rata kanan margin 1824) memakai atas dan bawah yang sama (y 626 sampai 1006). */
+/* ───────── Meme pembuka ─────────
+   Foto kakek di kanan (rata margin 1824). Dua kartu diletakkan di belakangnya, mengintip dari sisi kiri atas dan kanan bawah. */
 .meme{position:absolute;opacity:0;display:block;transform:none}
+.m-emoji,.m-credit{border-radius:14px;border:1px solid rgba(255,255,255,.2);box-shadow:0 12px 30px rgba(0,0,0,.45);object-fit:cover}
+.m-emoji{left:1372px;top:672px;width:190px;height:190px}
+.m-credit{left:1690px;top:856px;width:206px;height:139px}
 .m-kakek{left:1503px;top:626px;width:321px;height:380px;-webkit-mask-image:linear-gradient(to bottom,#000 76%,transparent 99%);mask-image:linear-gradient(to bottom,#000 76%,transparent 99%)}
-.m-emoji,.m-credit{left:1255px;width:218px;border-radius:14px;border:1px solid rgba(255,255,255,.2);box-shadow:0 12px 30px rgba(0,0,0,.45);object-fit:cover}
-.m-emoji{top:626px;height:218px}
-.m-credit{top:860px;height:146px}
-.m-bubble{left:1255px;top:508px;width:569px;padding:16px 26px 17px;border:1px solid rgba(125,180,255,.6);border-radius:18px;background:#0d1522;color:var(--text);font-size:23px;font-weight:500;line-height:1.38;letter-spacing:-.005em}
+.m-bubble{left:1408px;bottom:462px;width:416px;padding:12px 18px 13px;border:1px solid rgba(125,180,255,.6);border-radius:14px;background:#0d1522;color:var(--text);font-size:18px;font-weight:500;line-height:1.38;letter-spacing:-.005em}
 .m-bubble em{font-style:italic;color:var(--accent-bright)}
-.m-bubble::after{content:"";position:absolute;left:372px;bottom:-12px;width:20px;height:20px;background:#0d1522;border-right:1px solid rgba(125,180,255,.6);border-bottom:1px solid rgba(125,180,255,.6);transform:rotate(45deg)}
+.m-bubble::after{content:"";position:absolute;left:236px;bottom:-9px;width:16px;height:16px;background:#0d1522;border-right:1px solid rgba(125,180,255,.6);border-bottom:1px solid rgba(125,180,255,.6);transform:rotate(45deg)}
 .play .meme{animation:pop .6s cubic-bezier(.2,.75,.25,1) var(--d,2.4s) forwards}
 @keyframes pop{from{opacity:0;transform:translateY(40px) scale(.94)}to{opacity:1;transform:none}}
 
@@ -137,7 +137,7 @@ h1 .w{display:inline-block;opacity:0}
 
   <div class="main">
     <div class="eyebrow">Presentasi progres · Tahap 1 sampai 4</div>
-    <h1 id="title">Peramalan PM2.5 Beijing 24 Jam ke Depan dengan <em>Validasi Berurutan Waktu</em></h1>
+    <h1 id="title">Memprediksi PM2.5 Beijing 24 Jam ke Depan <em>tanpa Mengintip Masa Depan</em></h1>
     <div class="chips">
       <span class="chip" style="--j:0">Nilai hilang</span><span class="plus" style="--j:1">+</span>
       <span class="chip" style="--j:2">Validasi berurutan waktu</span><span class="plus" style="--j:3">+</span>
