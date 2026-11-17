@@ -182,15 +182,15 @@ svg .selr{transition:fill .25s ease,stroke .25s ease,fill-opacity .25s ease}
 
   <div class="copy">
     <div class="blk" id="b1"><span class="lbl">01 · Tahap 1: Rumusan masalah</span>
-      <p>Target ditetapkan: PM2.5 pada jam t+24 dari data sampai jam t. RMSE menjadi metrik utama karena pada <em>baseline naive</em>, 5% galat terbesar menyumbang <b>48,7%</b> jumlah kuadrat galat, tetapi hanya 22,1% galat mutlak.</p></div>
+      <p>Fokus prediksi ditetapkan pada konsentrasi PM2.5 jam t+24 menggunakan histori hingga jam t. RMSE dipilih sebagai metrik utama karena pada <em>baseline naive</em>, 5% galat paling ekstrem menyumbang <b>48,7%</b> total galat kuadrat, namun hanya 22,1% pada galat mutlak.</p></div>
     <div class="blk" id="b2"><span class="lbl">02 · Tahap 2: Eksplorasi dan praproses</span>
-      <p>Dari 420.768 baris (12 stasiun) terbentuk 29 fitur yang hanya memakai data sampai jam t: <b>246.798</b> baris latih dari 9 stasiun dan <b>82.151</b> baris uji yang dikunci. Jam dengan PM2.5 kosong 2,16%, dibiarkan tanpa <em>forward fill</em>.</p></div>
+      <p>Dari 420.768 rekaman (12 stasiun), disusun 29 fitur berbasis histori ≤ jam t, menghasilkan <b>246.798</b> sampel latih (9 stasiun) dan <b>82.151</b> sampel uji yang dikunci. Sebanyak 2,16% nilai PM2.5 yang kosong dibiarkan tanpa <em>forward fill</em>.</p></div>
     <div class="blk" id="b3"><span class="lbl">03 · Tahap 3: Skema validasi</span>
-      <p>Uji memakai 20% jam terakhir (mulai 12 Mei 2016 pukul 19.00). Validasi memakai <em>TimeSeriesSplit</em> 5 lipatan dengan jeda 24 jam, 4.671 jam per lipatan. Tiga stasiun baru (Dingling, Wanliu, Shunyi) hanya untuk uji.</p></div>
+      <p>Evaluasi akhir menggunakan 20% periode terakhir (mulai 12 Mei 2016 pukul 19.00), sementara validasi memakai <em>TimeSeriesSplit</em> 5 <em>fold</em> (4.671 jam/<em>fold</em>) dengan jeda 24 jam. Tiga stasiun baru (Dingling, Wanliu, Shunyi) disiapkan khusus untuk menguji generalisasi lintas lokasi.</p></div>
     <div class="blk" id="b4"><span class="lbl">04 · Tahap 4: <em>Baseline</em></span>
-      <p>RMSE <em>naive forecast</em> rata-rata <b>86,82 ± 24,70</b> µg/m³ dan MAE 59,39 ± 16,53 pada data latih. RMSE per lipatan berkisar 57,7 sampai 108,8, jadi model lanjutan dinilai lipatan demi lipatan.</p></div>
+      <p><em>Persistence baseline</em> menghasilkan rata-rata RMSE <b>86,82 ± 24,70</b> µg/m³ dan MAE 59,39 ± 16,53. Karena skor per <em>fold</em> bervariasi lebar (57,7 hingga 108,8), evaluasi model lanjutan wajib dibandingkan per <em>fold</em>, bukan hanya rata-ratanya.</p></div>
     <div class="blk" id="b5"><span class="lbl">05 · Status data uji</span>
-      <p><b>Belum ada skor uji.</b> Semua skor di atas berasal dari data latih. Statistik ringkas periode uji pernah terlihat (7 dan 15 Nov 2026), tetapi tidak dipakai memilih fitur, model, atau pengaturan.</p></div>
+      <p><b>Data uji (<em>test set</em>) belum dipakai menghitung skor apa pun.</b> Seluruh metrik di atas berasal dari validasi data latih. Statistik deskriptif periode uji pernah terlihat (7 dan 15 Nov 2026), tetapi tidak dilibatkan dalam pemilihan fitur, model, maupun <em>hyperparameter</em>.</p></div>
   </div>
 
   <div class="panel">
