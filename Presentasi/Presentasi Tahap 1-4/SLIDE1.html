@@ -49,12 +49,13 @@ h1{font-size:82px;line-height:1.08;font-weight:700;letter-spacing:-.035em;color:
 h1 em{font-style:italic;color:var(--accent-bright)}
 h1 .w{display:inline-block;opacity:0}
 
-.chips{display:flex;align-items:center;gap:20px;margin-top:56px}
-.chip{font-size:29px;font-weight:600;padding:16px 28px;border:1px solid rgba(125,180,255,.55);border-radius:6px;background:rgba(125,180,255,.08);color:var(--text);letter-spacing:-.005em;opacity:0}
+.chips{display:flex;align-items:center;gap:16px;margin-top:56px}
+.chip em{font-style:italic}
+.chip{font-size:26px;font-weight:600;padding:15px 24px;border:1px solid rgba(125,180,255,.55);border-radius:6px;background:rgba(125,180,255,.08);color:var(--text);letter-spacing:-.005em;opacity:0}
 .plus{font-family:var(--mono);font-size:26px;color:var(--mute);opacity:0}
 .sub em{font-style:italic;color:var(--body)}
 .sub{margin-top:44px;max-width:1160px;font-size:26px;line-height:1.5;color:var(--mute);opacity:0}
-.who{margin-top:52px;opacity:0}
+.who{margin-top:96px;opacity:0}
 .who b{display:block;font-size:36px;font-weight:600;letter-spacing:-.01em}
 .who span{display:inline-block;margin-top:12px;margin-right:34px;font-family:var(--mono);font-size:19px;letter-spacing:.06em;color:var(--mute)}
 
@@ -76,9 +77,9 @@ h1 .w{display:inline-block;opacity:0}
 .m-emoji{left:1372px;top:672px;width:190px;height:190px}
 .m-credit{left:1690px;top:856px;width:206px;height:139px}
 .m-kakek{left:1503px;top:626px;width:321px;height:380px;-webkit-mask-image:linear-gradient(to bottom,#000 76%,transparent 99%);mask-image:linear-gradient(to bottom,#000 76%,transparent 99%)}
-.m-bubble{left:1408px;bottom:462px;width:416px;padding:12px 18px 13px;border:1px solid rgba(125,180,255,.6);border-radius:14px;background:#0d1522;color:var(--text);font-size:18px;font-weight:500;line-height:1.38;letter-spacing:-.005em}
+.m-bubble{left:1504px;bottom:462px;width:320px;padding:12px 18px 13px;border:1px solid rgba(125,180,255,.6);border-radius:14px;background:#0d1522;color:var(--text);font-size:18px;font-weight:500;line-height:1.38;letter-spacing:-.005em}
 .m-bubble em{font-style:italic;color:var(--accent-bright)}
-.m-bubble::after{content:"";position:absolute;left:236px;bottom:-9px;width:16px;height:16px;background:#0d1522;border-right:1px solid rgba(125,180,255,.6);border-bottom:1px solid rgba(125,180,255,.6);transform:rotate(45deg)}
+.m-bubble::after{content:"";position:absolute;left:140px;bottom:-9px;width:16px;height:16px;background:#0d1522;border-right:1px solid rgba(125,180,255,.6);border-bottom:1px solid rgba(125,180,255,.6);transform:rotate(45deg)}
 .play .meme{animation:pop .6s cubic-bezier(.2,.75,.25,1) var(--d,2.4s) forwards}
 @keyframes pop{from{opacity:0;transform:translateY(40px) scale(.94)}to{opacity:1;transform:none}}
 
@@ -137,13 +138,13 @@ h1 .w{display:inline-block;opacity:0}
 
   <div class="main">
     <div class="eyebrow">Presentasi progres · Tahap 1 sampai 4</div>
-    <h1 id="title">Peramalan PM2.5 Beijing 24 Jam ke Depan dengan <em>Validasi Berurutan Waktu</em></h1>
+    <h1 id="title">Peramalan PM2.5 Beijing 24 Jam ke Depan dengan <em>Time Series</em></h1>
     <div class="chips">
-      <span class="chip" style="--j:0">Nilai hilang</span><span class="plus" style="--j:1">+</span>
-      <span class="chip" style="--j:2">Validasi berurutan waktu</span><span class="plus" style="--j:3">+</span>
-      <span class="chip" style="--j:4">Uji di stasiun lain</span>
+      <span class="chip" style="--j:0">Rumusan masalah</span><span class="plus" style="--j:1">→</span>
+      <span class="chip" style="--j:2">Eksplorasi dan praproses</span><span class="plus" style="--j:3">→</span>
+      <span class="chip" style="--j:4">Skema validasi</span><span class="plus" style="--j:5">→</span>
+      <span class="chip" style="--j:6"><em>Baseline</em></span>
     </div>
-    <p class="sub">Progres Tahap 1 sampai 4: rumusan masalah, eksplorasi data, skema validasi, dan <em>baseline</em>. Data uji belum pernah dibuka.</p>
     <div class="who">
       <b>Muhammad Alif Qadri</b>
       <span id="nim">NIM: D082261018</span><span id="mk">Mata kuliah: Pembelajaran Mesin</span>
@@ -153,7 +154,7 @@ h1 .w{display:inline-block;opacity:0}
   <img class="meme m-emoji" style="--d:2.4s" src="ASET/meme-emoji-jempol.jpg" alt="Meme: emoji kuning berpeci hitam mengacungkan jempol">
   <img class="meme m-credit" style="--d:2.55s" src="ASET/meme-social-credit.jpg" alt="Meme: tambah 30.000.000 social credit">
   <img class="meme m-kakek" style="--d:2.7s" src="ASET/meme-kakek.png" alt="Meme: kakek berjanggut putih panjang, latar belakang dihapus">
-  <div class="meme m-bubble" style="--d:3s">Validasi berurutan waktu, data uji dikunci. Kamu layak +30.000.000 <em>social credit</em>!</div>
+  <div class="meme m-bubble" style="--d:3s">Proyek yang bagus, kamu dapat +30.000.000 <em>social credit</em>!</div>
 
   <div class="footer">
     <div class="prog" id="prog"></div>
