@@ -25,6 +25,8 @@ Tujuan: membuat pembukaan data uji terjadi satu kali dengan aturan yang sudah di
 6. **Pembukaan 3 stasiun uji** memakai model yang sama, tanpa dilatih ulang pada stasiun itu, dan dicatat di log sebagai berkas terpisah. Stasiun uji tidak boleh dipakai untuk latih, *tuning*, imputasi, *scaling*, atau pemilihan fitur, dan harus ditetapkan sebelum periode uji dibuka.
 7. **Keterbukaan.** Dua hal sudah tercatat di `Laporan/Ringkasan Hasil Per Tahapan.md`: statistik ringkas periode uji pernah terlihat (profil awal 7 Nov dan ringkasan berkas fitur uji 15 Nov), dan tidak dipakai untuk keputusan apa pun.
 
+**Catatan 22 Nov 2026, setelah melihat hasil 05.5 (isi butir 2 tidak diubah dan tidak diterapkan ulang):** ambang satu simpangan baku antar *fold* (sekitar 19) tidak pernah terlewati oleh model apa pun, karena simpangan baku itu didominasi beda kesulitan antar periode, bukan beda antar model. Pembanding yang lebih tajam adalah selisih berpasangan pada *fold* yang sama. **[Usulan]** yang menunggu persetujuan penulis: model dianggap lebih baik dari pembanding bila lebih baik di minimal 4 dari 5 *fold*, selisih rata-ratanya lebih dari 3 kali simpangan baku selisih, dan lebih dari 1% RMSE pembanding. Ambang ini ditetapkan setelah melihat sebagian hasil, jadi bila dipakai harus diakui sebagai aturan yang ditulis sesudah melihat data, bukan aturan yang didaftarkan sebelumnya.
+
 ## Yang bisa dan tidak bisa dibuktikan oleh penjaga
 
 Bisa:

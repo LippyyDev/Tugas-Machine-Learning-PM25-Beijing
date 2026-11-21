@@ -1,6 +1,6 @@
 # Tabel
 
-Delapan tabel dibuat *notebook*: tiga dari EDA dan pemilihan stasiun uji (bagian 02), satu dari dasar keputusan *forward fill* (04.6), satu dari *baseline* tahap 4 (04.5), dan tiga dari perbandingan model lanjutan tahap 5 (bagian 05).
+Dua belas tabel dibuat *notebook*: tiga dari EDA dan pemilihan stasiun uji (bagian 02), satu dari dasar keputusan *forward fill* (04.6), satu dari *baseline* tahap 4 (04.5), dan tujuh dari model lanjutan tahap 5 (bagian 05).
 
 | Berkas | Isi |
 |---|---|
@@ -12,6 +12,10 @@ Delapan tabel dibuat *notebook*: tiga dari EDA dan pemilihan stasiun uji (bagian
 | `t5_tabel_model_lanjutan.csv` | RMSE dan MAE (rata-rata dan sd antar *fold*) *naive* dan enam konfigurasi model lanjutan, perbaikan RMSE terhadap *naive*, dan jumlah *fold* yang lebih baik dari *naive* |
 | `t5_tabel_rmse_per_fold.csv` | RMSE tiap model di tiap *fold* validasi |
 | `t5_tabel_selisih_vs_ridge.csv` | Selisih RMSE tiap model terhadap Ridge pada *fold* yang sama (rata-rata, sd selisih, jumlah *fold* lebih baik) |
+| `t5_tabel_eksperimen_per_fold.csv` | RMSE dan MAE tiap *fold* untuk 53 eksperimen lanjutan (bagian 05.5): ablasi fitur, keluarga model, konfigurasi terbaik hasil *tuning*, rata-rata model, transformasi target, putaran 2 |
+| `t5_tabel_eksperimen_ringkas.csv` | Ringkasan 53 eksperimen, diurutkan dari RMSE terendah: rata-rata dan sd, selisih berpasangan terhadap Ridge F1, jumlah *fold* lebih baik, perbaikan terhadap *naive* |
+| `t5_tabel_tuning.csv` | Rata-rata dan sd RMSE 36 konfigurasi *tuning* acak (HGB dan *random forest* pada F2 dan F3) beserta hiperparameternya |
+| `t5_tabel_tuning_putaran2.csv` | Rata-rata dan sd RMSE 9 konfigurasi putaran 2 (*random forest* yang diperluas dan *Extra Trees*, F3) |
 
 Dibuat ulang setiap *notebook* tahap 2 dijalankan.
 

@@ -1,6 +1,6 @@
 # Gambar
 
-Sepuluh grafik dari *notebook* (`Notebook/Tahap 2 EDA dan Praproses.ipynb`), satu untuk tiap langkah pekerjaan tahap 2 sampai 5. Awalan `t2_`, `t3_`, `t4_`, `t5_` menandai tahap, nomor mengikuti urutan di *notebook*. Gambar dibuat dari eksekusi *notebook* 9/3 pada 16 Nov 2026 dan ditimpa setiap *notebook* dijalankan.
+Sebelas grafik dari *notebook* (`Notebook/Tahap 2 EDA dan Praproses.ipynb`), satu untuk tiap langkah pekerjaan tahap 2 sampai 5. Awalan `t2_`, `t3_`, `t4_`, `t5_` menandai tahap, nomor mengikuti urutan di *notebook*. Gambar dibuat dari eksekusi *notebook* 9/3 pada 16 Nov 2026 dan ditimpa setiap *notebook* dijalankan.
 
 **Data uji tidak divisualisasikan nilainya.** Grafik yang menyebut data uji (`t2_01`, `t2_02`, `t3_01`) hanya memakai waktu dan jumlah baris. Nilai PM2.5 data uji dibuka satu kali di akhir proyek.
 
@@ -16,3 +16,4 @@ Sepuluh grafik dari *notebook* (`Notebook/Tahap 2 EDA dan Praproses.ipynb`), sat
 | `t4_01_baseline_rmse_per_fold.png` | *Baseline* | RMSE *naive forecast* di tiap *fold* |
 | `t4_02_pemeriksaan_desain.png` | Uji kebocoran | Ringkasan enam pemeriksaan desain 9/3 |
 | `t5_01_rmse_model_lanjutan.png` | Model lanjutan | Rata-rata RMSE ± sd dan nilai tiap *fold* untuk *naive* dan enam konfigurasi model lanjutan (validasi silang, data uji tidak dipakai) |
+| `t5_02_eksperimen_lanjutan.png` | Eksperimen lanjutan | Rata-rata RMSE ± sd dan nilai tiap *fold*: *naive*, Ridge F1, terbaik tanpa fitur lintas stasiun, dan terbaik dengan fitur lintas stasiun, dengan garis 70 |

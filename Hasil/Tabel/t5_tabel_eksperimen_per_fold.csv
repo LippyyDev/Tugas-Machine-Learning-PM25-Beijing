@@ -1,0 +1,266 @@
+kelompok,eksperimen,fold,RMSE,MAE
+1 ablasi fitur,Ridge | F1 (29 fitur awal),1,84.5326,62.7061
+1 ablasi fitur,"Elastic Net (alpha=0,1) | F1 (29 fitur awal)",1,84.1584,62.7614
+1 ablasi fitur,Ridge | F1 (29 fitur awal),2,54.1362,41.8591
+1 ablasi fitur,"Elastic Net (alpha=0,1) | F1 (29 fitur awal)",2,53.5343,41.2956
+1 ablasi fitur,Ridge | F1 (29 fitur awal),3,82.4915,63.9299
+1 ablasi fitur,"Elastic Net (alpha=0,1) | F1 (29 fitur awal)",3,82.4006,63.8158
+1 ablasi fitur,Ridge | F1 (29 fitur awal),4,50.2997,39.0431
+1 ablasi fitur,"Elastic Net (alpha=0,1) | F1 (29 fitur awal)",4,50.2496,38.9474
+1 ablasi fitur,Ridge | F1 (29 fitur awal),5,93.2461,65.3561
+1 ablasi fitur,"Elastic Net (alpha=0,1) | F1 (29 fitur awal)",5,92.6623,64.9454
+1 ablasi fitur,Ridge | F1 + cuaca dinamis,1,84.5413,62.8052
+1 ablasi fitur,"Elastic Net (alpha=0,1) | F1 + cuaca dinamis",1,84.1849,62.8477
+1 ablasi fitur,Ridge | F1 + cuaca dinamis,2,54.1873,42.002
+1 ablasi fitur,"Elastic Net (alpha=0,1) | F1 + cuaca dinamis",2,53.5553,41.3512
+1 ablasi fitur,Ridge | F1 + cuaca dinamis,3,82.3648,63.7585
+1 ablasi fitur,"Elastic Net (alpha=0,1) | F1 + cuaca dinamis",3,82.2349,63.5441
+1 ablasi fitur,Ridge | F1 + cuaca dinamis,4,50.2754,38.9854
+1 ablasi fitur,"Elastic Net (alpha=0,1) | F1 + cuaca dinamis",4,50.2022,38.8356
+1 ablasi fitur,Ridge | F1 + cuaca dinamis,5,92.8583,64.9286
+1 ablasi fitur,"Elastic Net (alpha=0,1) | F1 + cuaca dinamis",5,92.2551,64.5026
+1 ablasi fitur,Ridge | F1 + statistik PM dan polutan,1,84.5853,62.7374
+1 ablasi fitur,"Elastic Net (alpha=0,1) | F1 + statistik PM dan polutan",1,84.2094,62.8396
+1 ablasi fitur,Ridge | F1 + statistik PM dan polutan,2,54.2611,41.6684
+1 ablasi fitur,"Elastic Net (alpha=0,1) | F1 + statistik PM dan polutan",2,53.4696,41.0282
+1 ablasi fitur,Ridge | F1 + statistik PM dan polutan,3,82.7749,64.1761
+1 ablasi fitur,"Elastic Net (alpha=0,1) | F1 + statistik PM dan polutan",3,82.4732,63.9273
+1 ablasi fitur,Ridge | F1 + statistik PM dan polutan,4,49.7369,38.4669
+1 ablasi fitur,"Elastic Net (alpha=0,1) | F1 + statistik PM dan polutan",4,49.7396,38.4001
+1 ablasi fitur,Ridge | F1 + statistik PM dan polutan,5,93.5467,65.4277
+1 ablasi fitur,"Elastic Net (alpha=0,1) | F1 + statistik PM dan polutan",5,92.9297,64.938
+1 ablasi fitur,Ridge | F2 (F1 + cuaca + statistik),1,84.6451,62.9502
+1 ablasi fitur,"Elastic Net (alpha=0,1) | F2 (F1 + cuaca + statistik)",1,84.3042,63.0552
+1 ablasi fitur,Ridge | F2 (F1 + cuaca + statistik),2,54.2561,41.6794
+1 ablasi fitur,"Elastic Net (alpha=0,1) | F2 (F1 + cuaca + statistik)",2,53.4326,40.9781
+1 ablasi fitur,Ridge | F2 (F1 + cuaca + statistik),3,82.6438,64.0302
+1 ablasi fitur,"Elastic Net (alpha=0,1) | F2 (F1 + cuaca + statistik)",3,82.2787,63.6661
+1 ablasi fitur,Ridge | F2 (F1 + cuaca + statistik),4,49.6802,38.3626
+1 ablasi fitur,"Elastic Net (alpha=0,1) | F2 (F1 + cuaca + statistik)",4,49.6592,38.2521
+1 ablasi fitur,Ridge | F2 (F1 + cuaca + statistik),5,93.1495,65.066
+1 ablasi fitur,"Elastic Net (alpha=0,1) | F2 (F1 + cuaca + statistik)",5,92.5052,64.5421
+1 ablasi fitur,Ridge | F3 (F2 + lintas stasiun),1,83.9204,62.4425
+1 ablasi fitur,"Elastic Net (alpha=0,1) | F3 (F2 + lintas stasiun)",1,83.7463,62.6039
+1 ablasi fitur,Ridge | F3 (F2 + lintas stasiun),2,53.8122,41.2125
+1 ablasi fitur,"Elastic Net (alpha=0,1) | F3 (F2 + lintas stasiun)",2,53.0286,40.5523
+1 ablasi fitur,Ridge | F3 (F2 + lintas stasiun),3,82.1248,63.4331
+1 ablasi fitur,"Elastic Net (alpha=0,1) | F3 (F2 + lintas stasiun)",3,81.7863,63.0343
+1 ablasi fitur,Ridge | F3 (F2 + lintas stasiun),4,49.3974,38.0957
+1 ablasi fitur,"Elastic Net (alpha=0,1) | F3 (F2 + lintas stasiun)",4,49.4164,38.0298
+1 ablasi fitur,Ridge | F3 (F2 + lintas stasiun),5,92.1375,64.0034
+1 ablasi fitur,"Elastic Net (alpha=0,1) | F3 (F2 + lintas stasiun)",5,91.6536,63.6073
+2 model,Gradient boosting | F1 (29 fitur awal),1,98.0601,72.1175
+2 model,Ridge lalu boosting pada residual | F1 (29 fitur awal),1,96.0128,70.0931
+2 model,"Rata-rata Ridge dan boosting (0,5) | F1 (29 fitur awal)",1,86.7272,64.8024
+2 model,Gradient boosting | F1 (29 fitur awal),2,59.4596,44.5512
+2 model,Ridge lalu boosting pada residual | F1 (29 fitur awal),2,57.8705,43.7104
+2 model,"Rata-rata Ridge dan boosting (0,5) | F1 (29 fitur awal)",2,55.2619,42.0619
+2 model,Gradient boosting | F1 (29 fitur awal),3,82.9807,62.5175
+2 model,Ridge lalu boosting pada residual | F1 (29 fitur awal),3,82.4232,62.171
+2 model,"Rata-rata Ridge dan boosting (0,5) | F1 (29 fitur awal)",3,81.2545,62.2441
+2 model,Gradient boosting | F1 (29 fitur awal),4,48.7785,37.4264
+2 model,Ridge lalu boosting pada residual | F1 (29 fitur awal),4,49.5415,37.5349
+2 model,"Rata-rata Ridge dan boosting (0,5) | F1 (29 fitur awal)",4,48.5559,37.5968
+2 model,Gradient boosting | F1 (29 fitur awal),5,96.232,63.9419
+2 model,Ridge lalu boosting pada residual | F1 (29 fitur awal),5,97.6865,65.5177
+2 model,"Rata-rata Ridge dan boosting (0,5) | F1 (29 fitur awal)",5,93.032,63.5559
+2 model,Gradient boosting | F2 (F1 + cuaca + statistik),1,90.9752,69.5751
+2 model,Ridge lalu boosting pada residual | F2 (F1 + cuaca + statistik),1,89.0257,66.891
+2 model,"Rata-rata Ridge dan boosting (0,5) | F2 (F1 + cuaca + statistik)",1,84.9791,64.5368
+2 model,Random forest | F2 (F1 + cuaca + statistik),1,87.6788,67.4004
+2 model,Gradient boosting | F2 (F1 + cuaca + statistik),2,56.7329,43.0825
+2 model,Ridge lalu boosting pada residual | F2 (F1 + cuaca + statistik),2,56.4653,43.2505
+2 model,"Rata-rata Ridge dan boosting (0,5) | F2 (F1 + cuaca + statistik)",2,54.1295,41.2894
+2 model,Random forest | F2 (F1 + cuaca + statistik),2,54.9963,41.8134
+2 model,Gradient boosting | F2 (F1 + cuaca + statistik),3,83.778,62.9527
+2 model,Ridge lalu boosting pada residual | F2 (F1 + cuaca + statistik),3,83.7986,63.4763
+2 model,"Rata-rata Ridge dan boosting (0,5) | F2 (F1 + cuaca + statistik)",3,81.3759,62.2623
+2 model,Random forest | F2 (F1 + cuaca + statistik),3,82.7506,62.1952
+2 model,Gradient boosting | F2 (F1 + cuaca + statistik),4,48.7366,37.527
+2 model,Ridge lalu boosting pada residual | F2 (F1 + cuaca + statistik),4,48.5472,37.6706
+2 model,"Rata-rata Ridge dan boosting (0,5) | F2 (F1 + cuaca + statistik)",4,48.1907,37.2342
+2 model,Random forest | F2 (F1 + cuaca + statistik),4,48.5733,37.4508
+2 model,Gradient boosting | F2 (F1 + cuaca + statistik),5,95.9824,65.497
+2 model,Ridge lalu boosting pada residual | F2 (F1 + cuaca + statistik),5,100.0876,67.9497
+2 model,"Rata-rata Ridge dan boosting (0,5) | F2 (F1 + cuaca + statistik)",5,92.7497,63.9149
+2 model,Random forest | F2 (F1 + cuaca + statistik),5,92.0544,62.849
+2 model,Gradient boosting | F3 (F2 + lintas stasiun),1,91.3231,69.5003
+2 model,Ridge lalu boosting pada residual | F3 (F2 + lintas stasiun),1,87.6344,65.4908
+2 model,"Rata-rata Ridge dan boosting (0,5) | F3 (F2 + lintas stasiun)",1,84.388,64.111
+2 model,Random forest | F3 (F2 + lintas stasiun),1,86.1992,65.7788
+2 model,Gradient boosting | F3 (F2 + lintas stasiun),2,55.8838,42.2136
+2 model,Ridge lalu boosting pada residual | F3 (F2 + lintas stasiun),2,54.7796,41.8453
+2 model,"Rata-rata Ridge dan boosting (0,5) | F3 (F2 + lintas stasiun)",2,53.574,40.6453
+2 model,Random forest | F3 (F2 + lintas stasiun),2,54.4829,41.4186
+2 model,Gradient boosting | F3 (F2 + lintas stasiun),3,85.3691,63.596
+2 model,Ridge lalu boosting pada residual | F3 (F2 + lintas stasiun),3,84.5676,63.3469
+2 model,"Rata-rata Ridge dan boosting (0,5) | F3 (F2 + lintas stasiun)",3,81.7735,62.2646
+2 model,Random forest | F3 (F2 + lintas stasiun),3,82.6415,61.5674
+2 model,Gradient boosting | F3 (F2 + lintas stasiun),4,47.9978,36.3316
+2 model,Ridge lalu boosting pada residual | F3 (F2 + lintas stasiun),4,47.431,36.7277
+2 model,"Rata-rata Ridge dan boosting (0,5) | F3 (F2 + lintas stasiun)",4,47.7181,36.4258
+2 model,Random forest | F3 (F2 + lintas stasiun),4,48.4377,36.8943
+2 model,Gradient boosting | F3 (F2 + lintas stasiun),5,96.3002,64.4344
+2 model,Ridge lalu boosting pada residual | F3 (F2 + lintas stasiun),5,98.526,65.9874
+2 model,"Rata-rata Ridge dan boosting (0,5) | F3 (F2 + lintas stasiun)",5,92.153,62.6868
+2 model,Random forest | F3 (F2 + lintas stasiun),5,91.7949,61.9411
+3 tuning,HGB terpilih | F2 (F1 + cuaca + statistik),1,86.1318,66.4177
+3 tuning,Random forest terpilih | F2 (F1 + cuaca + statistik),1,85.7961,65.9476
+4 rata-rata,Ridge + HGB terpilih | F2 (F1 + cuaca + statistik),1,83.8602,63.4553
+4 rata-rata,Ridge + Random forest terpilih | F2 (F1 + cuaca + statistik),1,83.8522,63.339
+4 rata-rata,Ridge + HGB + Random forest terpilih | F2 (F1 + cuaca + statistik),1,84.1188,64.0302
+4 rata-rata,Elastic Net + HGB + Random forest terpilih | F2 (F1 + cuaca + statistik),1,84.2213,64.2879
+5 transformasi target,"Ridge, target akar kuadrat | F2 (F1 + cuaca + statistik)",1,87.8208,62.5136
+5 transformasi target,"HGB terpilih, target akar kuadrat | F2 (F1 + cuaca + statistik)",1,86.1341,65.235
+5 transformasi target,"Ridge, target log1p | F2 (F1 + cuaca + statistik)",1,95.2311,64.7693
+5 transformasi target,"HGB terpilih, target log1p | F2 (F1 + cuaca + statistik)",1,86.2171,62.6931
+3 tuning,HGB terpilih | F2 (F1 + cuaca + statistik),2,53.9853,41.5654
+3 tuning,Random forest terpilih | F2 (F1 + cuaca + statistik),2,53.9749,41.286
+4 rata-rata,Ridge + HGB terpilih | F2 (F1 + cuaca + statistik),2,53.2654,40.8913
+4 rata-rata,Ridge + Random forest terpilih | F2 (F1 + cuaca + statistik),2,53.1427,40.6422
+4 rata-rata,Ridge + HGB + Random forest terpilih | F2 (F1 + cuaca + statistik),2,53.1753,40.7555
+4 rata-rata,Elastic Net + HGB + Random forest terpilih | F2 (F1 + cuaca + statistik),2,53.0988,40.6897
+5 transformasi target,"Ridge, target akar kuadrat | F2 (F1 + cuaca + statistik)",2,54.4279,40.1453
+5 transformasi target,"HGB terpilih, target akar kuadrat | F2 (F1 + cuaca + statistik)",2,54.8758,40.0238
+5 transformasi target,"Ridge, target log1p | F2 (F1 + cuaca + statistik)",2,57.3903,40.5522
+5 transformasi target,"HGB terpilih, target log1p | F2 (F1 + cuaca + statistik)",2,58.1276,40.74
+3 tuning,HGB terpilih | F2 (F1 + cuaca + statistik),3,81.966,62.7511
+3 tuning,Random forest terpilih | F2 (F1 + cuaca + statistik),3,82.0014,62.3851
+4 rata-rata,Ridge + HGB terpilih | F2 (F1 + cuaca + statistik),3,81.6073,62.8646
+4 rata-rata,Ridge + Random forest terpilih | F2 (F1 + cuaca + statistik),3,81.4442,62.624
+4 rata-rata,Ridge + HGB + Random forest terpilih | F2 (F1 + cuaca + statistik),3,81.4119,62.5169
+4 rata-rata,Elastic Net + HGB + Random forest terpilih | F2 (F1 + cuaca + statistik),3,81.4163,62.5153
+5 transformasi target,"Ridge, target akar kuadrat | F2 (F1 + cuaca + statistik)",3,83.8699,62.2978
+5 transformasi target,"HGB terpilih, target akar kuadrat | F2 (F1 + cuaca + statistik)",3,83.5582,61.3064
+5 transformasi target,"Ridge, target log1p | F2 (F1 + cuaca + statistik)",3,91.057,63.1875
+5 transformasi target,"HGB terpilih, target log1p | F2 (F1 + cuaca + statistik)",3,88.9596,61.7371
+3 tuning,HGB terpilih | F2 (F1 + cuaca + statistik),4,49.3877,38.3033
+3 tuning,Random forest terpilih | F2 (F1 + cuaca + statistik),4,48.3802,37.1817
+4 rata-rata,Ridge + HGB terpilih | F2 (F1 + cuaca + statistik),4,48.9195,37.7017
+4 rata-rata,Ridge + Random forest terpilih | F2 (F1 + cuaca + statistik),4,48.336,37.1263
+4 rata-rata,Ridge + HGB + Random forest terpilih | F2 (F1 + cuaca + statistik),4,48.4993,37.3751
+4 rata-rata,Elastic Net + HGB + Random forest terpilih | F2 (F1 + cuaca + statistik),4,48.6264,37.4774
+5 transformasi target,"Ridge, target akar kuadrat | F2 (F1 + cuaca + statistik)",4,48.492,35.9285
+5 transformasi target,"HGB terpilih, target akar kuadrat | F2 (F1 + cuaca + statistik)",4,48.8258,35.4817
+5 transformasi target,"Ridge, target log1p | F2 (F1 + cuaca + statistik)",4,49.763,34.7893
+5 transformasi target,"HGB terpilih, target log1p | F2 (F1 + cuaca + statistik)",4,50.5804,34.3041
+3 tuning,HGB terpilih | F2 (F1 + cuaca + statistik),5,90.2731,61.5361
+3 tuning,Random forest terpilih | F2 (F1 + cuaca + statistik),5,91.2143,62.3463
+4 rata-rata,Ridge + HGB terpilih | F2 (F1 + cuaca + statistik),5,91.0001,62.7604
+4 rata-rata,Ridge + Random forest terpilih | F2 (F1 + cuaca + statistik),5,91.4104,63.1073
+4 rata-rata,Ridge + HGB + Random forest terpilih | F2 (F1 + cuaca + statistik),5,90.8291,62.4324
+4 rata-rata,Elastic Net + HGB + Random forest terpilih | F2 (F1 + cuaca + statistik),5,90.6708,62.3298
+5 transformasi target,"Ridge, target akar kuadrat | F2 (F1 + cuaca + statistik)",5,97.5832,64.1111
+5 transformasi target,"HGB terpilih, target akar kuadrat | F2 (F1 + cuaca + statistik)",5,96.4151,61.8028
+5 transformasi target,"Ridge, target log1p | F2 (F1 + cuaca + statistik)",5,107.0478,65.957
+5 transformasi target,"HGB terpilih, target log1p | F2 (F1 + cuaca + statistik)",5,105.2061,64.2184
+3 tuning,HGB terpilih | F3 (F2 + lintas stasiun),1,85.3463,65.3598
+3 tuning,Random forest terpilih | F3 (F2 + lintas stasiun),1,85.0684,64.7923
+4 rata-rata,Ridge + HGB terpilih | F3 (F2 + lintas stasiun),1,83.014,62.8327
+4 rata-rata,Ridge + Random forest terpilih | F3 (F2 + lintas stasiun),1,83.25,62.7073
+4 rata-rata,Ridge + HGB + Random forest terpilih | F3 (F2 + lintas stasiun),1,83.3635,63.2563
+4 rata-rata,Elastic Net + HGB + Random forest terpilih | F3 (F2 + lintas stasiun),1,83.476,63.4766
+5 transformasi target,"Ridge, target akar kuadrat | F3 (F2 + lintas stasiun)",1,87.1144,61.9647
+5 transformasi target,"HGB terpilih, target akar kuadrat | F3 (F2 + lintas stasiun)",1,83.8649,62.6904
+5 transformasi target,"Ridge, target log1p | F3 (F2 + lintas stasiun)",1,94.8949,64.3401
+5 transformasi target,"HGB terpilih, target log1p | F3 (F2 + lintas stasiun)",1,87.1223,61.8362
+3 tuning,HGB terpilih | F3 (F2 + lintas stasiun),2,53.4519,41.1253
+3 tuning,Random forest terpilih | F3 (F2 + lintas stasiun),2,53.249,40.8272
+4 rata-rata,Ridge + HGB terpilih | F3 (F2 + lintas stasiun),2,52.8791,40.5106
+4 rata-rata,Ridge + Random forest terpilih | F3 (F2 + lintas stasiun),2,52.6385,40.2172
+4 rata-rata,Ridge + HGB + Random forest terpilih | F3 (F2 + lintas stasiun),2,52.6728,40.3346
+4 rata-rata,Elastic Net + HGB + Random forest terpilih | F3 (F2 + lintas stasiun),2,52.5947,40.2672
+5 transformasi target,"Ridge, target akar kuadrat | F3 (F2 + lintas stasiun)",2,54.0296,39.7478
+5 transformasi target,"HGB terpilih, target akar kuadrat | F3 (F2 + lintas stasiun)",2,53.8695,39.504
+5 transformasi target,"Ridge, target log1p | F3 (F2 + lintas stasiun)",2,57.181,40.3438
+5 transformasi target,"HGB terpilih, target log1p | F3 (F2 + lintas stasiun)",2,57.2544,40.1754
+3 tuning,HGB terpilih | F3 (F2 + lintas stasiun),3,82.1866,62.6657
+3 tuning,Random forest terpilih | F3 (F2 + lintas stasiun),3,81.4543,61.7099
+4 rata-rata,Ridge + HGB terpilih | F3 (F2 + lintas stasiun),3,81.4708,62.4805
+4 rata-rata,Ridge + Random forest terpilih | F3 (F2 + lintas stasiun),3,80.9869,61.9589
+4 rata-rata,Ridge + HGB + Random forest terpilih | F3 (F2 + lintas stasiun),3,81.1592,62.0158
+4 rata-rata,Elastic Net + HGB + Random forest terpilih | F3 (F2 + lintas stasiun),3,81.1634,62.0043
+5 transformasi target,"Ridge, target akar kuadrat | F3 (F2 + lintas stasiun)",3,83.2109,61.7098
+5 transformasi target,"HGB terpilih, target akar kuadrat | F3 (F2 + lintas stasiun)",3,83.1169,61.0631
+5 transformasi target,"Ridge, target log1p | F3 (F2 + lintas stasiun)",3,90.2379,62.6827
+5 transformasi target,"HGB terpilih, target log1p | F3 (F2 + lintas stasiun)",3,88.2119,61.2705
+3 tuning,HGB terpilih | F3 (F2 + lintas stasiun),4,49.0343,37.4589
+3 tuning,Random forest terpilih | F3 (F2 + lintas stasiun),4,48.3155,36.6294
+4 rata-rata,Ridge + HGB terpilih | F3 (F2 + lintas stasiun),4,48.5674,37.0604
+4 rata-rata,Ridge + Random forest terpilih | F3 (F2 + lintas stasiun),4,48.1315,36.6521
+4 rata-rata,Ridge + HGB + Random forest terpilih | F3 (F2 + lintas stasiun),4,48.2111,36.7242
+4 rata-rata,Elastic Net + HGB + Random forest terpilih | F3 (F2 + lintas stasiun),4,48.3464,36.8427
+5 transformasi target,"Ridge, target akar kuadrat | F3 (F2 + lintas stasiun)",4,48.324,35.6968
+5 transformasi target,"HGB terpilih, target akar kuadrat | F3 (F2 + lintas stasiun)",4,48.8709,35.1509
+5 transformasi target,"Ridge, target log1p | F3 (F2 + lintas stasiun)",4,49.8193,34.7239
+5 transformasi target,"HGB terpilih, target log1p | F3 (F2 + lintas stasiun)",4,50.7097,34.0305
+3 tuning,HGB terpilih | F3 (F2 + lintas stasiun),5,90.3588,60.9251
+3 tuning,Random forest terpilih | F3 (F2 + lintas stasiun),5,90.7737,61.3494
+4 rata-rata,Ridge + HGB terpilih | F3 (F2 + lintas stasiun),5,90.493,61.8851
+4 rata-rata,Ridge + Random forest terpilih | F3 (F2 + lintas stasiun),5,90.5875,62.0005
+4 rata-rata,Ridge + HGB + Random forest terpilih | F3 (F2 + lintas stasiun),5,90.2916,61.4745
+4 rata-rata,Elastic Net + HGB + Random forest terpilih | F3 (F2 + lintas stasiun),5,90.1985,61.4189
+5 transformasi target,"Ridge, target akar kuadrat | F3 (F2 + lintas stasiun)",5,96.5179,63.0974
+5 transformasi target,"HGB terpilih, target akar kuadrat | F3 (F2 + lintas stasiun)",5,95.2613,60.895
+5 transformasi target,"Ridge, target log1p | F3 (F2 + lintas stasiun)",5,105.8072,65.105
+5 transformasi target,"HGB terpilih, target log1p | F3 (F2 + lintas stasiun)",5,104.2555,63.2937
+6 putaran 2,"Random forest {'min_samples_leaf': 100, 'max_features': 0.2, 'max_samples': 0.25} | F3 (F2 + lintas stasiun)",1,84.7397,64.6788
+6 putaran 2,"Random forest {'min_samples_leaf': 100, 'max_features': 0.2, 'max_samples': 0.25} | F3 (F2 + lintas stasiun)",2,52.9241,40.6037
+6 putaran 2,"Random forest {'min_samples_leaf': 100, 'max_features': 0.2, 'max_samples': 0.25} | F3 (F2 + lintas stasiun)",3,81.2836,61.668
+6 putaran 2,"Random forest {'min_samples_leaf': 100, 'max_features': 0.2, 'max_samples': 0.25} | F3 (F2 + lintas stasiun)",4,48.0368,36.6154
+6 putaran 2,"Random forest {'min_samples_leaf': 100, 'max_features': 0.2, 'max_samples': 0.25} | F3 (F2 + lintas stasiun)",5,90.6543,61.3815
+6 putaran 2,"Random forest {'min_samples_leaf': 300, 'max_features': 0.3, 'max_samples': 0.25} | F3 (F2 + lintas stasiun)",1,84.179,63.9164
+6 putaran 2,"Random forest {'min_samples_leaf': 300, 'max_features': 0.3, 'max_samples': 0.25} | F3 (F2 + lintas stasiun)",2,52.937,40.7492
+6 putaran 2,"Random forest {'min_samples_leaf': 300, 'max_features': 0.3, 'max_samples': 0.25} | F3 (F2 + lintas stasiun)",3,82.0976,62.8063
+6 putaran 2,"Random forest {'min_samples_leaf': 300, 'max_features': 0.3, 'max_samples': 0.25} | F3 (F2 + lintas stasiun)",4,48.7327,36.9824
+6 putaran 2,"Random forest {'min_samples_leaf': 300, 'max_features': 0.3, 'max_samples': 0.25} | F3 (F2 + lintas stasiun)",5,90.1162,61.2587
+6 putaran 2,"Random forest {'min_samples_leaf': 300, 'max_features': 0.2, 'max_samples': 0.25} | F3 (F2 + lintas stasiun)",1,84.3538,64.0806
+6 putaran 2,"Random forest {'min_samples_leaf': 300, 'max_features': 0.2, 'max_samples': 0.25} | F3 (F2 + lintas stasiun)",2,52.3754,40.4861
+6 putaran 2,"Random forest {'min_samples_leaf': 300, 'max_features': 0.2, 'max_samples': 0.25} | F3 (F2 + lintas stasiun)",3,82.3095,63.0043
+6 putaran 2,"Random forest {'min_samples_leaf': 300, 'max_features': 0.2, 'max_samples': 0.25} | F3 (F2 + lintas stasiun)",4,48.6453,37.0734
+6 putaran 2,"Random forest {'min_samples_leaf': 300, 'max_features': 0.2, 'max_samples': 0.25} | F3 (F2 + lintas stasiun)",5,90.0005,61.3211
+6 putaran 2,"Random forest {'min_samples_leaf': 1000, 'max_features': 0.3, 'max_samples': 0.25} | F3 (F2 + lintas stasiun)",1,86.3143,64.3103
+6 putaran 2,"Random forest {'min_samples_leaf': 1000, 'max_features': 0.3, 'max_samples': 0.25} | F3 (F2 + lintas stasiun)",2,52.3108,40.6971
+6 putaran 2,"Random forest {'min_samples_leaf': 1000, 'max_features': 0.3, 'max_samples': 0.25} | F3 (F2 + lintas stasiun)",3,82.9342,63.8822
+6 putaran 2,"Random forest {'min_samples_leaf': 1000, 'max_features': 0.3, 'max_samples': 0.25} | F3 (F2 + lintas stasiun)",4,49.879,38.0416
+6 putaran 2,"Random forest {'min_samples_leaf': 1000, 'max_features': 0.3, 'max_samples': 0.25} | F3 (F2 + lintas stasiun)",5,90.0138,61.7287
+6 putaran 2,"Random forest {'min_samples_leaf': 300, 'max_features': 0.3, 'max_samples': 0.1} | F3 (F2 + lintas stasiun)",1,85.0383,63.9334
+6 putaran 2,"Random forest {'min_samples_leaf': 300, 'max_features': 0.3, 'max_samples': 0.1} | F3 (F2 + lintas stasiun)",2,52.2215,40.5376
+6 putaran 2,"Random forest {'min_samples_leaf': 300, 'max_features': 0.3, 'max_samples': 0.1} | F3 (F2 + lintas stasiun)",3,82.7892,63.5208
+6 putaran 2,"Random forest {'min_samples_leaf': 300, 'max_features': 0.3, 'max_samples': 0.1} | F3 (F2 + lintas stasiun)",4,49.1807,37.4524
+6 putaran 2,"Random forest {'min_samples_leaf': 300, 'max_features': 0.3, 'max_samples': 0.1} | F3 (F2 + lintas stasiun)",5,89.7069,61.4978
+6 putaran 2,"Random forest {'min_samples_leaf': 1000, 'max_features': 0.2, 'max_samples': 0.1} | F3 (F2 + lintas stasiun)",1,88.5894,65.8487
+6 putaran 2,"Random forest {'min_samples_leaf': 1000, 'max_features': 0.2, 'max_samples': 0.1} | F3 (F2 + lintas stasiun)",2,52.4827,41.1981
+6 putaran 2,"Random forest {'min_samples_leaf': 1000, 'max_features': 0.2, 'max_samples': 0.1} | F3 (F2 + lintas stasiun)",3,83.206,64.4004
+6 putaran 2,"Random forest {'min_samples_leaf': 1000, 'max_features': 0.2, 'max_samples': 0.1} | F3 (F2 + lintas stasiun)",4,50.5817,39.3012
+6 putaran 2,"Random forest {'min_samples_leaf': 1000, 'max_features': 0.2, 'max_samples': 0.1} | F3 (F2 + lintas stasiun)",5,90.367,62.1326
+6 putaran 2,"Extra Trees {'min_samples_leaf': 50, 'max_features': 0.3} | F3 (F2 + lintas stasiun)",1,84.7368,64.731
+6 putaran 2,"Extra Trees {'min_samples_leaf': 50, 'max_features': 0.3} | F3 (F2 + lintas stasiun)",2,52.696,40.7604
+6 putaran 2,"Extra Trees {'min_samples_leaf': 50, 'max_features': 0.3} | F3 (F2 + lintas stasiun)",3,81.4075,62.2266
+6 putaran 2,"Extra Trees {'min_samples_leaf': 50, 'max_features': 0.3} | F3 (F2 + lintas stasiun)",4,48.9763,37.5197
+6 putaran 2,"Extra Trees {'min_samples_leaf': 50, 'max_features': 0.3} | F3 (F2 + lintas stasiun)",5,91.1651,62.0787
+6 putaran 2,"Extra Trees {'min_samples_leaf': 100, 'max_features': 0.3} | F3 (F2 + lintas stasiun)",1,84.992,64.8212
+6 putaran 2,"Extra Trees {'min_samples_leaf': 100, 'max_features': 0.3} | F3 (F2 + lintas stasiun)",2,52.6234,40.8563
+6 putaran 2,"Extra Trees {'min_samples_leaf': 100, 'max_features': 0.3} | F3 (F2 + lintas stasiun)",3,81.9111,62.8424
+6 putaran 2,"Extra Trees {'min_samples_leaf': 100, 'max_features': 0.3} | F3 (F2 + lintas stasiun)",4,49.2078,37.8742
+6 putaran 2,"Extra Trees {'min_samples_leaf': 100, 'max_features': 0.3} | F3 (F2 + lintas stasiun)",5,90.6455,62.1571
+6 putaran 2,"Extra Trees {'min_samples_leaf': 300, 'max_features': 0.3} | F3 (F2 + lintas stasiun)",1,85.8955,64.9784
+6 putaran 2,"Extra Trees {'min_samples_leaf': 300, 'max_features': 0.3} | F3 (F2 + lintas stasiun)",2,52.497,41.0377
+6 putaran 2,"Extra Trees {'min_samples_leaf': 300, 'max_features': 0.3} | F3 (F2 + lintas stasiun)",3,82.6091,63.9305
+6 putaran 2,"Extra Trees {'min_samples_leaf': 300, 'max_features': 0.3} | F3 (F2 + lintas stasiun)",4,49.9719,38.6355
+6 putaran 2,"Extra Trees {'min_samples_leaf': 300, 'max_features': 0.3} | F3 (F2 + lintas stasiun)",5,90.661,62.4525
+6 putaran 2,Ridge + Random forest putaran 2 terbaik | F3 (F2 + lintas stasiun),1,83.3495,62.7597
+6 putaran 2,Ridge + Extra Trees terbaik | F3 (F2 + lintas stasiun),1,83.4562,62.8024
+6 putaran 2,Ridge + Random forest + Extra Trees terbaik | F3 (F2 + lintas stasiun),1,83.5699,63.2197
+6 putaran 2,Ridge + Random forest putaran 2 terbaik | F3 (F2 + lintas stasiun),2,52.502,40.1262
+6 putaran 2,Ridge + Extra Trees terbaik | F3 (F2 + lintas stasiun),2,52.4001,40.2035
+6 putaran 2,Ridge + Random forest + Extra Trees terbaik | F3 (F2 + lintas stasiun),2,52.3267,40.1365
+6 putaran 2,Ridge + Random forest putaran 2 terbaik | F3 (F2 + lintas stasiun),3,80.9401,61.9528
+6 putaran 2,Ridge + Extra Trees terbaik | F3 (F2 + lintas stasiun),3,81.0807,62.2497
+6 putaran 2,Ridge + Random forest + Extra Trees terbaik | F3 (F2 + lintas stasiun),3,80.8979,61.8904
+6 putaran 2,Ridge + Random forest putaran 2 terbaik | F3 (F2 + lintas stasiun),4,48.0336,36.6568
+6 putaran 2,Ridge + Extra Trees terbaik | F3 (F2 + lintas stasiun),4,48.4822,37.0479
+6 putaran 2,Ridge + Random forest + Extra Trees terbaik | F3 (F2 + lintas stasiun),4,48.1393,36.7571
+6 putaran 2,Ridge + Random forest putaran 2 terbaik | F3 (F2 + lintas stasiun),5,90.6108,62.0488
+6 putaran 2,Ridge + Extra Trees terbaik | F3 (F2 + lintas stasiun),5,90.9082,62.4368
+6 putaran 2,Ridge + Random forest + Extra Trees terbaik | F3 (F2 + lintas stasiun),5,90.5899,61.9009
