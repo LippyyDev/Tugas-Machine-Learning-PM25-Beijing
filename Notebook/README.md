@@ -2,7 +2,7 @@
 
 | Berkas | Isi |
 |---|---|
-| `Tahap 2 EDA dan Praproses.ipynb` | Muat 12 stasiun, pisahkan 9 stasiun latih dan 3 stasiun asing, EDA, pembagian kronologis dengan satu batas waktu, validasi dari jam unik, fitur per stasiun, *baseline*, dan pemeriksaan kesesuaian desain (bagian 00 sampai 04). Akan diperluas menjadi *notebook* akhir (bagian 05 sampai 09) |
+| `Tahap 2 EDA dan Praproses.ipynb` | Muat 12 stasiun, pisahkan 9 stasiun latih dan 3 stasiun uji, EDA, pembagian kronologis dengan satu batas waktu, validasi dari jam unik, fitur per stasiun, *baseline*, dan pemeriksaan kesesuaian desain (bagian 00 sampai 04). Akan diperluas menjadi *notebook* akhir (bagian 05 sampai 09) |
 
 Cara menjalankan ada di `README.md` utama. *Notebook* mencari data di folder Google Drive, lalu `Data/Data Mentah` (dari akar repo atau dari folder ini), dan bila keduanya tidak ada mengunduh repo ini.
 

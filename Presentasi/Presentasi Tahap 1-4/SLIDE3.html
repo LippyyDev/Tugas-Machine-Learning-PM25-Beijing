@@ -198,21 +198,20 @@ svg.go .bar{transform:scaleY(1)}
   </div>
 
   <div class="kicker"><h1>Eksplorasi dan Praproses</h1></div>
-  <div class="src">Dasar: Penjelasan Proyek bagian 2 dan Tahap 2, hasil eksekusi notebook</div>
 
   <div class="copy">
     <div class="blk" id="b1"><span class="lbl">01 · Struktur Dataset</span>
-      <p>Dataset mencakup <b>12 stasiun</b> pemantau dengan rekaman 35.064 jam per stasiun (Maret 2013 sampai Februari 2017), menghasilkan total <b>420.768 baris</b> dan 18 variabel waktu, polutan, serta cuaca.</p></div>
-    <div class="blk" id="b2"><span class="lbl">02 · Konstruksi Sampel Latih</span>
-      <p>Model regresi membaca data per baris. Karena itu, riwayat hingga jam t diringkas menjadi <b>29 fitur</b>: polutan dan cuaca saat ini, <em>lag</em> PM2.5, rata-rata bergulir, serta siklus waktu (sinus dan kosinus), untuk memprediksi <b>target</b> PM2.5 pada jam t+24.</p></div>
+      <p>Dataset mencakup <b>12 stasiun</b> pemantau dengan data 35.064 jam per stasiun (Maret 2013 sampai Februari 2017), menghasilkan total <b>420.768 baris</b> dan 18 variabel waktu, polutan, serta cuaca.</p></div>
+    <div class="blk" id="b2"><span class="lbl">02 · Penyusunan Sampel Latih</span>
+      <p>Model regresi membaca data per baris. Karena itu, riwayat hingga jam t diringkas menjadi <b>29 fitur</b>: polutan dan cuaca saat ini, <em>lag</em> PM2.5, <em>rolling mean</em>, serta siklus waktu (sinus dan kosinus), untuk memprediksi <b>target</b> PM2.5 pada jam t+24.</p></div>
     <div class="blk" id="b3"><span class="lbl">03 · Pencegahan Kebocoran Data</span>
-      <p>Seluruh fitur wajib berasal dari waktu ≤ jam t, termasuk rata-rata bergulir yang jendelanya berhenti di jam t. Median untuk imputasi dihitung dari data latih saja. Menggunakan informasi setelah jam t memicu <em>data leakage</em>, sehingga skor validasi tampak tinggi secara semu, namun model gagal saat diterapkan.</p></div>
+      <p>Seluruh fitur wajib berasal dari waktu ≤ jam t, termasuk <em>rolling mean</em> yang jendelanya berhenti di jam t. Median untuk imputasi dihitung dari data latih saja. Menggunakan informasi setelah jam t memicu <em>data leakage</em>, sehingga skor validasi tampak lebih baik daripada kenyataan dan model gagal saat diterapkan.</p></div>
     <div class="blk" id="b4"><span class="lbl">04 · Pola &amp; Distribusi Data</span>
       <p>Distribusi PM2.5 condong ke kanan (<em>right-skewed</em>) dengan <b>median 57</b> dan rata-rata 81,1 µg/m³. Lonjakan polusi ekstrem inilah yang menarik rata-rata dan mendominasi galat RMSE.</p></div>
     <div class="blk" id="b5"><span class="lbl">05 · Penanganan Data Hilang</span>
       <p>Terdapat <b>2,16%</b> jam dengan nilai PM2.5 kosong. Karena uji imputasi <em>forward fill</em> (0 sampai 24 jam) tidak memberi peningkatan yang dapat dibedakan dari <em>noise</em>, data dibiarkan <b>tanpa <em>forward fill</em></b>.</p></div>
-    <div class="blk" id="b6"><span class="lbl">06 · Output Praproses</span>
-      <p>Tahap ini menghasilkan <b>246.798</b> baris data latih (dari 9 stasiun, 29 fitur), sementara <b>82.151</b> baris data uji dikunci dan tetap diisolasi dari proses eksplorasi.</p></div>
+    <div class="blk" id="b6"><span class="lbl">06 · Hasil Praproses</span>
+      <p>Tahap ini menghasilkan <b>246.798</b> baris data latih (dari 9 stasiun, 29 fitur), sementara <b>82.151</b> baris data uji disisihkan dan tidak disentuh dalam proses eksplorasi.</p></div>
   </div>
 
   <div class="panel">
@@ -233,7 +232,7 @@ svg.go .bar{transform:scaleY(1)}
           <div class="col" style="--d:560ms"><h4>Polutan<span>6</span></h4><div class="cl"><span class="cc tg">PM2.5</span><span class="cc">PM10</span><span class="cc">SO2</span><span class="cc">NO2</span><span class="cc">CO</span><span class="cc">O3</span></div></div>
           <div class="col" style="--d:700ms"><h4>Cuaca<span>6</span></h4><div class="cl"><span class="cc">TEMP</span><span class="cc">PRES</span><span class="cc">DEWP</span><span class="cc">RAIN</span><span class="cc">WSPM</span><span class="cc">wd</span></div></div>
         </div>
-        <div class="note">Kuning: kolom yang diramal (<code>PM2.5</code>). Nilai kosong tertulis <code>NA</code>. Arah angin <code>wd</code> berupa 16 kategori teks.</div>
+        <div class="note">Kuning: kolom yang diprediksi (<code>PM2.5</code>). Nilai kosong tertulis <code>NA</code>. Arah angin <code>wd</code> berupa 16 kategori teks.</div>
       </div></div>
       <div class="view" id="v-row">
         <svg class="vz" id="svg-row" viewBox="0 0 942 526"></svg>
@@ -353,7 +352,7 @@ const leakDot=mk('circle',{r:8,fill:'rgba(255,194,102,.25)',stroke:'#ffc266','st
 const leakLab=tx(sv,'JAM T+1',[0,0],13,'#ffc266',{'text-anchor':'middle','letter-spacing':'.1em','stroke':'#0a0b0f','stroke-width':5,'paint-order':'stroke'});
 const leakMsg=tx(sv,'',[CX0,CY1+60],15,'#ffc266');
 // batang komposisi 29 fitur
-const COMP=[[11,['kondisi jam t']],[7,['lag PM2.5']],[3,['rata-rata','bergulir']],[2,['arah','angin']],[6,['kalender']]];
+const COMP=[[11,['kondisi jam t']],[7,['lag PM2.5']],[3,['rolling','mean']],[2,['arah','angin']],[6,['kalender']]];
 const gC=mk('g',{},sv); const BX=CX0, BW=CX1-CX0, BY=428; let acc=0; const compEls=[];
 const OP=[.85,.68,.52,.4,.3];
 COMP.forEach(([n,name],i)=>{ const w=BW*n/29, x=BX+BW*acc/29; acc+=n;
@@ -366,7 +365,7 @@ const KEYS=['now','lag','roll','wind','cal'];
 const HTIP={
   now:'<small>11 fitur · kondisi jam t</small>6 polutan (PM2.5, PM10, SO2, NO2, CO, O3)<br>dan 5 cuaca (suhu, tekanan, titik embun,<br>hujan, kecepatan angin) pada jam t<br><span class="hs"><b>Peran:</b> gambaran langsung situasi<br>atmosfer saat prediksi dibuat</span>',
   lag:'<small>7 fitur · <em>lag</em> PM2.5</small>Nilai PM2.5 dari 1, 2, 3, 6, 12, 24, dan 48 jam<br>sebelum jam t, dijadikan kolom baru<br><span class="hs"><b>Peran:</b> memberi tahu arah gerak,<br>polusi sedang menanjak atau melandai</span>',
-  roll:'<small>3 fitur · rata-rata bergulir</small>Rata-rata PM2.5 selama 6, 24, dan 72 jam<br>terakhir (berhenti di jam t)<br><span class="hs"><b>Peran:</b> meredam fluktuasi sesaat dan<br>menangkap tren beberapa hari terakhir</span>',
+  roll:'<small>3 fitur · <em>rolling mean</em></small>Rata-rata PM2.5 selama 6, 24, dan 72 jam<br>terakhir (berhenti di jam t)<br><span class="hs"><b>Peran:</b> meredam fluktuasi sesaat dan<br>menangkap tren beberapa hari terakhir</span>',
   wind:'<small>2 fitur · arah angin</small>Kolom teks <em>wd</em> (16 arah, N, NE, SW, dst.)<br>diubah jadi sudut 0° sampai 360°,<br>lalu dipecah menjadi sinus dan kosinus<br><span class="hs"><b>Peran:</b> agar 359° dekat dengan 1°,<br>bukan berjauhan seperti angka 359 dan 1</span>',
   cal:'<small>6 fitur · kalender</small>Jam, hari dalam pekan, dan bulan,<br>masing-masing menjadi sinus dan kosinus<br><span class="hs"><b>Peran:</b> agar pukul 23.00 bersebelahan dengan<br>00.00 dan pola musim bulanan tertangkap</span>'
 };
@@ -391,7 +390,7 @@ function applyHi(){
   // 7 lag
   LAGS.forEach((k,i)=>{ const L=hiLagLn[i]; L.setAttribute('x1',xs(t-k)); L.setAttribute('y1',ys(EX[t-k])); L.setAttribute('x2',x); L.setAttribute('y2',y); L.style.opacity=on('lag')?.9:0;
     lagDots[i].setAttribute('r',on('lag')?7.5:5); lagDots[i].setAttribute('fill',on('lag')?'#7db4ff':'#0f1c31'); });
-  // 3 rata-rata bergulir
+  // 3 rolling mean
   ROLLS.forEach((w,i)=>{ const x0=Math.max(CX0,xs(t-w)); hiRoll[i].setAttribute('x',x0); hiRoll[i].setAttribute('width',Math.max(0,x-x0)); hiRoll[i].style.opacity=on('roll')?1:0;
     const lab=hiRollLab[i], edge=xs(t-w)<CX0+56; lab.setAttribute('x',edge?x0+6:x0-5); lab.setAttribute('text-anchor',edge?'start':'end'); lab.setAttribute('y',CY1-12-i*18); lab.style.opacity=on('roll')?1:0; });
   // 2 arah angin atau 6 kalender: sorotan siklik
@@ -412,7 +411,7 @@ function placeT(){
   const lk=mode===2&&leak;
   leakDot.setAttribute('cx',xs(tIdx+1)); leakDot.setAttribute('cy',ys(EX[tIdx+1])); leakDot.style.opacity=lk?1:0;
   leakLab.setAttribute('x',xs(tIdx+1)); leakLab.setAttribute('y',ys(EX[tIdx+1])+(EX[tIdx+1]>EX[tIdx]?-16:30)); leakLab.style.opacity=lk?1:0;
-  if(mode===2){ leakMsg.textContent=lk?'BOCOR: jam t+1 belum ada saat ramalan dibuat. Skor semu.':'AMAN: semua fitur berasal dari jam t ke kiri.'; leakMsg.setAttribute('fill',lk?'#ffc266':'#7db4ff'); }
+  if(mode===2){ leakMsg.textContent=lk?'BOCOR: jam t+1 belum ada saat prediksi dibuat. Skor terlalu optimistis.':'AMAN: semua fitur berasal dari jam t ke kiri.'; leakMsg.setAttribute('fill',lk?'#ffc266':'#7db4ff'); }
   else leakMsg.textContent='';
   [leakDot,leakLab].forEach(e=>e.style.transition='opacity .3s ease');
   applyHi();
@@ -463,9 +462,9 @@ function axisY(g,max,ticks,fmtv){ ticks.forEach(v=>{ const y=EY1-v/max*(EY1-EY0)
     if((i%3===0&&Math.abs(i-16)>1)||i===hi||i===16) tx(g,String(i).padStart(2,'0')+'.00',[x+bw/2,EY1+24],12,(i===hi||i===16)?col:'#80849a',{'text-anchor':'middle'});
     if(i===hi||i===16) tx(g,v,[x+bw/2,EY1-h-10],16,col,{'text-anchor':'middle','font-weight':500}); }); })();
 const TAB_CAP={
- sebaran:['Median · rata-rata','57 <span class="u">·</span> 81,1<span class="u">µg/m³</span>','Distribusi PM2.5 condong ke kanan: mayoritas jam berada di level rendah, namun segelintir lonjakan ekstrem akan <b>mendominasi RMSE</b>.'],
- bulan:['Tertinggi · terendah','Des 99 <span class="u">·</span> Agu 57<span class="u">µg/m³</span>','Pola musiman terlihat jelas: rata-rata tertinggi memuncak pada <b>Desember</b> (99 µg/m³) dan terendah pada <b>Agustus</b> (57 µg/m³).'],
- jam:['Tertinggi · terendah','21.00 <span class="u">·</span> 16.00','Variasi <em>diurnal</em> (per jam) cenderung landai: tertinggi pukul <b>21.00</b> (90) dan terendah pukul <b>16.00</b> (75), jauh lebih kecil dibanding fluktuasi antarmusim.']};
+ sebaran:['Median · rata-rata','57 <span class="u">·</span> 81,1<span class="u">µg/m³</span>','Distribusi PM2.5 condong ke kanan: mayoritas jam berada di level rendah, namun sedikit lonjakan ekstrem akan <b>mendominasi RMSE</b>.'],
+ bulan:['Tertinggi · terendah','Des 99 <span class="u">·</span> Agu 57<span class="u">µg/m³</span>','Pola musiman terlihat jelas: rata-rata tertinggi terjadi pada <b>Desember</b> (99 µg/m³) dan terendah pada <b>Agustus</b> (57 µg/m³).'],
+ jam:['Tertinggi · terendah','21.00 <span class="u">·</span> 16.00','Variasi per jam dalam sehari cenderung landai: tertinggi pukul <b>21.00</b> (90) dan terendah pukul <b>16.00</b> (75), jauh lebih kecil dibanding fluktuasi antarmusim.']};
 let tab='sebaran';
 function setTab(t,animate){ tab=t; $$('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
   Object.keys(EG).forEach(k=>{EG[k].style.display=k===t?'':'none';});
@@ -488,14 +487,14 @@ const sg=$('#svg-gap'); const GAPS=[['1 jam',996],['2 sampai 3 jam',505],['4 sam
   tx(g,'87% KEJADIAN',[(bx0+bx1)/2,by-10],15,'#c4dcff',{'text-anchor':'middle','letter-spacing':'.12em'});
   tx(g,'TERPANJANG: 343 JAM',[GX1-6,GY1-62],14,'#ffc266',{'text-anchor':'end','letter-spacing':'.1em'});
   tx(g,'Total 1.730 kejadian · median 1 jam · PM2.5, 9 stasiun latih',[GX0,GY1+64],14,'#80849a');
-  tx(g,'Biru: celah 1 sampai 3 jam. Kuning: celah lebih panjang.',[GX0,GY1+90],14,'#80849a');
+  tx(g,'Biru: nilai hilang 1 sampai 3 jam berturut-turut. Kuning: lebih lama.',[GX0,GY1+90],14,'#80849a');
   GAPS.forEach(([nm,c],i)=>{ const x=GX0+i*bw; const hit=mk('rect',{x:x,y:GY0,width:bw,height:GY1-GY0,fill:'transparent'},g);
     hit.addEventListener('mousemove',ev=>tip('<small>'+nm+'</small>'+fmt(c)+' kejadian ('+fd(c/1730*100)+'%)',ev)); hit.addEventListener('mouseleave',tipOff); });
   g.setAttribute('class','gapg'); })();
 
 /* ═════════ View alur praproses ═════════ */
 const sf=$('#svg-flow'); const gf=mk('g',{},sf);
-const BOX=[['01 · DATA MENTAH',['12 stasiun','420.768 baris']],['02 · SISIHKAN UJI',['cutoff 12 Mei 2016','pukul 19.00','diisolasi sebelum EDA']],['03 · FITUR DAN TARGET',['29 fitur','sampai jam t','target: jam t+24']],['04 · BERSIHKAN',['buang baris','target kosong','24 jam terakhir']]];
+const BOX=[['01 · DATA MENTAH',['12 stasiun','420.768 baris']],['02 · SISIHKAN UJI',['cutoff 12 Mei 2016','pukul 19.00','disisihkan sebelum EDA']],['03 · FITUR DAN TARGET',['29 fitur','sampai jam t','target: jam t+24']],['04 · BERSIHKAN',['buang baris','target kosong','24 jam terakhir']]];
 const FB=[];
 BOX.forEach((b,i)=>{ const x=44+i*214, g=mk('g',{transform:'translate('+x+',34)'},gf), ig=mk('g',{},g); ig.style.opacity=0; ig.style.transform='translateY(14px)'; ig.style.transition='opacity .6s ease '+(i*180)+'ms,transform .6s ease '+(i*180)+'ms'; FB.push(ig);
   mk('rect',{width:180,height:138,fill:'rgba(255,255,255,.025)',stroke:i===1?'rgba(255,255,255,.28)':'rgba(255,255,255,.13)'},ig); mk('rect',{width:180,height:3,fill:i===1?'#80849a':'#7db4ff'},ig);
@@ -503,8 +502,8 @@ BOX.forEach((b,i)=>{ const x=44+i*214, g=mk('g',{transform:'translate('+x+',34)'
   if(i===0){ tx(ig,b[1][0],[14,76],24,'#f1f2f6',{'font-family':SANS,'font-weight':600}); tx(ig,b[1][1],[14,112],24,'#c4dcff',{'font-family':SANS,'font-weight':600}); }
   else b[1].forEach((ln,j)=>tx(ig,ln,[14,66+j*27],j===0?16:15,j===0?'#f1f2f6':'#c4c7d4',{'font-family':SANS,'font-weight':j===0?600:400}));
   if(i<3){ const a=mk('path',{d:'M'+(x+184)+' 103h24m-7 -6 7 6 -7 6',fill:'none',stroke:'#80849a','stroke-width':2},gf); a.style.opacity=0; a.style.transition='opacity .5s ease '+(i*180+300)+'ms'; FB.push(a); } });
-tx(gf,'Fitur kosong diisi median dari data latih, di dalam pipeline per lipatan.',[44,218],15,'#80849a');
-const OUT=[['LATIH','246.798','baris, 29 fitur, 9 stasiun','dipakai di Tahap 3 sampai 5',false],['UJI · DIKUNCI','82.151','baris dikunci (tidak disentuh)','61.686 stasiun latih + 20.465 stasiun baru',true]];
+tx(gf,'Fitur kosong diisi median dari data latih, di dalam pipeline per fold.',[44,218],15,'#80849a');
+const OUT=[['LATIH','246.798','baris, 29 fitur, 9 stasiun','dipakai di Tahap 3 sampai 5',false],['UJI · DISISIHKAN','82.151','baris disisihkan (tidak disentuh)','61.686 stasiun latih + 20.465 stasiun uji',true]];
 OUT.forEach((o,i)=>{ const x=44+i*434, g=mk('g',{transform:'translate('+x+',260)'},gf), ig=mk('g',{},g); ig.style.opacity=0; ig.style.transform='translateY(14px)'; ig.style.transition='opacity .6s ease '+(900+i*200)+'ms,transform .6s ease '+(900+i*200)+'ms'; FB.push(ig);
   mk('rect',{width:396,height:190,fill:o[4]?'rgba(255,255,255,.02)':'rgba(125,180,255,.07)',stroke:o[4]?'rgba(255,255,255,.28)':'rgba(125,180,255,.55)','stroke-dasharray':o[4]?'6 5':'0'},ig); mk('rect',{width:396,height:4,fill:o[4]?'#80849a':'#7db4ff'},ig);
   tx(ig,o[0],[22,40],14,o[4]?'#80849a':'#7db4ff',{'letter-spacing':'.14em'}); tx(ig,o[1],[22,102],58,o[4]?'#c4c7d4':'#c4dcff',{'font-weight':500}); tx(ig,o[2],[22,134],18,'#c4c7d4',{'font-family':SANS}); tx(ig,o[3],[22,164],15,'#80849a',{'font-family':SANS}); });
@@ -512,11 +511,11 @@ OUT.forEach((o,i)=>{ const x=44+i*434, g=mk('g',{transform:'translate('+x+',260)
 const conn=mk('path',{d:'M776 172V232H242V256M776 232H676V256',fill:'none',stroke:'#80849a','stroke-width':2,'stroke-dasharray':'5 5'},gf); conn.style.opacity=0; conn.style.transition='opacity .5s ease .8s'; FB.push(conn);
 
 /* ═════════ Langkah ═════════ */
-const FIG=['Fig. 06 · Dataset','Fig. 07 · Satu baris latihan','Fig. 08 · Aturan fitur','Fig. 09 · Apa yang tampak di data','Fig. 10 · Nilai hilang','Fig. 11 · Alur praproses'];
+const FIG=['Gambar 6 · Dataset','Gambar 7 · Satu baris latihan','Gambar 8 · Aturan fitur','Gambar 9 · Apa yang tampak di data','Gambar 10 · Nilai hilang','Gambar 11 · Alur praproses'];
 const VIEWS=['v-data','v-row','v-row','v-eda','v-gap','v-flow'];
 function setView(i){
   $$('.view').forEach(v=>v.classList.toggle('on',v.id===VIEWS[i]));
-  $('#fig').innerHTML=FIG[i].replace(/^(Fig\. \d+)/,'<b>$1</b>');
+  $('#fig').innerHTML=FIG[i].replace(/^(Gambar \d+)/,'<b>$1</b>');
   $('#v-data').classList.toggle('on',i===0); $('#dgrid').classList.toggle('on',i===0);
   const lk=$('#lk'); lk.style.opacity=i===2?1:0; lk.style.pointerEvents=i===2?'auto':'none';
   gC.style.opacity=i===1?1:0; gC.style.pointerEvents=i===1?'auto':'none'; hov=null;
@@ -529,8 +528,8 @@ const STEPS=[
   ()=>{ blocks(1); mode=1; leak=false; setView(1); placeT(); readoutNow('Satu baris latihan','29 fitur <span class="u">→</span> 1 target'); caption('<b>Fitur</b> (biru): yang sudah terukur sampai jam t, termasuk riwayat PM2.5 (titik biru). <b>Target</b> (kuning): PM2.5 24 jam kemudian. Seret garis putih, lalu arahkan kursor ke tiap kelompok fitur di bawah.'); },
   ()=>{ blocks(2); mode=2; setView(2); placeT(); readoutNow('Fitur boleh dari','≤ jam t'); caption('Fitur <b>tidak boleh</b> memakai data sesudah jam t. Seret garis putih, lalu coba tombol <b>Bocor</b> di kiri bawah.'); },
   ()=>{ blocks(3); setView(3); setTab('sebaran'); },
-  ()=>{ blocks(4); setView(4); readoutNow('Kejadian celah PM2.5','1.730'); caption('<b>87%</b> celah data hanya berdurasi 1 sampai 3 jam (terpanjang 343 jam). Strategi yang diambil: tanpa <em>forward fill</em>, menghapus baris dengan target kosong, serta mengisi fitur kosong memakai median di dalam <em>pipeline</em>.'); },
-  ()=>{ blocks(5); setView(5); readoutNow('Baris latih','246.798'); caption('Hasil Tahap 2: <b>246.798</b> baris latih dengan 29 fitur. <b>82.151</b> baris uji dikunci, belum pernah disentuh.'); }
+  ()=>{ blocks(4); setView(4); readoutNow('Rentang nilai hilang PM2.5','1.730'); caption('<b>87%</b> rentang nilai hilang hanya berdurasi 1 sampai 3 jam (terpanjang 343 jam). Strategi yang diambil: tanpa <em>forward fill</em>, menghapus baris dengan target kosong, serta mengisi fitur kosong memakai median di dalam <em>pipeline</em>.'); },
+  ()=>{ blocks(5); setView(5); readoutNow('Baris latih','246.798'); caption('Hasil Tahap 2: <b>246.798</b> baris latih dengan 29 fitur. <b>82.151</b> baris uji disisihkan, belum pernah disentuh.'); }
 ];
 function RESET_HOOK(){ tIdx=106; leak=false; mode=1; $$('#lk button').forEach((b,i)=>b.classList.toggle('on',i===0)); $$('.copy .blk').forEach(b=>b.classList.remove('show','active','seen','old')); $$('.view').forEach(v=>v.classList.remove('on')); $('#dgrid').classList.remove('on'); FB.forEach(e=>{e.style.opacity=0;}); se.classList.remove('go'); sg.classList.remove('go'); }
 

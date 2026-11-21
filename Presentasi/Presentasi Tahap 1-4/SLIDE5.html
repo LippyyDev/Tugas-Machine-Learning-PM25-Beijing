@@ -180,17 +180,16 @@ svg .fade{transition:opacity .45s ease}
   </div>
 
   <div class="kicker"><h1><em>Baseline</em></h1></div>
-  <div class="src">Dasar: Penjelasan Proyek, Tahap 4, hasil eksekusi notebook</div>
 
   <div class="copy">
-    <div class="blk" id="b1"><span class="lbl">01 · Model Acuan (<em>Persistence Baseline</em>)</span>
+    <div class="blk" id="b1"><span class="lbl">01 · <em>Naive Forecast</em> sebagai <em>Baseline</em></span>
       <p><em>Naive forecast</em> memprediksi kadar PM2.5 pada jam t+24 <b>sama persis dengan kondisi jam t</b>. Pendekatan tanpa pelatihan ini menjadi patokan minimum (<em>floor</em>) sebelum beralih ke model yang lebih kompleks.</p></div>
-    <div class="blk" id="b2"><span class="lbl">02 · Performa Lintas Lipatan (RMSE)</span>
+    <div class="blk" id="b2"><span class="lbl">02 · Performa di Tiap <em>Fold</em> (RMSE)</span>
       <p>Rata-rata RMSE pada 5 <em>fold</em> validasi mencapai <b>86,82 ± 24,70</b> µg/m³. Fluktuasinya cukup lebar: <em>fold</em> 1, 3, dan 5 (validasi mencakup musim dingin) sekitar 100, sedangkan <em>fold</em> 2 dan 4 (musim hangat) sekitar 60.</p></div>
     <div class="blk" id="b3"><span class="lbl">03 · Metrik Pendamping (MAE)</span>
-      <p>Nilai MAE tercatat <b>59,39 ± 16,53</b> µg/m³. Selisihnya yang lebih rendah dari RMSE mengindikasikan sejumlah kecil galat besar yang memengaruhi RMSE jauh lebih kuat.</p></div>
+      <p>Nilai MAE tercatat <b>59,39 ± 16,53</b> µg/m³. MAE yang lebih rendah daripada RMSE menunjukkan ada sejumlah kecil galat besar yang lebih kuat memengaruhi RMSE.</p></div>
     <div class="blk" id="b4"><span class="lbl">04 · Kriteria Keberhasilan Model</span>
-      <p>Model <em>machine learning</em> di tahap berikutnya wajib mencetak RMSE <b>di bawah RMSE <em>naive</em> pada <em>fold</em> yang sama</b>, bukan hanya di bawah rata-rata 86,82. Angka ini dari data latih, <b>bukan data uji</b>. Karena <em>baseline</em> ini lemah, mengalahkannya adalah syarat minimum, bukan tujuan akhir.</p></div>
+      <p>Model <em>machine learning</em> di tahap berikutnya harus memberi RMSE <b>lebih kecil daripada RMSE <em>naive</em> pada <em>fold</em> yang sama</b>, bukan hanya di bawah rata-rata 86,82. Angka ini dari data latih, <b>bukan data uji</b>. Karena <em>baseline</em> ini lemah, mengalahkannya adalah syarat minimum, bukan tujuan akhir.</p></div>
   </div>
 
   <div class="panel">
@@ -298,10 +297,10 @@ const aDot=mk('circle',{r:9,fill:'rgba(255,194,102,.2)',stroke:AMB,'stroke-width
 const tDot=mk('circle',{r:7.5,fill:'#0a0b10',stroke:'#f1f2f6','stroke-width':2.5},sn);
 const HALO={stroke:'#0a0b0f','stroke-width':5,'paint-order':'stroke'};
 const tLab=tx(sn,'',[0,CY0-20],14,'#f1f2f6',Object.assign({'text-anchor':'middle','letter-spacing':'.12em'}));
-const pLab=tx(sn,'RAMALAN',[0,0],13,BLUE,Object.assign({'letter-spacing':'.1em'},HALO));
+const pLab=tx(sn,'PREDIKSI',[0,0],13,BLUE,Object.assign({'letter-spacing':'.1em'},HALO));
 const aLab=tx(sn,'KENYATAAN',[0,0],13,AMB,Object.assign({'letter-spacing':'.1em'},HALO));
 const eLab=tx(sn,'',[0,0],15,AMB,Object.assign({'font-weight':500},HALO));
-const stat=[['RAMALAN (NILAI JAM T)',BLUE],['KENYATAAN (JAM T+24)',AMB],['MELESET',AMB]].map(([l,c],i)=>{ tx(sn,l,[74+i*268,CY1+54],12,GREY,{'letter-spacing':'.1em'}); return tx(sn,'',[74+i*268,CY1+92],34,c,{'font-weight':500}); });
+const stat=[['PREDIKSI (NILAI JAM T)',BLUE],['KENYATAAN (JAM T+24)',AMB],['MELESET',AMB]].map(([l,c],i)=>{ tx(sn,l,[74+i*268,CY1+54],12,GREY,{'letter-spacing':'.1em'}); return tx(sn,'',[74+i*268,CY1+92],34,c,{'font-weight':500}); });
 let tIdx=106;
 function placeT(){
   const x=xs(tIdx), x2=xs(tIdx+24), v1=EX[tIdx], v2=EX[tIdx+24], y1=ys(v1), y2=ys(v2), err=Math.abs(v2-v1);
@@ -322,7 +321,7 @@ let drag=false; const setFromEv=ev=>{const p=svgPt(sn,ev);tIdx=Math.max(T_MIN,Ma
 hit.addEventListener('pointerdown',e=>{drag=true;hit.setPointerCapture(e.pointerId);setFromEv(e);});
 hit.addEventListener('pointermove',e=>{if(drag)setFromEv(e);}); hit.addEventListener('pointerup',()=>{drag=false;}); hit.addEventListener('pointercancel',()=>{drag=false;});
 
-/* ═════════ V1: RMSE naive per lipatan ═════════ */
+/* ═════════ V1: RMSE naive per fold ═════════ */
 const sf=$('#svg-fold'); const BX0=74, BX1=872, BY0=84, BY1=388, YM=120, by=v=>BY1-v/YM*(BY1-BY0), SLOT=(BX1-BX0)/5, BW=104;
 [0,40,80,120].forEach(v=>{ mk('line',{x1:BX0,x2:BX1,y1:by(v),y2:by(v),stroke:v===0?'rgba(255,255,255,.28)':'rgba(255,255,255,.07)'},sf); tx(sf,v,[BX0-12,by(v)+1],14,GREY,{'text-anchor':'end','dominant-baseline':'central'}); });
 tx(sf,'RMSE (µg/m³)',[BX1,BY0-30],13,GREY,{'text-anchor':'end','letter-spacing':'.1em'});
@@ -332,11 +331,11 @@ const WIN=[true,false,true,false,true];
 RF.forEach((v,i)=>{ const x=BX0+i*SLOT+(SLOT-BW)/2, h=BY1-by(v), col=WIN[i]?AMB:BLUE;
   const r=mk('rect',{class:'bar',x:x,y:by(v),width:BW,height:h,fill:col,'fill-opacity':.78},sf); r.style.setProperty('--d',(i*110)+'ms');
   tx(sf,fd1(v),[x+BW/2,by(v)-10],20,'#f1f2f6',{'text-anchor':'middle','font-weight':500});
-  tx(sf,'Lipatan '+(i+1),[x+BW/2,BY1+26],14,'#c4c7d4',{'text-anchor':'middle'});
+  tx(sf,'Fold '+(i+1),[x+BW/2,BY1+26],14,'#c4c7d4',{'text-anchor':'middle'});
   tx(sf,WIN[i]?'dingin':'hangat',[x+BW/2,BY1+46],13,col,{'text-anchor':'middle'});
   const hr=mk('rect',{x:BX0+i*SLOT,y:BY0-10,width:SLOT,height:BY1-BY0+10,fill:'transparent',class:'hov'},sf);
   const n=TRAIN[i];
-  hr.addEventListener('mousemove',ev=>tip('<small>Lipatan '+(i+1)+' · validasi '+dstr(n+GAPH)+' sampai '+dstr(n+GAPH+VAL-1)+'</small>RMSE '+fd1(v),ev)); hr.addEventListener('mouseleave',tipOff); });
+  hr.addEventListener('mousemove',ev=>tip('<small>Fold '+(i+1)+' · validasi '+dstr(n+GAPH)+' sampai '+dstr(n+GAPH+VAL-1)+'</small>RMSE '+fd1(v),ev)); hr.addEventListener('mouseleave',tipOff); });
 mk('rect',{x:74,y:452,width:14,height:14,fill:AMB,'fill-opacity':.8},sf); tx(sf,'validasi mencakup musim dingin',[96,464],13,'#c4c7d4');
 mk('rect',{x:394,y:452,width:14,height:14,fill:BLUE,'fill-opacity':.8},sf); tx(sf,'validasi musim hangat',[416,464],13,'#c4c7d4');
 mk('line',{x1:620,x2:644,y1:459,y2:459,stroke:'#f1f2f6','stroke-width':1.8,'stroke-dasharray':'5 4'},sf); tx(sf,'rata-rata, pita = ± sd',[654,464],13,'#c4c7d4');
@@ -353,8 +352,8 @@ tx(sm,'µg/m³',[MX1+16,246],13,GREY,{'text-anchor':'end'});
   tx(sm,fd2(m)+' ± '+fd2(s),[mxv(m+s)+14,y+30],18,'#f1f2f6',{'font-weight':500});
   tx(sm,fd2(m-s)+' hingga '+fd2(m+s),[mxv(m+s)+14,y+50],13,GREY);
   const hr=mk('rect',{x:mxv(0),y:y-6,width:mxv(130)-mxv(0),height:56,fill:'transparent',class:'hov'},sm);
-  hr.addEventListener('mousemove',ev=>tip('<small>'+nm+' naive, 5 lipatan</small>'+fd2(m)+' ± '+fd2(s)+' µg/m³<br><span class="hs">Garis = rentang ± 1 simpangan baku<br>antar lipatan: '+fd2(m-s)+' hingga '+fd2(m+s)+' µg/m³</span>',ev)); hr.addEventListener('mouseleave',tipOff); });
-tx(sm,'RATA-RATA ± SIMPANGAN BAKU ANTAR LIPATAN',[MX0,84],12,GREY,{'letter-spacing':'.1em'});
+  hr.addEventListener('mousemove',ev=>tip('<small>'+nm+' naive, 5 fold</small>'+fd2(m)+' ± '+fd2(s)+' µg/m³<br><span class="hs">Garis = rentang ± 1 simpangan baku<br>antar fold: '+fd2(m-s)+' hingga '+fd2(m+s)+' µg/m³</span>',ev)); hr.addEventListener('mouseleave',tipOff); });
+tx(sm,'RATA-RATA ± SIMPANGAN BAKU ANTAR FOLD',[MX0,84],12,GREY,{'letter-spacing':'.1em'});
 tx(sm,'MENGAPA RMSE LEBIH BESAR',[74,292],13,'#c4dcff',{'letter-spacing':'.12em'});
 tx(sm,'5% galat terbesar menyumbang…',[74,322],18,'#c4c7d4',{'font-family':SANS});
 const SB0=74, SBW=798;
@@ -363,9 +362,9 @@ const SB0=74, SBW=798;
   mk('rect',{x:SB0,y:y,width:SBW,height:30,fill:'rgba(255,255,255,.05)',stroke:'rgba(255,255,255,.13)'},sm);
   const r=mk('rect',{class:'hbar',x:SB0,y:y,width:SBW*p/100,height:30,fill:c,'fill-opacity':.85},sm); r.style.setProperty('--d',(500+i*160)+'ms');
   tx(sm,fd(p,1)+'%',[SB0+SBW*p/100+12,y+22],20,'#f1f2f6',{'font-weight':500}); });
-tx(sm,'Seluruh data latih, 9 stasiun, '+fmt(PG.n_pasang)+' pasangan (bukan per lipatan).',[74,484],13,GREY);
+tx(sm,'Seluruh data latih, 9 stasiun, '+fmt(PG.n_pasang)+' pasangan (bukan per fold).',[74,484],13,GREY);
 
-/* ═════════ V3: cara memakai: bandingkan per lipatan ═════════ */
+/* ═════════ V3: cara memakai: bandingkan per fold ═════════ */
 const sp=$('#svg-pakai'); const PX0=74, PX1=872, PSC=(PX1-PX0)/130, pv=v=>PX0+v*PSC, AY=236;
 mk('line',{x1:PX0,x2:PX1,y1:AY,y2:AY,stroke:'rgba(255,255,255,.3)','stroke-width':2},sp);
 [0,20,40,60,80,100,120].forEach(v=>{ mk('line',{x1:pv(v),x2:pv(v),y1:AY,y2:AY+7,stroke:'rgba(255,255,255,.3)'},sp); tx(sp,v,[pv(v),AY+28],13,GREY,{'text-anchor':'middle'}); });
@@ -374,7 +373,7 @@ mk('line',{x1:pv(MEAN),x2:pv(MEAN),y1:AY-92,y2:AY,stroke:'#f1f2f6','stroke-width
 tx(sp,'RATA-RATA NAIVE 86,82',[pv(MEAN)+10,AY-84],13,'#f1f2f6',{'letter-spacing':'.08em'});
 const OFFY=[-30,-30,-30,-30,-30];
 RF.forEach((v,i)=>{ mk('circle',{cx:pv(v),cy:AY,r:7.5,fill:i%2===0?AMB:BLUE,'fill-opacity':.9,stroke:'#0a0b10','stroke-width':2},sp); tx(sp,'L'+(i+1),[pv(v),AY-(i===2?40:19)],13,'#c4c7d4',{'text-anchor':'middle'}); });
-tx(sp,'tiap titik = RMSE naive di satu lipatan',[PX0,AY-84],13,GREY);
+tx(sp,'tiap titik = RMSE naive di satu fold',[PX0,AY-84],13,GREY);
 const mk0=mk('g',{},sp);
 const mLine=mk('line',{y1:AY-52,y2:AY+14,stroke:BLUE,'stroke-width':3},mk0);
 const mTri=mk('path',{d:'M0 0l-11 -17h22z',fill:BLUE},mk0);
@@ -386,24 +385,24 @@ let mv=70;
 function setM(v){ mv=Math.max(30,Math.min(125,v)); const x=pv(mv);
   mLine.setAttribute('x1',x); mLine.setAttribute('x2',x); mTri.setAttribute('transform','translate('+x+','+(AY-52)+')'); mLab.setAttribute('x',x); mLab.textContent=fd(mv,0);
   const k=RF.filter(r=>mv<r).length;
-  r1.textContent='Bila RMSE model = '+fd(mv,0)+' di semua lipatan, ia mengalahkan naive di '+k+' dari 5 lipatan.';
-  r2.textContent=mv<MEAN?'Rata-rata tampak lebih baik ('+fd(mv,0)+' < 86,82)'+(k<5?', tetapi tidak di setiap lipatan.':', dan di setiap lipatan.'):'Rata-rata belum lebih baik dari naive.';
-  r3.textContent=k<5&&mv<MEAN?'Karena itu bandingkan lipatan demi lipatan, bukan hanya rata-rata.':(k===5?'Aman dibaca: unggul konsisten.':'');
+  r1.textContent='Bila RMSE model = '+fd(mv,0)+' di semua fold, ia mengalahkan naive di '+k+' dari 5 fold.';
+  r2.textContent=mv<MEAN?'Rata-rata tampak lebih baik ('+fd(mv,0)+' < 86,82)'+(k<5?', tetapi tidak di setiap fold.':', dan di setiap fold.'):'Rata-rata belum lebih baik dari naive.';
+  r3.textContent=k<5&&mv<MEAN?'Karena itu bandingkan fold demi fold, bukan hanya rata-rata.':(k===5?'Rata-rata dapat dipakai sebagai ringkasan: lebih baik di setiap fold.':'');
   readoutNow('RMSE contoh',fd(mv,0)+' <span class="u">µg/m³</span>'); }
 let dm=false; const sm2=ev=>{const p=svgPt(sp,ev);setM((p.x-PX0)/PSC);};
 mhit.addEventListener('pointerdown',e=>{dm=true;mhit.setPointerCapture(e.pointerId);sm2(e);}); mhit.addEventListener('pointermove',e=>{if(dm)sm2(e);}); mhit.addEventListener('pointerup',()=>{dm=false;}); mhit.addEventListener('pointercancel',()=>{dm=false;});
 
 /* ═════════ Langkah ═════════ */
-const FIG=['Fig. 18 · Tebakan naive','Fig. 19 · RMSE tiap lipatan','Fig. 20 · RMSE dan MAE','Fig. 21 · Membaca hasil model nanti'];
+const FIG=['Gambar 18 · Naive forecast','Gambar 19 · RMSE tiap fold','Gambar 20 · RMSE dan MAE','Gambar 21 · Membaca hasil model nanti'];
 const VIEWS=['v-naive','v-fold','v-mae','v-pakai'];
-function setView(i){ $$('.view').forEach(v=>v.classList.toggle('on',v.id===VIEWS[i])); $('#fig').innerHTML=FIG[i].replace(/^(Fig\. \d+)/,'<b>$1</b>'); tipOff();
+function setView(i){ $$('.view').forEach(v=>v.classList.toggle('on',v.id===VIEWS[i])); $('#fig').innerHTML=FIG[i].replace(/^(Gambar \d+)/,'<b>$1</b>'); tipOff();
   sf.classList.remove('go'); sm.classList.remove('go'); void sf.getBoundingClientRect();
   if(i===1) setTimeout(()=>sf.classList.add('go'),80); if(i===2) setTimeout(()=>sm.classList.add('go'),80); }
 const STEPS=[
-  ()=>{ blocks(0); setView(0); placeT(); caption('Ramalan <em>naive</em> = nilai sekarang (biru). Kenyataan 24 jam kemudian di lingkaran kuning. Seret garis putih. Korelasi jam t dan t+24 hanya <b>0,40</b>.'); },
-  ()=>{ blocks(1); setView(1); readoutNow('RMSE rata-rata','86,82 <span class="u">±</span> 24,70'); caption('RMSE <em>naive</em> per lipatan, data latih 9 stasiun. Validasi musim dingin sekitar <b>100</b>, musim hangat sekitar <b>60</b>. Arahkan kursor ke batang.'); },
+  ()=>{ blocks(0); setView(0); placeT(); caption('Prediksi <em>naive</em> = nilai sekarang (biru). Kenyataan 24 jam kemudian di lingkaran kuning. Seret garis putih. Korelasi jam t dan t+24 hanya <b>0,40</b>.'); },
+  ()=>{ blocks(1); setView(1); readoutNow('RMSE rata-rata','86,82 <span class="u">±</span> 24,70'); caption('RMSE <em>naive</em> per <em>fold</em>, data latih 9 stasiun. Validasi musim dingin sekitar <b>100</b>, musim hangat sekitar <b>60</b>. Arahkan kursor ke batang.'); },
   ()=>{ blocks(2); setView(2); readoutNow('MAE rata-rata','59,39 <span class="u">±</span> 16,53'); caption('RMSE memberi bobot besar pada galat besar, jadi lebih tinggi dari MAE. Cocok di sini: meleset jauh saat polusi tinggi paling merugikan.'); },
-  ()=>{ blocks(3); setView(3); setM(70); caption('Target model lanjutan: <b>di bawah 86,82</b>. Geser penanda biru: rata-rata bisa tampak lebih baik padahal kalah di lipatan musim hangat.'); }
+  ()=>{ blocks(3); setView(3); setM(70); caption('Target model lanjutan: <b>di bawah 86,82</b>. Geser penanda biru: rata-rata bisa tampak lebih baik padahal kalah di <em>fold</em> musim hangat.'); }
 ];
 function RESET_HOOK(){ tIdx=106; mv=70; $$('.copy .blk').forEach(b=>b.classList.remove('show','active','seen','old')); $$('.view').forEach(v=>v.classList.remove('on')); sf.classList.remove('go'); sm.classList.remove('go'); }
 

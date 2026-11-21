@@ -17,12 +17,12 @@ Catatan batas klaim: pada [1] hanya tujuan, data (12 stasiun Beijing per jam), d
 | Referensi | Alasan belum dipakai |
 |---|---|
 | Dáger López, 2026, *Ecological Engineering & Environmental Technology* 27(10), 118–133. DOI 10.12912/27197050/231162 | Sangat relevan (kebocoran temporal, uji *leave-one-station-out*, *baseline* persistence), tetapi indeks Scopus dan kuartil belum terverifikasi. Hanya halaman ringkasan yang dibaca |
-| Haile, Tian, Tian, 2026, *Communications in Statistics, Theory and Methods* 55(5), 1602–1622 | Relevan untuk imputasi dengan celah panjang dan divalidasi pada PM2.5 Beijing, tetapi DOI belum ditemukan dan indeks Scopus belum terverifikasi |
+| Haile, Tian, Tian, 2026, *Communications in Statistics, Theory and Methods* 55(5), 1602–1622 | Relevan untuk imputasi dengan rentang nilai hilang yang panjang dan divalidasi pada PM2.5 Beijing, tetapi DOI belum ditemukan dan indeks Scopus belum terverifikasi |
 | Niu, Zhang, Ren, 2023, *Atmosphere* 14(2), 340. DOI 10.3390/atmos14020340 | Metadata cocok di Crossref, tetapi memakai 35 stasiun Beijing 2019 sampai 2022 (bukan dataset ini) dan indeks Scopus belum dicek |
 
 Dikeluarkan karena tidak memenuhi syarat: Albelali dan Ahmed (arXiv 2512.06932, Des 2025) berstatus *preprint* tanpa bukti terbit di jurnal atau konferensi terindeks.
 
-## Yang harus dicek manual oleh LIP
+## Yang harus dicek manual oleh penulis
 
 1. ~~Kuartil [1] dan [2] langsung di scimagojr.com~~ Sudah dicek 16 Nov 2026 lewat halaman SCImago, hasil di bagian paling bawah berkas ini.
 2. ~~Teks lengkap [1]~~ Sudah dibaca 16 Nov 2026 (lihat bagian paling bawah). Hasil numerik [1] tetap tidak dikutip.
@@ -58,7 +58,7 @@ Tidak didukung oleh sumber yang berhasil dibaca:
 | Bergmeir dan Benítez, 2012, *Information Sciences* 191, 192–213 | Hanya terlihat lewat dokumentasi paket pihak ketiga. Belum diverifikasi lewat penerbit. Tahun 2012, hanya layak sebagai [Teori Dasar] |
 | Albelali dan Ahmed, arXiv 2512.06932 | *Preprint*, tetap dikeluarkan (alasan sama dengan catatan di atas) |
 
-### Tambahan yang harus dicek manual oleh LIP
+### Tambahan yang harus dicek manual oleh penulis
 
 1. ~~Kuartil [4] dan [5] (*Patterns*) di scimagojr.com~~ Sudah dicek 16 Nov 2026, hasil di bagian paling bawah berkas ini. Kuartil SJR dan CiteScore bisa berbeda, jadi sebutkan satu sumber dan tahun cek di laporan.
 2. ~~Isi bagian temporal dan data uji pada versi *Patterns* [5]~~ Sudah dibaca dari PDF versi terbit (PMC11573893), lihat bagian paling bawah.

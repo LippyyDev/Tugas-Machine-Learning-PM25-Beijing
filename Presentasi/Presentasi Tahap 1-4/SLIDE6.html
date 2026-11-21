@@ -178,17 +178,16 @@ svg .selr{transition:fill .25s ease,stroke .25s ease,fill-opacity .25s ease}
   </div>
 
   <div class="kicker"><h1>Ringkasan Hasil Tahap 1 sampai 4</h1></div>
-  <div class="src">Dasar: Penjelasan Proyek, Tahap 1 sampai 4, hasil eksekusi notebook</div>
 
   <div class="copy">
     <div class="blk" id="b1"><span class="lbl">01 · Tahap 1: Rumusan masalah</span>
-      <p>Fokus prediksi ditetapkan pada konsentrasi PM2.5 jam t+24 menggunakan histori hingga jam t. RMSE dipilih sebagai metrik utama karena pada <em>baseline naive</em>, 5% galat paling ekstrem menyumbang <b>48,7%</b> total galat kuadrat, namun hanya 22,1% pada galat mutlak.</p></div>
+      <p>Fokus prediksi ditetapkan pada konsentrasi PM2.5 jam t+24 menggunakan riwayat data hingga jam t. RMSE dipilih sebagai metrik utama karena pada <em>naive forecast</em>, 5% galat paling ekstrem menyumbang <b>48,7%</b> total galat kuadrat, namun hanya 22,1% pada galat mutlak.</p></div>
     <div class="blk" id="b2"><span class="lbl">02 · Tahap 2: Eksplorasi dan praproses</span>
-      <p>Dari 420.768 rekaman (12 stasiun), disusun 29 fitur berbasis histori ≤ jam t, menghasilkan <b>246.798</b> sampel latih (9 stasiun) dan <b>82.151</b> sampel uji yang dikunci. Sebanyak 2,16% nilai PM2.5 yang kosong dibiarkan tanpa <em>forward fill</em>.</p></div>
+      <p>Dari 420.768 baris data (12 stasiun), disusun 29 fitur dari riwayat data sampai jam t, menghasilkan <b>246.798</b> sampel latih (9 stasiun) dan <b>82.151</b> sampel uji yang disisihkan. Sebanyak 2,16% nilai PM2.5 yang kosong dibiarkan tanpa <em>forward fill</em>.</p></div>
     <div class="blk" id="b3"><span class="lbl">03 · Tahap 3: Skema validasi</span>
-      <p>Evaluasi akhir menggunakan 20% periode terakhir (mulai 12 Mei 2016 pukul 19.00), sementara validasi memakai <em>TimeSeriesSplit</em> 5 <em>fold</em> (4.671 jam/<em>fold</em>) dengan jeda 24 jam. Tiga stasiun baru (Dingling, Wanliu, Shunyi) disiapkan khusus untuk menguji generalisasi lintas lokasi.</p></div>
+      <p>Evaluasi akhir menggunakan 20% periode terakhir (mulai 12 Mei 2016 pukul 19.00), sementara validasi memakai <em>TimeSeriesSplit</em> 5 <em>fold</em> (4.671 jam/<em>fold</em>) dengan <em>gap</em> 24 jam. Tiga stasiun uji (Dingling, Wanliu, Shunyi) disiapkan khusus untuk menguji generalisasi di stasiun lain.</p></div>
     <div class="blk" id="b4"><span class="lbl">04 · Tahap 4: <em>Baseline</em></span>
-      <p><em>Persistence baseline</em> menghasilkan rata-rata RMSE <b>86,82 ± 24,70</b> µg/m³ dan MAE 59,39 ± 16,53. Karena skor per <em>fold</em> bervariasi lebar (57,7 hingga 108,8), evaluasi model lanjutan wajib dibandingkan per <em>fold</em>, bukan hanya rata-ratanya.</p></div>
+      <p><em>Naive forecast</em> menghasilkan rata-rata RMSE <b>86,82 ± 24,70</b> µg/m³ dan MAE 59,39 ± 16,53. Karena skor per <em>fold</em> bervariasi lebar (57,7 hingga 108,8), evaluasi model lanjutan harus dibandingkan per <em>fold</em>, bukan hanya rata-ratanya.</p></div>
     <div class="blk" id="b5"><span class="lbl">05 · Status data uji</span>
       <p><b>Data uji (<em>test set</em>) belum dipakai menghitung skor apa pun.</b> Seluruh metrik di atas berasal dari validasi data latih. Statistik deskriptif periode uji pernah terlihat (7 dan 15 Nov 2026), tetapi tidak dilibatkan dalam pemilihan fitur, model, maupun <em>hyperparameter</em>.</p></div>
   </div>
@@ -290,7 +289,7 @@ tx(s0,'Bagian jumlah galat yang berasal dari 5% galat terbesar',[74,190],19,WHIT
   tx(g,'5% terbesar',[168,b.y+31],12,'#1a1204',{'font-family':SANS,'pointer-events':'none'});
   tx(g,fd(100-b.v)+'% dari 95% galat lainnya',[74+w+14,b.y+31],16,SOFT,{'font-family':SANS,'pointer-events':'none'});
   hov(a,'<small>5% galat terbesar</small>'+fd(b.v)+'% dari '+b.w); hov(r,'<small>95% galat lainnya</small>'+fd(100-b.v)+'% dari '+b.w); });
-tx(s0,'*Baseline naive* pada seluruh data latih ('+fmt(N_PASANG)+' pasangan jam).',[74,432],15,GREY,{'font-family':SANS});
+tx(s0,'*Naive forecast* pada seluruh data latih ('+fmt(N_PASANG)+' pasangan jam).',[74,432],15,GREY,{'font-family':SANS});
 tx(s0,'Satu galat besar ikut dikuadratkan, sehingga RMSE paling terpengaruh olehnya.',[74,456],15,GREY,{'font-family':SANS});
 
 /* ═════════ V1: hasil tahap 2, data latih, data uji, fitur ═════════ */
@@ -299,15 +298,15 @@ tx(s1,'TAHAP 2 · EKSPLORASI DAN PRAPROSES',[74,52],12,BLUE,{'letter-spacing':'.
 tx(s1,fmt(N_ALL)+' baris: 12 stasiun × '+fmt(NTOT)+' jam',[74,92],17,WHITE,{'font-family':SANS,'font-weight':500});
 (function(){ let x=74; const W=798;
   [{n:N_LATIH,f:'rgba(125,180,255,.88)',t:'LATIH',s:fmt(N_LATIH)+' · 9 stasiun',c:DARK,tip:'<small>Data latih</small>'+fmt(N_LATIH)+' baris dari 9 stasiun'},
-   {n:N_UJI,f:hU,t:'UJI',s:fmt(N_UJI)+' · dikunci',c:WHITE,hl:1,tip:'<small>Data uji</small>'+fmt(N_UJI)+' baris, dikunci dan tidak dieksplorasi'},
-   {n:N_SISA,f:'rgba(255,255,255,.05)',t:'BUKAN LATIH ATAU UJI',s:fmt(N_SISA),c:SOFT,tip:'<small>Bukan latih atau uji</small>'+fmt(N_SISA)+' baris (mis. 80% awal tiga stasiun baru)'}].forEach((p,i)=>{
+   {n:N_UJI,f:hU,t:'UJI',s:fmt(N_UJI),c:WHITE,hl:1,tip:'<small>Data uji</small>'+fmt(N_UJI)+' baris, disisihkan dan tidak dieksplorasi'},
+   {n:N_SISA,f:'rgba(255,255,255,.05)',t:'BUKAN LATIH ATAU UJI',s:fmt(N_SISA),c:SOFT,tip:'<small>Bukan latih atau uji</small>'+fmt(N_SISA)+' baris (mis. 80% awal tiga stasiun uji)'}].forEach((p,i)=>{
     const g=rise(s1,120+i*160), w=W*p.n/N_ALL;
     const r=mk('rect',{class:'clk',x:x,y:104,width:w,height:60,fill:p.f,stroke:LINE},g);
     tx(g,p.t,[x+14,128],11,p.c,Object.assign({'letter-spacing':'.1em','pointer-events':'none'},p.hl?HL:{}));
     tx(g,p.s,[x+14,152],i===2?15:17,p.c,Object.assign({'font-family':SANS,'font-weight':500,'pointer-events':'none'},p.hl?HL:{}));
     hov(r,p.tip); x+=w; }); })();
 tx(s1,'29 fitur, semuanya dari data sampai jam t',[74,222],17,WHITE,{'font-family':SANS,'font-weight':500});
-(function(){ let x=74; const W=798, F=[[11,'kondisi jam t','#7db4ff',DARK],[7,'lag PM2.5','#5f95e0',DARK],[3,'rata-rata bergulir','#4a7bc2',WHITE],[2,'arah angin','#3a629f',WHITE],[6,'kalender','#2e4f80',WHITE]];
+(function(){ let x=74; const W=798, F=[[11,'kondisi jam t','#7db4ff',DARK],[7,'lag PM2.5','#5f95e0',DARK],[3,'*rolling mean*','#4a7bc2',WHITE],[2,'arah angin','#3a629f',WHITE],[6,'kalender','#2e4f80',WHITE]];
   F.forEach((f,i)=>{ const g=rise(s1,520+i*90), w=W*f[0]/29;
     const r=mk('rect',{class:'clk',x:x,y:234,width:w,height:44,fill:f[2],stroke:'#0a0b0f','stroke-width':2},g);
     tx(g,String(f[0]),[x+w/2,264],22,f[3],{'text-anchor':'middle','font-family':SANS,'font-weight':600,'pointer-events':'none'});
@@ -325,33 +324,33 @@ tx(s2,'TAHAP 3 · SKEMA VALIDASI',[74,52],12,BLUE,{'letter-spacing':'.14em'});
 (function(){ const X0=112, W=760, sc=W/NTOT, Y0=80, PI=46, H=28;
   const ug=rise(s2,700), ux=X0+BND*sc, uw=W-BND*sc;
   mk('rect',{x:ux,y:Y0-8,width:uw,height:PI*5-2,fill:hU2,stroke:AMB,'stroke-opacity':.6},ug);
-  tx(ug,'UJI · DIKUNCI',[ux+12,Y0+16],12,AMB,Object.assign({'letter-spacing':'.08em'},HL)); tx(ug,fmt(NTOT-BND)+' jam',[ux+12,Y0+38],15,WHITE,Object.assign({'font-family':SANS},HL));
+  tx(ug,'UJI · DISISIHKAN',[ux+12,Y0+16],12,AMB,Object.assign({'letter-spacing':'.08em'},HL)); tx(ug,fmt(NTOT-BND)+' jam',[ux+12,Y0+38],15,WHITE,Object.assign({'font-family':SANS},HL));
   for(let k=0;k<5;k++){ const g=rise(s2,100+k*110), y=Y0+k*PI;
     tx(g,'L'+(k+1),[74,y+19],14,GREY);
     mk('rect',{x:X0,y:y,width:TRAIN[k]*sc,height:H,fill:'rgba(125,180,255,.85)'},g);
     mk('rect',{x:X0+TRAIN[k]*sc,y:y,width:Math.max(3,GAPH*sc),height:H,fill:AMB},g);
     mk('rect',{x:X0+(TRAIN[k]+GAPH)*sc,y:y,width:VAL*sc,height:H,fill:'rgba(125,180,255,.2)',stroke:BLUE,'stroke-width':1.4},g);
     const rw=mk('rect',{class:'clk',x:74,y:y-6,width:ux-74-2,height:H+12,fill:'transparent'},g);
-    hov(rw,'<small>Lipatan '+(k+1)+'</small>latih: 0 sampai '+fmt(TRAIN[k])+' jam<br>jeda: 24 jam<br>validasi: '+dstr(TRAIN[k]+GAPH)+' sampai '+dstr(TRAIN[k]+GAPH+VAL),
+    hov(rw,'<small>Fold '+(k+1)+'</small>latih: 0 sampai '+fmt(TRAIN[k])+' jam<br><em>gap</em>: 24 jam<br>validasi: '+dstr(TRAIN[k]+GAPH)+' sampai '+dstr(TRAIN[k]+GAPH+VAL),
       ()=>rw.setAttribute('fill','rgba(125,180,255,.07)'),()=>rw.setAttribute('fill','transparent')); }
   const lg=rise(s2,800); let lx=74;
-  [['rect','rgba(125,180,255,.85)','latih (melebar)',130],['rect',AMB,'jeda 24 jam',108],['box','rgba(125,180,255,.2)','validasi '+fmt(VAL)+' jam',150],['hatch',hU2,'uji',60]].forEach(it=>{
+  [['rect','rgba(125,180,255,.85)','latih (melebar)',130],['rect',AMB,'*gap* 24 jam',108],['box','rgba(125,180,255,.2)','validasi '+fmt(VAL)+' jam',150],['hatch',hU2,'uji',60]].forEach(it=>{
     if(it[0]==='box') mk('rect',{x:lx,y:336,width:14,height:14,fill:it[1],stroke:BLUE,'stroke-width':1.4},lg);
     else if(it[0]==='hatch') mk('rect',{x:lx,y:336,width:14,height:14,fill:it[1],stroke:AMB,'stroke-opacity':.6},lg);
-    else mk('rect',{x:lx,y:336,width:it[0]==='rect'&&it[2]==='jeda 24 jam'?4:14,height:14,fill:it[1]},lg);
+    else mk('rect',{x:lx,y:336,width:it[0]==='rect'&&it[2]==='*gap* 24 jam'?4:14,height:14,fill:it[1]},lg);
     tx(lg,it[2],[lx+22,348],14,SOFT,{'font-family':SANS}); lx+=it[3]+22; });
-  tx(lg,'Jeda 24 jam tidak terlihat pada skala ini.',[74,374],13,GREY,{'font-family':SANS});
+  tx(lg,'*Gap* 24 jam tidak terlihat pada skala ini.',[74,374],13,GREY,{'font-family':SANS});
   tx(lg,'Mar 2013',[X0,318],12,GREY); tx(lg,dstr(BND),[ux,318],12,AMB); tx(lg,'Feb 2017',[872,318],12,GREY,{'text-anchor':'end'}); })();
 (function(){ const g=rise(s2,950);
   R(g,74,396,392,108); tx(g,'9 STASIUN LATIH',[90,420],12,BLUE,{'letter-spacing':'.12em'});
   lines(g,['Aotizhongxin · Changping · Dongsi · Guanyuan','Gucheng · Huairou · Nongzhanguan · Tiantan','Wanshouxigong'],90,446,22,14,SOFT);
-  R(g,480,396,392,108); tx(g,'3 STASIUN BARU · HANYA UJI',[496,420],12,BLUE,{'letter-spacing':'.12em'});
+  R(g,480,396,392,108); tx(g,'3 STASIUN UJI · TIDAK DILATIH',[496,420],12,BLUE,{'letter-spacing':'.12em'});
   tx(g,'Dingling · Wanliu · Shunyi',[496,452],22,WHITE,{'font-family':SANS,'font-weight':500});
  })();
 
-/* ═════════ V3: hasil tahap 4, RMSE baseline per lipatan ═════════ */
+/* ═════════ V3: hasil tahap 4, RMSE baseline per fold ═════════ */
 const s3=SV[3];
-tx(s3,'TAHAP 4 · BASELINE · RMSE NAIVE PER LIPATAN (µg/m³)',[74,52],12,BLUE,{'letter-spacing':'.14em'});
+tx(s3,'TAHAP 4 · BASELINE · RMSE NAIVE PER FOLD (µg/m³)',[74,52],12,BLUE,{'letter-spacing':'.14em'});
 (function(){ const YB=400, K=2.6, PX=130, PT=118, BW=70, XR=700;
   [0,40,80,120].forEach(v=>{ mk('line',{x1:112,x2:XR,y1:YB-v*K,y2:YB-v*K,stroke:v?LINE:'rgba(255,255,255,.3)','stroke-width':1},s3); tx(s3,String(v),[104,YB-v*K+4],11,GREY,{'text-anchor':'end'}); });
   const band=rise(s3,600); mk('rect',{x:112,y:YB-(RMSE_M+RMSE_SD)*K,width:XR-112,height:2*RMSE_SD*K,fill:'rgba(255,194,102,.07)'},band);
@@ -360,7 +359,7 @@ tx(s3,'TAHAP 4 · BASELINE · RMSE NAIVE PER LIPATAN (µg/m³)',[74,52],12,BLUE,
     tx(g,fd(v),[x+BW/2,YB-h-8],15,WHITE,Object.assign({'text-anchor':'middle','pointer-events':'none'},HL));
     tx(g,'L'+(i+1),[x+BW/2,YB+20],14,SOFT,{'text-anchor':'middle'});
     tx(g,win?'dingin':'hangat',[x+BW/2,YB+38],12,GREY,{'text-anchor':'middle'});
-    hov(r,'<small>Lipatan '+(i+1)+' · validasi mencakup musim '+(win?'dingin':'hangat')+'</small>RMSE '+fd(v)+' µg/m³ · selisih dari rata-rata '+(v>=RMSE_M?'+':'−')+fd(Math.abs(v-RMSE_M))); });
+    hov(r,'<small>Fold '+(i+1)+' · validasi mencakup musim '+(win?'dingin':'hangat')+'</small>RMSE '+fd(v)+' µg/m³ · selisih dari rata-rata '+(v>=RMSE_M?'+':'−')+fd(Math.abs(v-RMSE_M))); });
   const ln=rise(s3,700);
   mk('line',{x1:112,x2:XR,y1:YB-RMSE_M*K,y2:YB-RMSE_M*K,stroke:AMB,'stroke-width':2,'stroke-dasharray':'6 5'},ln);
   mk('line',{x1:112,x2:XR,y1:YB-MAE_M*K,y2:YB-MAE_M*K,stroke:'#c4c7d4','stroke-width':2,'stroke-dasharray':'2 5','stroke-linecap':'round'},ln);
@@ -370,14 +369,14 @@ tx(s3,'TAHAP 4 · BASELINE · RMSE NAIVE PER LIPATAN (µg/m³)',[74,52],12,BLUE,
   mk('line',{x1:722,x2:752,y1:236,y2:236,stroke:'#c4c7d4','stroke-width':2,'stroke-dasharray':'2 5','stroke-linecap':'round'},lg); tx(lg,'MAE RATA-RATA',[762,240],11,GREY,{'letter-spacing':'.1em'});
   tx(lg,fd(MAE_M,2)+' ± '+fd(MAE_SD,2),[722,270],22,WHITE,{'font-family':SANS,'font-weight':500});
   mk('rect',{x:722,y:312,width:14,height:14,fill:'rgba(255,194,102,.4)'},lg); tx(lg,'pita: rata-rata ± sd',[744,324],12,GREY,{'font-family':SANS});
-  lines(lg,['Validasi lipatan 1, 3, 5 mencakup musim dingin, lipatan 2 dan 4 musim hangat.','Penyebab selisih antar lipatan: dugaan, belum diuji.'],74,486,22,14,GREY); })();
+  lines(lg,['Validasi *fold* 1, 3, 5 mencakup musim dingin, *fold* 2 dan 4 musim hangat.','Penyebab selisih antar *fold*: dugaan, belum diuji.'],74,486,22,14,GREY); })();
 
 /* ═════════ V4: ringkasan satu layar ═════════ */
 const s4=SV[4];
 tx(s4,'RINGKASAN · KLIK PETAK UNTUK MELIHAT RINCIAN',[74,52],12,BLUE,{'letter-spacing':'.14em'});
 [['TAHAP 1','Rumusan masalah','48,7%',['jumlah kuadrat galat','berasal dari 5% galat','terbesar (MAE: 22,1%)']],
- ['TAHAP 2','Eksplorasi dan praproses','29',['fitur dari data sampai jam t','246.798 baris latih','82.151 baris uji dikunci']],
- ['TAHAP 3','Skema validasi','5',['lipatan *expanding window*','jeda 24 jam','uji mulai 12 Mei 2016']],
+ ['TAHAP 2','Eksplorasi dan praproses','29',['fitur dari data sampai jam t','246.798 baris latih','82.151 baris uji disisihkan']],
+ ['TAHAP 3','Skema validasi','5',['*fold* *expanding window*','*gap* 24 jam','uji mulai 12 Mei 2016']],
  ['TAHAP 4','*Baseline*','86,82',['RMSE *naive* ± 24,70','MAE 59,39 ± 16,53','data latih, µg/m³']]].forEach((t,i)=>{
   const g=rise(s4,100+i*130), x=74+(i%2)*406, y=70+Math.floor(i/2)*146;
   const r=R(g,x,y,392,134,{class:'selr clk'});
@@ -392,15 +391,15 @@ tx(s4,'RINGKASAN · KLIK PETAK UNTUK MELIHAT RINCIAN',[74,52],12,BLUE,{'letter-s
   lines(g,['Semua skor di slide ini berasal dari data latih.','Statistik ringkas periode uji pernah terlihat (7 dan 15 Nov 2026),','tetapi tidak dipakai memilih fitur, model, atau pengaturan.'],340,404,28,16,SOFT); })();
 
 /* ═════════ Langkah ═════════ */
-const FIG=['Fig. 22 · Hasil tahap 1: alasan memilih RMSE','Fig. 23 · Hasil tahap 2: data dan fitur','Fig. 24 · Hasil tahap 3: skema validasi','Fig. 25 · Hasil tahap 4: RMSE baseline','Fig. 26 · Ringkasan hasil tahap 1 sampai 4'];
+const FIG=['Gambar 22 · Hasil tahap 1: alasan memilih RMSE','Gambar 23 · Hasil tahap 2: data dan fitur','Gambar 24 · Hasil tahap 3: skema validasi','Gambar 25 · Hasil tahap 4: RMSE baseline','Gambar 26 · Ringkasan hasil tahap 1 sampai 4'];
 const VIEWS=['v-t1','v-t2','v-t3','v-t4','v-ring'];
-function setView(i){ $$('.view').forEach(v=>v.classList.toggle('on',v.id===VIEWS[i])); $('#fig').innerHTML=FIG[i].replace(/^(Fig\. \d+)/,'<b>$1</b>'); tipOff();
+function setView(i){ $$('.view').forEach(v=>v.classList.toggle('on',v.id===VIEWS[i])); $('#fig').innerHTML=FIG[i].replace(/^(Gambar \d+)/,'<b>$1</b>'); tipOff();
   SV.forEach(s=>s.classList.remove('go')); void SV[i].getBoundingClientRect(); setTimeout(()=>SV[i].classList.add('go'),80); }
 const STEPS=[
   ()=>{ blocks(0); setView(0); readoutNow('Porsi galat terbesar','48,7 <span class="u">%</span>'); caption('Tahap 1: yang diprediksi dan alasan memilih <b>RMSE</b>. Arahkan kursor ke batang untuk melihat angkanya.'); },
   ()=>{ blocks(1); setView(1); readoutNow('Baris latih','246.798'); caption('Tahap 2: data mentah menjadi <b>246.798</b> baris latih dan <b>82.151</b> baris uji dengan 29 fitur. Arahkan kursor ke tiap bagian batang.'); },
-  ()=>{ blocks(2); setView(2); readoutNow('Lipatan validasi','5'); caption('Tahap 3: lima lipatan <em>expanding window</em> dengan jeda 24 jam, lalu blok uji di ujung waktu. Arahkan kursor ke sebuah lipatan.'); },
-  ()=>{ blocks(3); setView(3); readoutNow('RMSE naive','86,82 <span class="u">µg/m³</span>'); caption('Tahap 4: RMSE <em>naive</em> naik turun antar lipatan, rata-rata <b>86,82</b>. Arahkan kursor ke batang untuk melihat angkanya.'); },
+  ()=>{ blocks(2); setView(2); readoutNow('Fold validasi','5'); caption('Tahap 3: lima <em>fold</em> <em>expanding window</em> dengan <em>gap</em> 24 jam, lalu blok uji di ujung waktu. Arahkan kursor ke sebuah <em>fold</em>.'); },
+  ()=>{ blocks(3); setView(3); readoutNow('RMSE naive','86,82 <span class="u">µg/m³</span>'); caption('Tahap 4: RMSE <em>naive</em> naik turun antar <em>fold</em>, rata-rata <b>86,82</b>. Arahkan kursor ke batang untuk melihat angkanya.'); },
   ()=>{ blocks(4); setView(4); readoutNow('Skor uji','belum ada'); caption('Empat tahap selesai. Semua skor berasal dari data latih. Klik sebuah petak untuk melihat rinciannya.'); }
 ];
 function RESET_HOOK(){ $$('.copy .blk').forEach(b=>b.classList.remove('show','active','seen','old')); $$('.view').forEach(v=>v.classList.remove('on')); SV.forEach(s=>s.classList.remove('go')); }

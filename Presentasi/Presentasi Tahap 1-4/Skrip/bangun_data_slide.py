@@ -3,7 +3,7 @@
 Aturan:
 - Hanya data latih: baris dengan waktu sebelum BATAS (2016-05-12 19:00).
   Data uji (BATAS dan sesudahnya) tidak dibaca ke perhitungan apa pun.
-- Statistik EDA memakai 9 stasiun latih (Dingling, Wanliu, Shunyi adalah stasiun asing).
+- Statistik EDA memakai 9 stasiun latih (Dingling, Wanliu, Shunyi adalah stasiun uji).
 - Angka yang juga ada di notebook (median, rata-rata, bulan dan jam tertinggi) dicetak
   ulang di akhir supaya bisa dicocokkan dengan keluaran notebook.
 
@@ -22,7 +22,7 @@ DATA = AKAR / "Data" / "Data Mentah"
 KELUAR = pathlib.Path(__file__).resolve().parent / "data_slide.json"
 
 BATAS = pd.Timestamp("2016-05-12 19:00")
-ASING = {"Dingling", "Wanliu", "Shunyi"}
+STASIUN_UJI = {"Dingling", "Wanliu", "Shunyi"}
 STASIUN_CONTOH = "Tiantan"
 # Contoh 14 hari (336 jam) dari data latih Tiantan, dipilih karena rata-rata dan RMSE
 # naive-nya dekat dengan angka seluruh data latih (bukan karena tampak dramatis).
@@ -39,7 +39,7 @@ def muat(nama):
 
 
 nama_stasiun = sorted(p.stem for p in DATA.glob("*.csv"))
-latih = [s for s in nama_stasiun if s not in ASING]
+latih = [s for s in nama_stasiun if s not in STASIUN_UJI]
 assert len(nama_stasiun) == 12 and len(latih) == 9
 
 data = {s: muat(s) for s in latih}
@@ -69,7 +69,7 @@ t = data[STASIUN_CONTOH].set_index("waktu")["PM2.5"]
 contoh = t[CONTOH_MULAI : CONTOH_MULAI + pd.Timedelta(hours=CONTOH_JAM - 1)]
 assert len(contoh) == CONTOH_JAM and not contoh.isna().any() and contoh.index.max() < BATAS
 
-# 5. Porsi galat besar pada naive forecast (jam t+24 diramal dengan jam t), seluruh data latih
+# 5. Porsi galat besar pada naive forecast (jam t+24 diprediksi dengan jam t), seluruh data latih
 galat = []
 for s, d in data.items():
     x = d.set_index("waktu")["PM2.5"]

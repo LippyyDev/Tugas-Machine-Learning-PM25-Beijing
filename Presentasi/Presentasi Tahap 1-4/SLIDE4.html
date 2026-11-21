@@ -176,21 +176,20 @@ svg .hov{cursor:pointer}
   </div>
 
   <div class="kicker"><h1>Skema Validasi</h1></div>
-  <div class="src">Dasar: Penjelasan Proyek, Tahap 3 dan bagian 2, notebook</div>
 
   <div class="copy">
     <div class="blk" id="b1"><span class="lbl">01 · Pemisahan Kronologis</span>
-      <p>Pemisahan dilakukan secara kronologis (tanpa acak) agar model selalu belajar dari masa lalu untuk memprediksi masa depan. <b>20% data terakhir</b> (mulai 12 Mei 2016 pukul 19.00) dikunci sebagai <em>test set</em>.</p></div>
-    <div class="blk" id="b2"><span class="lbl">02 · Validasi Silang 5 Lipatan</span>
+      <p>Pemisahan dilakukan secara kronologis (tanpa acak) agar model selalu belajar dari masa lalu untuk memprediksi masa depan. <b>20% data terakhir</b> (mulai 12 Mei 2016 pukul 19.00) disisihkan sebagai <em>test set</em>.</p></div>
+    <div class="blk" id="b2"><span class="lbl">02 · Validasi Silang 5 <em>Fold</em></span>
       <p>Pada <b>80% data awal</b>, pemilihan model menggunakan <code>TimeSeriesSplit</code> (<b>5 <em>fold</em></b>) dengan skema <em>expanding window</em>: jendela latih terus melebar sementara blok validasi selalu berada di periode berikutnya.</p></div>
-    <div class="blk" id="b3"><span class="lbl">03 · Jeda Aman (Embargo 24 Jam)</span>
-      <p>Karena target berjarak <b>24 jam</b> ke depan, tanpa jeda, label dari 24 baris latih terakhir akan jatuh di blok validasi. Jeda <b>24 jam</b> diterapkan untuk mencegah kebocoran label tersebut.</p></div>
-    <div class="blk" id="b4"><span class="lbl">04 · Isolasi Praproses dalam <em>Pipeline</em></span>
-      <p>Imputasi nilai hilang dan penskalaan fitur diikat di dalam <em>pipeline</em>, sehingga parameter statistiknya hanya dihitung dari <b>data latih</b> pada masing-masing <em>fold</em>.</p></div>
-    <div class="blk" id="b5"><span class="lbl">05 · Evaluasi Lintas Stasiun</span>
-      <p>Model dilatih pada <b>9 stasiun</b>, lalu diuji generalisasinya pada <b>3 stasiun baru</b> (Dingling, Wanliu, Shunyi) yang belum pernah dikenali selama pelatihan, sebagai skema tambahan untuk menguji <em>spatial shift</em>.</p></div>
+    <div class="blk" id="b3"><span class="lbl">03 · <em>Gap</em> 24 Jam</span>
+      <p>Karena target berjarak <b>24 jam</b> ke depan, tanpa <em>gap</em>, label dari 24 baris latih terakhir akan jatuh di blok validasi. <em>Gap</em> <b>24 jam</b> diterapkan untuk mencegah kebocoran label tersebut.</p></div>
+    <div class="blk" id="b4"><span class="lbl">04 · Praproses di dalam <em>Pipeline</em></span>
+      <p>Imputasi nilai hilang dan penskalaan fitur dijalankan di dalam <em>pipeline</em>, sehingga parameter statistiknya hanya dihitung dari <b>data latih</b> pada masing-masing <em>fold</em>.</p></div>
+    <div class="blk" id="b5"><span class="lbl">05 · Evaluasi di Stasiun Uji</span>
+      <p>Model dilatih pada <b>9 stasiun</b>, lalu diuji generalisasinya pada <b>3 stasiun uji</b> (Dingling, Wanliu, Shunyi) yang tidak dipakai untuk melatih, sebagai skema tambahan untuk menguji <em>spatial shift</em>.</p></div>
     <div class="blk" id="b6"><span class="lbl">06 · Mitigasi Kebocoran &amp; Batasan</span>
-      <p>Lima potensi <em>data leakage</em> telah dimitigasi, sementara tiga keterbatasan metodologis dicatat secara transparan sebagai bahan evaluasi.</p></div>
+      <p>Lima potensi <em>data leakage</em> sudah dicegah. Tiga keterbatasan metodologis dicatat dan dijadikan bahan umpan balik.</p></div>
   </div>
 
   <div class="panel">
@@ -282,14 +281,14 @@ mk('line',{x1:bx,x2:bx,y1:Y0-22,y2:Y0+H0+10,stroke:'#f1f2f6','stroke-width':1.5,
 tx(aSeq,'12 Mei 2016, 19.00',[bx,Y0-30],14,'#f1f2f6',{'text-anchor':'middle'});
 const brk=(g,x1,x2,y,col)=>mk('path',{d:'M'+x1+' '+y+'v10H'+x2+'v-10',fill:'none',stroke:col,'stroke-width':2},g);
 brk(aSeq,74+2,bx-6,Y0+H0+16,BLUE); tx(aSeq,'LATIH: memilih model dan tuning',[(74+bx)/2,Y0+H0+48],15,BLUE,{'text-anchor':'middle','letter-spacing':'.08em'});
-brk(aSeq,bx+6,872-2,Y0+H0+16,GREY); tx(aSeq,'UJI: DIKUNCI',[(bx+872)/2,Y0+H0+48],15,GREY,{'text-anchor':'middle','letter-spacing':'.08em'});
+brk(aSeq,bx+6,872-2,Y0+H0+16,GREY); tx(aSeq,'UJI: DISISIHKAN',[(bx+872)/2,Y0+H0+48],15,GREY,{'text-anchor':'middle','letter-spacing':'.08em'});
 if(pick>0){ const px=74+pick*PX0;
   [pick-1,pick+1].forEach(i=>mk('rect',{x:74+i*PX0,y:Y0-3,width:PX0,height:H0+6,fill:'none',stroke:'#c4dcff','stroke-width':1.8},aRnd));
   mk('rect',{x:px,y:Y0-3,width:PX0,height:H0+6,fill:'none',stroke:'#fff','stroke-width':2},aRnd);
   mk('path',{d:'M'+(px+PX0/2)+' '+(Y0+H0+8)+'v26',stroke:AMB,'stroke-width':1.6,fill:'none'},aRnd);
   tx(aRnd,'Satu jam diuji, jam di kiri dan kanannya sudah dipelajari',[px+PX0/2,Y0+H0+58],15,AMB,{'text-anchor':'middle'}); }
 const m0a=tx(s0,'',[74,372],24,'#f1f2f6',{'font-family':SANS,'font-weight':500}), m0b=tx(s0,'',[74,408],18,'#c4c7d4',{'font-family':SANS});
-const lg0=mk('g',{},s0); [[BLUE,'latih'],[AMB,'uji (diacak)'],[GREY,'uji (dikunci)']].forEach(([c,t],i)=>{ mk('rect',{x:74+i*190,y:458,width:14,height:14,fill:c,'fill-opacity':.8},lg0); tx(lg0,t,[96+i*190,470],14,'#c4c7d4'); });
+const lg0=mk('g',{},s0); [[BLUE,'latih'],[AMB,'uji (diacak)'],[GREY,'uji (disisihkan)']].forEach(([c,t],i)=>{ mk('rect',{x:74+i*190,y:458,width:14,height:14,fill:c,'fill-opacity':.8},lg0); tx(lg0,t,[96+i*190,470],14,'#c4c7d4'); });
 let m0='seq';
 function setUrut(m){ m0=m;
   C0.forEach((r,i)=>{ const te=m==='seq'?i>=80:isTe[i];
@@ -297,18 +296,18 @@ function setUrut(m){ m0=m;
     r.setAttribute('fill',te?(m==='seq'?GREY:AMB):BLUE); r.setAttribute('fill-opacity',te?(m==='seq'?.5:.95):.7); });
   aSeq.style.opacity=m==='seq'?1:0; aRnd.style.opacity=m==='rand'?1:0;
   m0a.textContent=m==='seq'?'Berurutan: latih di masa lalu, uji di masa depan.':'Diacak: uji diselipkan di antara jam latih.';
-  m0b.textContent=m==='seq'?'Sama seperti pemakaian sungguhan: ramalan selalu untuk jam yang belum terjadi.':'Jam bertetangga biasanya mirip, jadi model seolah mengintip jawabannya.';
+  m0b.textContent=m==='seq'?'Sama seperti pemakaian sungguhan: prediksi selalu untuk jam yang belum terjadi.':'Jam yang berdekatan biasanya mirip, jadi jawaban data uji ikut terlihat oleh model.';
   $$('#sw-urut button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));
   readoutNow('Pembagian',m==='seq'?'80 <span class="u">/</span> 20':'<span style="color:#ffc266">diacak</span>');
-  caption(m==='seq'?'Data diurut menurut waktu: <b>80% awal</b> untuk belajar, <b>20% akhir</b> dikunci. Tekan <b>Acak</b> untuk melihat apa yang salah dengan cara lain.':'Jika diacak, jam uji diselipkan di antara jam latih. Skor tampak bagus tetapi menipu, karena di dunia nyata masa depan belum pernah dilihat.'); }
+  caption(m==='seq'?'Data diurut menurut waktu: <b>80% awal</b> untuk belajar, <b>20% akhir</b> disisihkan. Tekan <b>Acak</b> untuk melihat apa yang salah dengan cara lain.':'Jika diacak, jam uji diselipkan di antara jam latih. Skor jadi terlalu optimistis, karena di dunia nyata masa depan belum pernah dilihat.'); }
 $$('#sw-urut button').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();setUrut(b.dataset.m);}));
 
-/* ═════════ V1: lima lipatan nyata ═════════ */
+/* ═════════ V1: lima fold nyata ═════════ */
 const sf=$('#svg-fold'); const FX=h=>74+h/NTOT*798, FY0=104, FP=54, FH=34;
-tx(sf,'LIPATAN',[74,FY0-26],12,GREY,{'letter-spacing':'.1em'}); 
+tx(sf,'FOLD',[74,FY0-26],12,GREY,{'letter-spacing':'.1em'}); 
 const hat=mk('defs',{},sf); const hp=mk('pattern',{id:'hG',width:10,height:10,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'},hat); mk('line',{x1:0,y1:0,x2:0,y2:10,stroke:'rgba(128,132,154,.55)','stroke-width':2},hp);
 mk('rect',{x:FX(BND),y:FY0-16,width:FX(NTOT)-FX(BND),height:5*FP-4,fill:'url(#hG)',stroke:'rgba(128,132,154,.5)'},sf);
-tx(sf,'UJI 20% · DIKUNCI',[FX(NTOT),FY0-26],12,GREY,{'text-anchor':'end','letter-spacing':'.06em'});
+tx(sf,'UJI 20% · DISISIHKAN',[FX(NTOT),FY0-26],12,GREY,{'text-anchor':'end','letter-spacing':'.06em'});
 const FR=TRAIN.map((n,k)=>{ const y=FY0+k*FP, g=mk('g',{class:'fade'},sf), ig=mk('g',{},g);
   tx(g,String(k+1),[66,y+FH/2+5],16,'#c4c7d4',{'text-anchor':'end','font-weight':500});
   const rl=mk('rect',{x:FX(0),y:y,width:FX(n)-FX(0),height:FH,fill:BLUE,'fill-opacity':.7},ig);
@@ -318,7 +317,7 @@ const FR=TRAIN.map((n,k)=>{ const y=FY0+k*FP, g=mk('g',{class:'fade'},sf), ig=mk
   tx(ig,fmt(VAL)+' jam',[FX(n+GAPH)+VAL/NTOT*798/2,y+FH/2+4],12,'#1c1305',{'text-anchor':'middle','font-weight':500});
   const hit=mk('rect',{x:40,y:y-8,width:840,height:FH+16,fill:'transparent',class:'hov'},g);
   hit.addEventListener('click',e=>{e.stopPropagation();selFold(k);});
-  hit.addEventListener('mousemove',ev=>tip('<small>Lipatan '+(k+1)+'</small>latih '+fmt(n)+' jam, validasi '+fmt(VAL)+' jam',ev)); hit.addEventListener('mouseleave',tipOff);
+  hit.addEventListener('mousemove',ev=>tip('<small>Fold '+(k+1)+'</small>latih '+fmt(n)+' jam, validasi '+fmt(VAL)+' jam',ev)); hit.addEventListener('mouseleave',tipOff);
   ig.style.transformBox='fill-box'; ig.style.transformOrigin='0 50%'; ig.style.transition='transform .8s cubic-bezier(.3,.7,.2,1)'; 
   return {g,ig}; });
 const AY=FY0+5*FP+8; mk('line',{x1:74,x2:872,y1:AY,y2:AY,stroke:'rgba(255,255,255,.28)'},sf);
@@ -328,14 +327,14 @@ const fd1=tx(sf,'',[74,AY+64],13,GREY,{'letter-spacing':'.1em'}), fd2=tx(sf,'',[
 let fsel=-1;
 function selFold(k){ fsel=(k===fsel)?-1:k;
   FR.forEach((r,i)=>{ r.g.style.opacity=(fsel<0||i===fsel)?1:.3; });
-  if(fsel<0){ fd1.textContent='KLIK SATU LIPATAN'; fd2.textContent=''; fd3.textContent=''; readoutNow('Lipatan','5'); caption('Biru: belajar. Putih tipis: jeda 24 jam. Kuning: validasi, selalu <b>lebih baru</b> dari biru. Tiap lipatan memvalidasi 4.671 jam di 9 stasiun. Klik satu lipatan.'); }
-  else { const n=TRAIN[fsel]; fd1.textContent='LIPATAN '+(fsel+1);
+  if(fsel<0){ fd1.textContent='KLIK SATU FOLD'; fd2.textContent=''; fd3.textContent=''; readoutNow('Fold','5'); caption('Biru: belajar. Putih tipis: <em>gap</em> 24 jam. Kuning: validasi, selalu <b>lebih baru</b> dari biru. Tiap <em>fold</em> memvalidasi 4.671 jam di 9 stasiun. Klik satu <em>fold</em>.'); }
+  else { const n=TRAIN[fsel]; fd1.textContent='FOLD '+(fsel+1);
     fd2.textContent='Latih: 1 Mar 2013 sampai '+dstr(n-1)+' ('+fmt(n)+' jam)';
     fd3.textContent='Validasi: '+dstr(n+GAPH)+' sampai '+dstr(n+GAPH+VAL-1)+' ('+fmt(VAL)+' jam)';
-    readoutNow('Lipatan '+(fsel+1),fmt(n)+' <span class="u">jam latih</span>');
-    caption('Lipatan '+(fsel+1)+': latih sampai <b>'+dstr(n-1)+'</b>, jeda 24 jam, validasi <b>'+dstr(n+GAPH)+'</b> sampai <b>'+dstr(n+GAPH+VAL-1)+'</b>. Klik lagi untuk melepas.'); } }
+    readoutNow('Fold '+(fsel+1),fmt(n)+' <span class="u">jam latih</span>');
+    caption('Fold '+(fsel+1)+': latih sampai <b>'+dstr(n-1)+'</b>, <em>gap</em> 24 jam, validasi <b>'+dstr(n+GAPH)+'</b> sampai <b>'+dstr(n+GAPH+VAL-1)+'</b>. Klik lagi untuk melepas.'); } }
 
-/* ═════════ V2: jarak aman 24 jam ═════════ */
+/* ═════════ V2: gap 24 jam ═════════ */
 const sg=$('#svg-gap'); const CP=7.7, CXS=79, CYY=146, CHH=54, NTR=36, NGP=36, NVL=30;
 const cell=(i,col,op,g)=>mk('rect',{class:'cs',x:CXS+i*CP,y:CYY,width:CP-1.6,height:CHH,fill:col,'fill-opacity':op},g);
 const gT=mk('g',{},sg), gG=mk('g',{},sg), gV=mk('g',{},sg);
@@ -343,8 +342,7 @@ const cT=[...Array(NTR)].map((_,i)=>cell(i,BLUE,.7,gT)), cG=[...Array(NGP)].map(
 const setX=(r,i)=>r.setAttribute('x',CXS+i*CP);
 tx(sg,'LATIH',[CXS,CYY+CHH+22],13,BLUE,{'letter-spacing':'.1em'});
 const lblV=tx(sg,'VALIDASI',[0,CYY+CHH+22],13,AMB,{'letter-spacing':'.1em'});
-const lblG=tx(sg,'JEDA (',[0,CYY-12],13,'#fff',{'text-anchor':'middle','letter-spacing':'.1em'});
-const lblGi=document.createElementNS(SVGNS,'tspan'); lblGi.setAttribute('font-style','italic'); lblGi.textContent='GAP'; lblG.appendChild(lblGi); lblG.appendChild(document.createTextNode(')'));
+const lblG=tx(sg,'GAP',[0,CYY-12],13,'#fff',{'text-anchor':'middle','letter-spacing':'.1em','font-style':'italic'});
 // 24 baris latih terakhir
 const bx1=CXS+(NTR-24)*CP, bx2=CXS+NTR*CP-1.6;
 mk('path',{d:'M'+bx1+' '+(CYY-12)+'v-9H'+bx2+'v9',fill:'none',stroke:BLUE,'stroke-width':2},sg);
@@ -363,7 +361,7 @@ const sFill=mk('line',{x1:SX0,x2:SX0,y1:SY,y2:SY,stroke:BLUE,'stroke-width':3,'s
 const sx=g=>SX0+SXW*g/GMAX;
 [0,24].forEach(g=>{mk('line',{x1:sx(g),x2:sx(g),y1:SY-8,y2:SY+8,stroke:GREY},sg);});
 tx(sg,'0',[sx(0),SY+28],13,GREY,{'text-anchor':'middle'}); tx(sg,'24 jam = horizon prediksi',[sx(24),SY+28],13,'#c4dcff',{'text-anchor':'middle'}); tx(sg,'36',[sx(36),SY+28],13,GREY,{'text-anchor':'middle'});
-tx(sg,'JEDA AMAN (JAM)',[SX0,SY-24],13,GREY,{'letter-spacing':'.1em'});
+tx(sg,'GAP (JAM)',[SX0,SY-24],13,GREY,{'letter-spacing':'.1em'});
 const sH=mk('circle',{r:11,fill:'#0a0b10',stroke:'#c4dcff','stroke-width':3,style:'cursor:ew-resize'},sg);
 const sArr=mk('path',{fill:'none',stroke:'#c4dcff','stroke-width':1.8,'stroke-linecap':'round','stroke-linejoin':'round',style:'pointer-events:none'},sg);
 const sHit=mk('rect',{x:SX0-14,y:SY-22,width:SXW+28,height:44,fill:'transparent',style:'cursor:ew-resize'},sg);
@@ -386,7 +384,7 @@ sHit.addEventListener('pointermove',e=>{if(dragG)setG(e);}); sHit.addEventListen
 /* ═════════ V3: praproses di dalam pipeline ═════════ */
 const sp=$('#svg-pipe'); const gS=mk('g',{class:'fade'},sp), gB=mk('g',{class:'fade'},sp);
 const blk=(y,col,name,sub,dim)=>{ const g=mk('g',{},sp); mk('rect',{x:74,y:y,width:210,height:64,fill:col,'fill-opacity':.12,stroke:col,'stroke-opacity':.7},g); mk('rect',{x:74,y:y,width:4,height:64,fill:col},g); tx(g,name,[94,y+28],16,'#f1f2f6',{'font-family':SANS,'font-weight':600}); tx(g,sub,[94,y+50],13,'#c4c7d4'); return g; };
-blk(120,BLUE,'LATIH','data belajar'); const bV=blk(230,AMB,'VALIDASI','satu lipatan'); const bU=blk(340,GREY,'UJI','dikunci');
+blk(120,BLUE,'LATIH','data belajar'); const bV=blk(230,AMB,'VALIDASI','satu fold'); const bU=blk(340,GREY,'UJI','disisihkan');
 const mid=mk('g',{},sp); mk('rect',{x:410,y:196,width:250,height:128,fill:'rgba(125,180,255,.07)',stroke:BLUE,'stroke-opacity':.7},mid); mk('rect',{x:410,y:196,width:250,height:4,fill:BLUE},mid);
 tx(mid,'IMPUTER + SCALER',[428,226],13,BLUE,{'letter-spacing':'.1em'});
 const mt1=tx(mid,'',[428,262],19,'#f1f2f6',{'font-family':SANS,'font-weight':600}), mt2=tx(mid,'',[428,288],15,'#c4c7d4',{'font-family':SANS}), mt3=tx(mid,'',[428,310],15,'#c4c7d4',{'font-family':SANS});
@@ -402,49 +400,49 @@ tx(gS,'BOCOR: validasi dan uji ikut dihitung',[428,356],15,AMB,{'font-weight':50
 // Benar: validasi hanya menerima hasilnya
 arr(gB,'M404 276H294',AMB,'6 5'); head(gB,288,276,AMB,-1);
 tx(gB,'terapkan saja',[296,300],13,AMB);
-tx(gB,'DIHITUNG ULANG TIAP LIPATAN',[428,356],14,BLUE,{'letter-spacing':'.08em'});
+tx(gB,'DIHITUNG ULANG TIAP FOLD',[428,356],14,BLUE,{'letter-spacing':'.08em'});
 arr(sp,'M660 260H752',GREY); head(sp,756,260,GREY,1);
 const lockT=tx(sp,'tidak disentuh',[179,418],14,GREY,{'text-anchor':'middle'});
 let pm='benar';
 function setPipe(m){ pm=m; gS.style.opacity=m==='salah'?1:0; gB.style.opacity=m==='benar'?1:0; bU.style.opacity=m==='salah'?1:.45; lockT.style.opacity=m==='benar'?1:0;
   if(m==='salah'){ mt1.textContent='median dan skala'; mt2.textContent='dari SEMUA baris'; mt3.textContent='latih + validasi + uji'; }
-  else { mt1.textContent='median dan skala'; mt2.textContent='dari LATIH saja'; mt3.textContent='lipatan itu saja'; }
+  else { mt1.textContent='median dan skala'; mt2.textContent='dari LATIH saja'; mt3.textContent='fold itu saja'; }
   $$('#sw-pipe button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));
   readoutNow('Dihitung dari',m==='salah'?'<span style="color:#ffc266">semua baris</span>':'latih saja');
-  caption(m==='salah'?'<b>Salah:</b> median dan skala dihitung dari semua baris, jadi data validasi dan uji ikut dilihat. Skor tampak lebih bagus dari kenyataannya.':'<b>Benar:</b> di dalam <em>pipeline</em>, median dan skala dihitung dari data latih setiap lipatan, lalu hanya diterapkan ke validasi. Data uji tidak disentuh.'); }
+  caption(m==='salah'?'<b>Salah:</b> median dan skala dihitung dari semua baris, jadi data validasi dan uji ikut dilihat. Skor tampak lebih bagus dari kenyataannya.':'<b>Benar:</b> di dalam <em>pipeline</em>, median dan skala dihitung dari data latih setiap <em>fold</em>, lalu hanya diterapkan ke validasi. Data uji tidak disentuh.'); }
 $$('#sw-pipe button').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();clearRuns();setPipe(b.dataset.m);}));
 
-/* ═════════ V4: 9 stasiun latih dan 3 stasiun baru ═════════ */
-const ss=$('#svg-sta'); const LAT=["Aotizhongxin", "Changping", "Dongsi", "Guanyuan", "Gucheng", "Huairou", "Nongzhanguan", "Tiantan", "Wanshouxigong"], ASI=['Dingling','Wanliu','Shunyi'];
+/* ═════════ V4: 9 stasiun latih dan 3 stasiun uji ═════════ */
+const ss=$('#svg-sta'); const LAT=["Aotizhongxin", "Changping", "Dongsi", "Guanyuan", "Gucheng", "Huairou", "Nongzhanguan", "Tiantan", "Wanshouxigong"], STU=['Dingling','Wanliu','Shunyi'];
 const SX=190, SW=872-SX, WA=SW*.8-3, WB=SW*.2-3, ROWH=24, ROWP=29, SY0=96;
-const ROLE={latih:['LATIH · 60% baris','Melatih model, memilih model, dan tuning',BLUE,.7],uji:['UJI · 15% baris','Masa depan di stasiun yang ikut dilatih',AMB,.55],skip:['TIDAK DIPAKAI · 20% baris','Sengaja dibuang: model belum boleh melihat stasiun ini',GREY,.3],asing:['UJI BARU · 5% baris','Stasiun baru yang tidak dikenal model, sekaligus masa depan',AMB,.95]};
+const ROLE={latih:['LATIH · 60% baris','Melatih model, memilih model, dan tuning',BLUE,.7],uji:['UJI · 15% baris','Masa depan di stasiun yang ikut dilatih',AMB,.55],skip:['TIDAK DIPAKAI · 20% baris','Sengaja dibuang: model belum boleh melihat stasiun ini',GREY,.3],stuji:['STASIUN UJI · 5% baris','Stasiun yang tidak dipakai untuk melatih, sekaligus periode masa depan',AMB,.95]};
 tx(ss,'80% AWAL',[SX,SY0-30],13,GREY,{'letter-spacing':'.1em'}); tx(ss,'sebelum 12 Mei 2016, 19.00',[SX,SY0-14],12,GREY);
 tx(ss,'20% AKHIR',[SX+WA+3+WB,SY0-30],13,GREY,{'letter-spacing':'.1em','text-anchor':'end'});
 const SC=[];
-const addRow=(name,i,roleA,roleB,asing)=>{ const y=SY0+i*ROWP+(asing?18:0);
-  tx(ss,name,[SX-12,y+ROWH/2+5],14,asing?AMB:'#c4c7d4',{'text-anchor':'end'});
+const addRow=(name,i,roleA,roleB,stuji)=>{ const y=SY0+i*ROWP+(stuji?18:0);
+  tx(ss,name,[SX-12,y+ROWH/2+5],14,stuji?AMB:'#c4c7d4',{'text-anchor':'end'});
   [[SX,WA,roleA],[SX+WA+3,WB,roleB]].forEach(([x,w,r])=>{ const el=mk('rect',{class:'cs hov',x:x,y:y,width:w,height:ROWH,fill:ROLE[r][2],'fill-opacity':ROLE[r][3]},ss);
-    if(r==='skip') el.setAttribute('stroke','rgba(128,132,154,.6)'); if(r==='asing'){el.setAttribute('stroke','#fff');el.setAttribute('stroke-opacity',.7);}
+    if(r==='skip') el.setAttribute('stroke','rgba(128,132,154,.6)'); if(r==='stuji'){el.setAttribute('stroke','#fff');el.setAttribute('stroke-opacity',.7);}
     SC.push({el:el,r:r});
     el.addEventListener('mousemove',ev=>{tip('<small>'+name+'</small>'+ROLE[r][0],ev);hlRole(r);}); el.addEventListener('mouseleave',()=>{tipOff();hlRole(null);}); }); };
-LAT.forEach((n,i)=>addRow(n,i,'latih','uji',false)); ASI.forEach((n,i)=>addRow(n,9+i,'skip','asing',true));
-tx(ss,'BARU',[SX-12,SY0+9*ROWP+11],12,AMB,{'text-anchor':'end','letter-spacing':'.12em'});
-const LGY=476, LG=[['latih',74],['uji',264],['skip',424],['asing',650]]; const LGE=[];
-LG.forEach(([r,x])=>{ const g=mk('g',{class:'hov'},ss); mk('rect',{x:x,y:LGY,width:14,height:14,fill:ROLE[r][2],'fill-opacity':ROLE[r][3]},g); tx(g,ROLE[r][0],[x+22,LGY+12],13,'#c4c7d4'); mk('rect',{x:x-6,y:LGY-8,width:r==='skip'?220:(r==='asing'?220:170),height:30,fill:'transparent'},g);
+LAT.forEach((n,i)=>addRow(n,i,'latih','uji',false)); STU.forEach((n,i)=>addRow(n,9+i,'skip','stuji',true));
+tx(ss,'STASIUN UJI',[SX-12,SY0+9*ROWP+11],12,AMB,{'text-anchor':'end','letter-spacing':'.12em'});
+const LGY=476, LG=[['latih',74],['uji',264],['skip',424],['stuji',650]]; const LGE=[];
+LG.forEach(([r,x])=>{ const g=mk('g',{class:'hov'},ss); mk('rect',{x:x,y:LGY,width:14,height:14,fill:ROLE[r][2],'fill-opacity':ROLE[r][3]},g); tx(g,ROLE[r][0],[x+22,LGY+12],13,'#c4c7d4'); mk('rect',{x:x-6,y:LGY-8,width:r==='skip'?220:(r==='stuji'?220:170),height:30,fill:'transparent'},g);
   g.addEventListener('mouseenter',()=>hlRole(r)); g.addEventListener('mouseleave',()=>hlRole(null)); });
 function hlRole(r){ SC.forEach(c=>{ c.el.style.opacity=(r===null||c.r===r)?1:.2; }); 
-  if(r){ readoutNow(ROLE[r][0].split(' · ')[0],ROLE[r][0].split(' · ')[1]); caption('<b>'+ROLE[r][0]+'.</b> '+ROLE[r][1]+'.'); } else { readoutNow('Stasiun','9 <span class="u">+</span> 3'); caption('Waktu dibagi sama untuk semua stasiun. <b>9 stasiun</b> melatih model, <b>3 stasiun baru</b> sengaja tidak dilihat sebelum diuji. Arahkan kursor ke kotak mana pun.'); } }
+  if(r){ readoutNow(ROLE[r][0].split(' · ')[0],ROLE[r][0].split(' · ')[1]); caption('<b>'+ROLE[r][0]+'.</b> '+ROLE[r][1]+'.'); } else { readoutNow('Stasiun','9 <span class="u">+</span> 3'); caption('Waktu dibagi sama untuk semua stasiun. <b>9 stasiun</b> melatih model, <b>3 stasiun uji</b> sengaja tidak dilihat sebelum diuji. Arahkan kursor ke kotak mana pun.'); } }
 
 /* ═════════ V5: dicegah dan diakui ═════════ */
 const sc=$('#svg-cek');
-const OK=[['Fitur dari masa depan','semua fitur dari jam t ke kiri','Semua fitur dihitung dari jam t ke kiri. Rata-rata bergulir memakai jam t dan sebelumnya, bukan sesudahnya.'],
- ['Praproses memakai data uji','di dalam pipeline, per lipatan','Pengisian dan penskalaan ada di dalam <em>pipeline</em>, jadi dihitung ulang dari data latih pada setiap lipatan.'],
- ['Target jatuh di validasi','jeda aman 24 jam','Ada jeda 24 jam di antara latih dan validasi pada setiap lipatan.'],
- ['Data uji dilihat berulang','dikunci, dibuka satu kali','20% akhir dikunci dan dibuka satu kali di akhir. Bila skornya buruk, model tidak disetel ulang.'],
- ['Stasiun baru ikut belajar','3 stasiun tidak ikut dilatih','Tiga stasiun baru tidak ikut dilatih, bahkan 80% awalnya dibuang.']];
-const NG=[['Hanya 5 lipatan',['Simpangan baku antar lipatan','besar (86,82 ± 24,70 pada baseline).'],'Hanya 5 lipatan membuat angka validasi kurang stabil. Karena itu rata-rata dan simpangan baku selalu dilaporkan.'],
+const OK=[['Fitur dari masa depan','semua fitur dari jam t ke kiri','Semua fitur dihitung dari jam t ke kiri. <em>Rolling mean</em> memakai jam t dan sebelumnya, bukan sesudahnya.'],
+ ['Praproses memakai data uji','di dalam pipeline, per fold','Pengisian dan penskalaan ada di dalam <em>pipeline</em>, jadi dihitung ulang dari data latih pada setiap <em>fold</em>.'],
+ ['Target jatuh di validasi','gap 24 jam','Ada <em>gap</em> 24 jam di antara latih dan validasi pada setiap <em>fold</em>.'],
+ ['Data uji dilihat berulang','disisihkan, dibuka satu kali','20% akhir disisihkan dan dibuka satu kali di akhir. Bila skornya buruk, model tidak disetel ulang.'],
+ ['Stasiun uji ikut belajar','3 stasiun tidak ikut dilatih','Tiga stasiun uji tidak ikut dilatih, bahkan 80% awalnya dibuang.']];
+const NG=[['Hanya 5 fold',['Simpangan baku antar fold','besar (86,82 ± 24,70 pada baseline).'],'Hanya 5 <em>fold</em> membuat angka validasi kurang stabil. Karena itu rata-rata dan simpangan baku selalu dilaporkan.'],
  ['Statistik ringkas uji pernah terlihat',['7 dan 15 Nov 2026. Tidak dipakai untuk','memilih fitur, model, atau pengaturan.'],'Dicatat terbuka di laporan: profil awal pada 7 Nov 2026 dan ringkasan berkas fitur uji pada 15 Nov 2026. Statistik ringkas periode uji tidak dipakai untuk keputusan apa pun.'],
- ['Aturan jeda aman sama dengan horizon',['Belum ada sumber peer review yang','terbaca. Alasannya logis, belum terkutip.'],'Dicatat sebagai bahan umpan balik di Pertemuan 13.']];
+ ['Aturan gap sama dengan horizon',['Belum ada sumber peer review yang','terbaca. Alasannya logis, belum terkutip.'],'Dicatat sebagai bahan umpan balik di Pertemuan 13.']];
 const CAPD='Arahkan kursor ke tiap butir. Biru: sudah ditutup. Kuning: batasan yang diakui.';
 const rows=[];
 tx(sc,'DICEGAH (5)',[74,60],13,BLUE,{'letter-spacing':'.14em'}); tx(sc,'BATASAN (3)',[496,60],13,AMB,{'letter-spacing':'.14em'});
@@ -462,15 +460,15 @@ OK.forEach((o,i)=>IG.push(itm(74,80+i*80,396,68,BLUE,'ok',o[0],[o[1]],o[2])));
 NG.forEach((o,i)=>IG.push(itm(496,80+i*122,376,108,AMB,'warn',o[0],o[1],o[2])));
 
 /* ═════════ Langkah ═════════ */
-const FIG=['Fig. 12 · Urut waktu atau acak','Fig. 13 · Lima lipatan','Fig. 14 · Jeda aman 24 jam','Fig. 15 · Praproses dalam pipeline','Fig. 16 · Stasiun latih dan baru','Fig. 17 · Dicegah dan batasan'];
+const FIG=['Gambar 12 · Urut waktu atau acak','Gambar 13 · Lima fold','Gambar 14 · Gap 24 jam','Gambar 15 · Praproses dalam pipeline','Gambar 16 · Stasiun latih dan stasiun uji','Gambar 17 · Dicegah dan batasan'];
 const VIEWS=['v-urut','v-fold','v-gap','v-pipe','v-sta','v-cek'];
-function setView(i){ $$('.view').forEach(v=>v.classList.toggle('on',v.id===VIEWS[i])); $('#fig').innerHTML=FIG[i].replace(/^(Fig\. \d+)/,'<b>$1</b>'); tipOff();
+function setView(i){ $$('.view').forEach(v=>v.classList.toggle('on',v.id===VIEWS[i])); $('#fig').innerHTML=FIG[i].replace(/^(Gambar \d+)/,'<b>$1</b>'); tipOff();
   FR.forEach((r,k)=>{ r.ig.style.transitionDelay=(i===1?(k*140):0)+'ms'; r.ig.style.transform=i===1?'scaleX(1)':'scaleX(0)'; });
   IG.forEach((g,k)=>{ g.style.transitionDelay=(i===5?k*110:0)+'ms'; g.style.opacity=i===5?1:0; g.style.transform=i===5?'none':'translateY(10px)'; }); }
 const STEPS=[
   ()=>{ blocks(0); setView(0); setUrut('seq'); },
   ()=>{ blocks(1); setView(1); fsel=-1; selFold(-1); },
-  ()=>{ blocks(2); setView(2); setGap(0); caption('Tanpa jeda, target dari 24 baris latih terakhir <b>jatuh di validasi</b> (kuning). Geser penggeser ke <b>24</b> dan semuanya aman. Penggeser berjalan otomatis, atau seret untuk mencoba.'); later(()=>{ let g=0; ticker=setInterval(()=>{ g++; setGap(g); if(g>=24){clearInterval(ticker);ticker=null;} },110); },900); },
+  ()=>{ blocks(2); setView(2); setGap(0); caption('Tanpa <em>gap</em>, target dari 24 baris latih terakhir <b>jatuh di validasi</b> (kuning). Geser penggeser ke <b>24</b> dan semuanya aman. Penggeser berjalan otomatis, atau seret untuk mencoba.'); later(()=>{ let g=0; ticker=setInterval(()=>{ g++; setGap(g); if(g>=24){clearInterval(ticker);ticker=null;} },110); },900); },
   ()=>{ blocks(3); setView(3); setPipe('salah'); later(()=>setPipe('benar'),2600); },
   ()=>{ blocks(4); setView(4); hlRole(null); },
   ()=>{ blocks(5); setView(5); readoutNow('Dicegah · batasan','5 <span class="u">·</span> 3'); caption(CAPD); }
