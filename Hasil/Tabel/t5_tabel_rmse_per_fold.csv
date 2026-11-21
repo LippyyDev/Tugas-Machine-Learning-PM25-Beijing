@@ -1,0 +1,6 @@
+,Naive forecast,Ridge (alpha=1),Elastic Net (alpha=1),"Elastic Net (alpha=0,1)","Elastic Net (alpha=0,01)",Gradient boosting,Gradient boosting (early stopping bawaan)
+Fold 1,101.71,84.53,84.48,84.16,84.46,98.06,95.72
+Fold 2,62.22,54.14,52.43,53.53,54.05,59.46,59.52
+Fold 3,103.6,82.49,83.0,82.4,82.46,82.98,83.33
+Fold 4,57.72,50.3,50.86,50.25,50.28,48.78,48.99
+Fold 5,108.84,93.25,91.88,92.66,93.16,96.23,97.28

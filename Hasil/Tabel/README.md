@@ -1,6 +1,6 @@
 # Tabel
 
-Lima tabel dibuat *notebook* tahap 2: tiga dari EDA dan pemilihan stasiun uji (bagian 02), satu dari dasar keputusan *forward fill* (04.6), dan satu dari *baseline* tahap 4 (04.5).
+Delapan tabel dibuat *notebook*: tiga dari EDA dan pemilihan stasiun uji (bagian 02), satu dari dasar keputusan *forward fill* (04.6), satu dari *baseline* tahap 4 (04.5), dan tiga dari perbandingan model lanjutan tahap 5 (bagian 05).
 
 | Berkas | Isi |
 |---|---|
@@ -9,6 +9,9 @@ Lima tabel dibuat *notebook* tahap 2: tiga dari EDA dan pemilihan stasiun uji (b
 | `t2_tabel_distribusi_stasiun.csv` | Jarak distribusi PM2.5 tiap stasiun terhadap 11 stasiun lain (Wasserstein dan KS, sebelum batas uji), dasar memilih tiga stasiun uji |
 | `t2_tabel_ffill.csv` | RMSE Ridge dan *HistGradientBoosting* untuk batas *forward fill* 0 sampai 24 jam (9 stasiun latih, data latih) |
 | `t4_tabel_baseline.csv` | RMSE dan MAE (rata-rata dan sd antar *fold*) *naive forecast* |
+| `t5_tabel_model_lanjutan.csv` | RMSE dan MAE (rata-rata dan sd antar *fold*) *naive* dan enam konfigurasi model lanjutan, perbaikan RMSE terhadap *naive*, dan jumlah *fold* yang lebih baik dari *naive* |
+| `t5_tabel_rmse_per_fold.csv` | RMSE tiap model di tiap *fold* validasi |
+| `t5_tabel_selisih_vs_ridge.csv` | Selisih RMSE tiap model terhadap Ridge pada *fold* yang sama (rata-rata, sd selisih, jumlah *fold* lebih baik) |
 
 Dibuat ulang setiap *notebook* tahap 2 dijalankan.
 

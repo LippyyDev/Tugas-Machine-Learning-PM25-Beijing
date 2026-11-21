@@ -8,7 +8,7 @@ Berisi inti hasil tiap tahap, diperbarui setiap satu tahap selesai. Rincian leng
 | 2. EDA dan praproses | Selesai, dijalankan penuh 21 Nov 2026 pada desain 9/3 (lokal dan Colab, angka sama). Angka di bawah memakai data latih 9 stasiun |
 | 3. Skema validasi | Desain 9/3 sudah diimplementasikan dan dijalankan 21 Nov 2026 (skema, pengecekan otomatis, alasan, dan keterbatasan ada di *notebook* bagian 03). Penjaga pembukaan data uji ada di bagian 03.3 dan protokol [Usulan, menunggu persetujuan] di `Protokol Evaluasi Data Uji.md`. Penjaga hanya mencegah pembukaan ganda yang tidak disengaja, dan baru teruji saat data uji dibuka. Literatur pendukung: lihat `Proposal/Catatan Verifikasi Referensi.md` (aturan `gap` sama dengan horizon belum punya sumber *peer review* yang terbaca) |
 | 4. *Baseline* | Selesai, hasil validasi 9 stasiun latih (dijalankan 21 Nov 2026) |
-| 5. Model lanjutan dan *tuning* | Belum dikerjakan |
+| 5. Model lanjutan dan *tuning* | Selesai sebagian: perbandingan awal 3 keluarga model (6 konfigurasi) dengan *cross-validation* pada data latih 9 stasiun, dijalankan 22 Nov 2026. *Tuning* sistematis belum, model final belum dipilih, data uji belum dibuka |
 | 6. Evaluasi dan diagnosis | Belum dikerjakan |
 | 7. Analisis kesalahan dan etika | Belum dikerjakan |
 
@@ -77,3 +77,27 @@ Validasi 5 *fold* pada data latih 9 stasiun, tanpa menyentuh data uji. Baris val
 
 - RMSE per *fold* (101,7 / 62,2 / 103,6 / 57,7 / 108,8) naik turun mengikuti periode (*fold* 1, 3, dan 5 lebih tinggi), jadi simpangan baku yang besar kemungkinan berasal dari beda periode antar *fold* (belum diuji penyebabnya).
 - Ini hasil validasi data latih, bukan data uji. Skor uji dibuka satu kali di akhir.
+
+## Tahap 5. Model lanjutan dan *tuning* (perbandingan awal, 22 Nov 2026)
+
+Aturan evaluasi sama dengan Tahap 4: `TimeSeriesSplit(n_splits=5, gap=24)` pada jam unik data latih 9 stasiun, baris validasi yang sama dengan *naive forecast* (PM2.5 jam *t* tidak kosong), imputer median dan *scaler* di dalam *pipeline* per *fold*. **Data uji tidak dibuka** (tidak ada log pembukaan). Angka berasal dari eksekusi penuh `Notebook/Tahap 2 EDA dan Praproses.ipynb` bagian 05, tanpa *error*. *Notebook* memeriksa dengan `assert` bahwa galat *naive* di bagian ini sama persis dengan 04.5.
+
+| Model | RMSE rata-rata ± sd | MAE rata-rata ± sd | Perbaikan RMSE vs *naive* | *Fold* lebih baik dari *naive* |
+|---|---|---|---|---|
+| *Naive forecast* | 86,82 ± 24,70 | 59,39 ± 16,53 | n/a | n/a |
+| Ridge (`alpha=1`) | 72,94 ± 19,39 | 54,58 ± 12,97 | 16,0% | 5 dari 5 |
+| Elastic Net (`alpha=1`) | 72,53 ± 19,37 | 54,79 ± 13,38 | 16,5% | 5 dari 5 |
+| Elastic Net (`alpha=0,1`) | 72,60 ± 19,33 | 54,35 ± 13,04 | 16,4% | 5 dari 5 |
+| Elastic Net (`alpha=0,01`) | 72,88 ± 19,38 | 54,54 ± 12,97 | 16,0% | 5 dari 5 |
+| *Gradient boosting* | 77,10 ± 22,10 | 56,11 ± 14,50 | 11,2% | 5 dari 5 |
+| *Gradient boosting* (*early stopping* bawaan) | 76,97 ± 21,75 | 56,04 ± 14,07 | 11,4% | 5 dari 5 |
+
+Keluarannya: `Hasil/Tabel/t5_tabel_model_lanjutan.csv`, `t5_tabel_rmse_per_fold.csv`, `t5_tabel_selisih_vs_ridge.csv`, dan grafik `Hasil/Gambar/t5_01_rmse_model_lanjutan.png`.
+
+- **Yang berdiri di data:** semua konfigurasi lebih baik dari *naive* di kelima *fold*. Model linear sekitar 16% di bawah RMSE *naive*, *boosting* sekitar 11%.
+- **Yang tidak berdiri di data:** selisih antar model linear sangat kecil (paling besar 0,41, sekitar 0,6% dari RMSE) dibanding simpangan baku antar *fold* sekitar 19. Elastic Net `alpha=0,1` lebih baik dari Ridge di 5 dari 5 *fold*, tetapi hanya 0,34 µg/m³ (rata-rata, sd selisih 0,26) dan terpilih dari enam konfigurasi, jadi tidak diklaim nyata. *Gradient boosting* rata-rata 4,0 sampai 4,2 lebih buruk dari Ridge dan lebih baik hanya di 1 dari 5 *fold*.
+- **Aturan pemilihan (protokol butir 2, [Usulan], menunggu persetujuan):** RMSE terendah adalah Elastic Net `alpha=1` (72,53, sd 19,37). Semua konfigurasi dalam satu simpangan baku darinya, jadi dianggap tidak terbedakan dan yang paling sederhana menjadi **kandidat: Ridge**. Ini kandidat, bukan model final. Konfigurasi belum dibekukan.
+- ***Early stopping* bawaan tidak pernah berhenti:** jumlah iterasi yang dipakai 200 di kelima *fold* (batas maksimum). Varian ini praktis hanya melatih *boosting* pada sebagian data latih *fold*, dan hasilnya hampir sama dengan *boosting* tanpa *early stopping*. Pemisahan validasi internalnya acak, bukan menurut waktu.
+- **Reproduksi angka penulis:** angka Ridge (72,94 ± 19,39) dan Elastic Net (72,88, 72,60, 72,53 dengan `l1_ratio=0,5`) sama dengan tangkapan layar penulis sampai dua desimal. Angka *gradient boosting* berbeda 0,3 sampai 0,4 (penulis: 76,66 ± 20,77 dan 76,77 ± 20,74), karena pengaturan *boosting* penulis tidak diketahui. Yang dipakai di sini mengikuti 04.6 (200 iterasi, *learning rate* 0,1, kedalaman 4). Selisih sebesar itu masih dalam kisaran pergeseran HGB antar lingkungan yang dicatat di Tahap 2.
+- **Keterbatasan:** *tuning* belum sistematis (grid `alpha` tiga nilai dan alpha terbaik ada di tepi grid, `l1_ratio` tetap, *boosting* belum dicari *hyperparameter*-nya). Lima *fold* sedikit. Skor model terpilih dari enam konfigurasi dengan validasi yang sama sedikit optimistis, sehingga bukan kinerja akhir. Dugaan bahwa *boosting* lebih lemah karena data latih *fold* awal sedikit belum diuji.
+- **Berikutnya:** (1) putuskan model yang di-*tuning*, lalu cari *hyperparameter* pada *fold* yang sama tanpa data uji, (2) setujui aturan pemilihan di `Protokol Evaluasi Data Uji.md`, (3) bekukan dan *commit* konfigurasi final, lalu tahap 6.
