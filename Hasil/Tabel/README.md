@@ -12,4 +12,4 @@ Lima tabel dibuat *notebook* tahap 2: tiga dari EDA dan pemilihan stasiun uji (b
 
 Dibuat ulang setiap *notebook* tahap 2 dijalankan.
 
-**Catatan 16 Nov 2026:** *notebook* sudah ditulis ulang untuk desain 9/3, tetapi belum dijalankan ulang di repo ini. Isi folder ini masih hasil pilot Tiantan (data latih Tiantan saja) sampai *notebook* dijalankan. `t2_tabel_transfer.csv` (RMSE model Tiantan di stasiun lain) adalah sisa pilot dan tidak dibuat lagi oleh *notebook* 9/3.
+**Catatan 21 Nov 2026:** lima tabel (`t2_tabel_distribusi_stasiun`, `t2_tabel_ffill`, `t2_tabel_nilai_hilang`, `t2_tabel_ringkas_stasiun`, `t4_tabel_baseline`) dibuat dari jalan penuh *notebook* desain 9/3. `t2_tabel_ffill.csv` bergeser kecil pada HGB bila dijalankan di Colab. `t2_tabel_transfer.csv` (RMSE model Tiantan di stasiun lain) adalah sisa pilot dan tidak dibuat lagi oleh *notebook* 9/3.

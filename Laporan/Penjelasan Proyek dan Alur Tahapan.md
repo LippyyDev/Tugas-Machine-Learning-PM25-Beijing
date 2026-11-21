@@ -51,7 +51,7 @@ Dari 12 stasiun, **9 dipakai untuk melatih model** dan **3 stasiun uji**: model 
 
 Uji akhir dilakukan pada 20% periode terakhir dari semua 12 stasiun, dilaporkan terpisah: (1) 9 stasiun latih, untuk melihat apakah model bagus memprediksi masa depan, dan (2) 3 stasiun uji, untuk melihat apakah model masih bagus di stasiun yang belum pernah dilihat. Selisih galat keduanya menunjukkan pergeseran distribusi. Tiga stasiun uji dipilih dengan aturan: satu yang jauh, satu sedang, dan satu dekat dari stasiun lain berdasarkan data periode latih saja. Hasilnya Dingling, Wanliu, dan Shunyi, yang sudah ditetapkan penulis (16 Nov 2026). Tiantan dan Dingling dipakai pada tahap awal sebagai percobaan (pilot), dan hasilnya dihitung ulang untuk desain ini.
 
-Pembagian murni per stasiun pada seluruh periode tidak dipakai karena jam yang sama muncul di data latih dan uji. PM2.5 antar stasiun saling berkaitan pada jam yang sama (korelasi median 0,89), sehingga jawaban data uji ikut terlihat oleh model.
+Pembagian murni per stasiun pada seluruh periode tidak dipakai karena jam yang sama muncul di data latih dan uji. PM2.5 antar stasiun saling berkaitan pada jam yang sama (korelasi median 0,88), sehingga jawaban data uji ikut terlihat oleh model.
 
 ## 3. Rumusan masalah
 

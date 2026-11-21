@@ -5,9 +5,9 @@ Berisi inti hasil tiap tahap, diperbarui setiap satu tahap selesai. Rincian leng
 | Tahap | Status |
 |---|---|
 | 1. Proposal dan rumusan masalah | Selesai sebagian (draf selesai, menunggu konfirmasi dosen) |
-| 2. EDA dan praproses | *Notebook* sudah disesuaikan ke desain 9/3 dan diuji 16 Nov 2026, belum dijalankan penulis. Angka di bawah masih hasil pilot Tiantan (dasar keputusan *forward fill* ada di *notebook* 04.6) |
-| 3. Skema validasi | Desain direvisi 16 Nov 2026, implementasi masih skema Tiantan (skema, pengecekan otomatis, alasan, dan keterbatasan ada di *notebook* bagian 03). Penjaga pembukaan data uji ada di bagian 03.3 dan protokol [Usulan, menunggu persetujuan] di `Protokol Evaluasi Data Uji.md`. Penjaga hanya mencegah pembukaan ganda yang tidak disengaja, dan baru teruji saat data uji dibuka. Literatur pendukung: lihat `Proposal/Catatan Verifikasi Referensi.md` (aturan `gap` sama dengan horizon belum punya sumber *peer review* yang terbaca) |
-| 4. *Baseline* | Selesai sebagian, hasil pilot Tiantan (hasil validasi ada, belum dibahas dengan dosen) |
+| 2. EDA dan praproses | Selesai, dijalankan penuh 21 Nov 2026 pada desain 9/3 (lokal dan Colab, angka sama). Angka di bawah memakai data latih 9 stasiun |
+| 3. Skema validasi | Desain 9/3 sudah diimplementasikan dan dijalankan 21 Nov 2026 (skema, pengecekan otomatis, alasan, dan keterbatasan ada di *notebook* bagian 03). Penjaga pembukaan data uji ada di bagian 03.3 dan protokol [Usulan, menunggu persetujuan] di `Protokol Evaluasi Data Uji.md`. Penjaga hanya mencegah pembukaan ganda yang tidak disengaja, dan baru teruji saat data uji dibuka. Literatur pendukung: lihat `Proposal/Catatan Verifikasi Referensi.md` (aturan `gap` sama dengan horizon belum punya sumber *peer review* yang terbaca) |
+| 4. *Baseline* | Selesai, hasil validasi 9 stasiun latih (dijalankan 21 Nov 2026) |
 | 5. Model lanjutan dan *tuning* | Belum dikerjakan |
 | 6. Evaluasi dan diagnosis | Belum dikerjakan |
 | 7. Analisis kesalahan dan etika | Belum dikerjakan |
@@ -16,16 +16,16 @@ Berisi inti hasil tiap tahap, diperbarui setiap satu tahap selesai. Rincian leng
 
 ![Pembagian data: 9 stasiun latih, 3 stasiun uji, uji 20% periode terakhir](../Hasil/Gambar/t2_02_pembagian_data.png)
 
-Keputusan penulis 16 Nov 2026 menggantikan skema "latih di Tiantan, uji di Dingling" (opsi A) dengan desain berikut. Status: [Usulan], belum dikonfirmasi dosen. Panduan dosen hanya menetapkan uji = 20% periode terakhir dan tantangan "uji model di stasiun lain".
+Keputusan penulis 16 Nov 2026 menggantikan skema "latih di Tiantan, uji di Dingling" (opsi A) dengan desain berikut. Status: dikonfirmasi dosen menurut penulis (21 Nov 2026, bentuk konfirmasi belum tercatat di repo). Panduan dosen hanya menetapkan uji = 20% periode terakhir dan tantangan "uji model di stasiun lain".
 
 - **Desain:** 9 stasiun latih dan 3 stasiun uji. Waktu 80% awal untuk latih, 20% akhir untuk uji, dengan satu stempel waktu batas untuk semua stasiun. Uji final dibuka satu kali pada 20% akhir dari 12 stasiun, dilaporkan terpisah untuk 9 stasiun latih dan 3 stasiun uji.
 - **Porsi baris:** latih 60%, uji 20%, tidak dipakai 20% (80% awal dari 3 stasiun uji, sengaja tidak dipakai agar model belum pernah melihat stasiun itu sebelum diuji).
 - **Tiga stasiun uji: Dingling, Wanliu, Shunyi [Keputusan penulis, 16 Nov 2026, ditetapkan sebelum data uji dibuka].** Dasarnya aturan: urutan ke-1, ke-6, dan ke-12 menurut jarak Wasserstein PM2.5 terhadap gabungan 11 stasiun lain, hanya dari data sebelum batas waktu (Dingling paling berbeda, Wanliu sedang, Shunyi paling mirip). *Notebook* 02.2 memeriksa bahwa aturan itu masih menghasilkan daftar yang sama. Mengubahnya berarti mengubah keputusan dan menjalankan ulang semua hasil.
-- **Pembagian murni per stasiun pada seluruh periode ditolak:** jam yang sama muncul di data latih dan uji, dan korelasi PM2.5 antar stasiun pada jam yang sama median 0,89, sehingga bocor lewat waktu. Besar kebocoran belum diukur.
+- **Pembagian murni per stasiun pada seluruh periode ditolak:** jam yang sama muncul di data latih dan uji, dan korelasi PM2.5 antar stasiun pada jam yang sama median 0,88, sehingga bocor lewat waktu. Besar kebocoran belum diukur.
 - **Syarat teknis:** *fold* dibuat dari stempel waktu unik, `gap` 24 jam dihitung per jam, dan data tidak dipotong menurut urutan stasiun.
 - **Pemeriksaan data mentah (16 Nov 2026, dari 12 CSV di repo):** setiap stasiun 35.064 baris, rentang waktu identik, tanpa duplikat waktu. Jumlah PM2.5 kosong berbeda antar stasiun (382 di Wanliu sampai 953 di Huairou, seluruh periode).
-- **Dampak:** *notebook* sudah menerapkan desain ini dan diuji 16 Nov 2026. Hasil Tahap 2 sampai 4 di bawah dan berkas di `Hasil/` adalah hasil pilot Tiantan, dan baru diganti setelah penulis menjalankan *notebook* yang baru. Dasar pemilihan Dingling (bagian Tahap 2) tetap berguna sebagai bahan memilih stasiun uji, tetapi Dingling tidak lagi otomatis stasiun uji.
-- **Belum diputuskan:** identitas stasiun sebagai fitur, dan jawaban dosen atas desain ini. Bila dosen menolak, kembali ke opsi A+ (latih Tiantan, uji beberapa stasiun).
+- **Dampak:** *notebook* menerapkan desain ini dan dijalankan penuh 21 Nov 2026. Hasil Tahap 2 sampai 4 di bawah dan berkas di `Hasil/Tabel/` (kecuali `t2_tabel_transfer.csv`, sisa pilot) berasal dari jalan itu. Dasar pemilihan Dingling di versi pilot tetap berguna sebagai bahan memilih stasiun uji.
+- **Belum diputuskan:** identitas stasiun sebagai fitur. Desain 9/3 sudah dikonfirmasi dosen menurut penulis (21 Nov 2026).
 
 ## Tahap 1. Proposal
 
@@ -40,22 +40,22 @@ Keputusan penulis 16 Nov 2026 menggantikan skema "latih di Tiantan, uji di Dingl
 
 ## Tahap 2. EDA dan praproses
 
-Semua angka berasal dari eksekusi `Notebook/Tahap 2 EDA dan Praproses.ipynb` pada stasiun Tiantan dan **hanya memakai data latih**, kecuali disebut lain. *Notebook* dijalankan ulang 15 Nov 2026 setelah keputusan tanpa *forward fill*, *gap* 24 jam, dan penambahan *baseline* (0 *error*, 10 grafik tertanam). Dua tabel EDA identik dengan eksekusi sebelumnya.
+Semua angka berasal dari eksekusi `Notebook/Tahap 2 EDA dan Praproses.ipynb` pada 9 stasiun latih dan **hanya memakai data latih**, kecuali disebut lain. *Notebook* dijalankan penuh 21 Nov 2026 di lingkungan lokal dan di Colab, tanpa *error*. Angka sama, kecuali analisis HGB di 04.6 yang bergeser kecil antar lingkungan (lihat di bawah).
 
-Keluaran *notebook*: sembilan grafik di `Hasil/Gambar/`, enam tabel di `Hasil/Tabel/` (dua EDA, tiga dasar keputusan, satu *baseline*), dan fitur siap pakai (latih dan uji) di `Data/Data Olahan/`. Berkas pilot Tiantan dihapus 16 Nov 2026 supaya *notebook* dijalankan ulang di bawah desain 9/3, sehingga angka tahap 2 sampai 4 di dokumen ini adalah hasil pilot. Berkas fitur uji hanya disimpan, tidak dibuka untuk analisis.
+Keluaran *notebook*: sembilan grafik di `Hasil/Gambar/`, enam tabel di `Hasil/Tabel/` (dua EDA, tiga dasar keputusan, satu *baseline*; `t2_tabel_transfer.csv` adalah sisa pilot), dan fitur siap pakai (latih dan uji) di `Data/Data Olahan/` (tidak ikut di repo, dibuat dengan menjalankan *notebook*). Berkas fitur uji hanya disimpan, tidak dibuka untuk analisis.
 
 - **Pembagian waktu:** data uji dimulai 2016-05-12 19:00 (20% jam terakhir), disisihkan sebelum eksplorasi dan tidak dibuka. Data latih seluruh stasiun 336.612 baris (80%).
-- **Sebaran PM2.5:** median 59, rata-rata 82,2, miring ke kanan (*skewness* 1,91). Galat besar saat episode polusi tinggi akan mendominasi RMSE.
-- **Nilai ekstrem (12 stasiun, data latih):** 659 jam di atas 500, 32 jam di atas 700, 3 jam di atas 900, 1 jam bernilai tepat 999. Pada jam-jam di atas 700, median 10 dari 12 stasiun ikut di atas 300, jadi lonjakan itu terjadi serempak dan sejalan dengan keputusan mempertahankan nilai ekstrem. Belum ada bukti batas alat ukur.
-- **Pola waktu:** rata-rata tertinggi bulan Desember (106), terendah Agustus (59). Per jam, tertinggi pukul 23.00 (89), terendah pukul 16.00 (76).
-- **Nilai hilang PM2.5:** 2,08% pada data latih Tiantan, dalam 313 rentang nilai hilang berturut-turut. Median rentang 1 jam, terpanjang 24 jam. Rentang sampai 3 jam mencakup 91% dari seluruh rentang tetapi hanya 65% jam yang hilang.
-- **Korelasi dengan PM2.5 24 jam kemudian:** PM2.5 sekarang 0,39, CO 0,34, NO2 0,33, PM10 0,32. Korelasi PM2.5 dengan nilai sebelumnya turun dari 0,39 (24 jam) ke 0,12 (48 jam) dan 0,03 (72 jam), sehingga *lag* lebih dari dua hari hampir tidak informatif.
-- **Antarstasiun (rata-rata PM2.5 data latih):** Dingling 67,0, Huairou 71,0, Tiantan 82,2, Dongsi 85,7. Secara visual, pola bulanan Tiantan searah dengan tiga kandidat stasiun uji (belum diukur). Rata-rata yang berbeda belum membuktikan stasiun itu paling sulit diprediksi (lihat bagian stasiun uji di bawah).
-- **Fitur dan target:** target PM2.5 pada jam t+24, 29 fitur yang hanya memakai data sampai jam t (kondisi sekarang, *lag* 1 sampai 48 jam, *rolling mean* 6, 24, 72 jam, kalender, arah angin). Baris latih 27.443, baris uji 6.896 (disimpan, tidak dibuka).
+- **Sebaran PM2.5:** median 57, rata-rata 81,1, miring ke kanan (*skewness* 1,95). Galat besar saat episode polusi tinggi akan mendominasi RMSE.
+- **Nilai ekstrem (9 stasiun latih, data latih):** 531 jam-stasiun di atas 500, 23 di atas 700, 1 di atas 900, 1 bernilai tepat 999. Pada 17 jam dengan PM2.5 di atas 700 di suatu stasiun, median 7 dari 9 stasiun ikut di atas 300, jadi lonjakan itu terjadi serempak dan sejalan dengan keputusan mempertahankan nilai ekstrem. Belum ada bukti batas alat ukur.
+- **Pola waktu:** rata-rata tertinggi bulan Desember (99), terendah Agustus (57). Per jam, tertinggi pukul 21.00 (90), terendah pukul 16.00 (75).
+- **Nilai hilang PM2.5:** 2,16% pada data latih 9 stasiun, dalam 1.730 rentang nilai hilang berturut-turut. Median rentang 1 jam, terpanjang 343 jam, dan 22 rentang lebih dari 24 jam. Rentang sampai 3 jam mencakup 87% dari seluruh rentang tetapi hanya 39% jam yang hilang.
+- **Korelasi dengan PM2.5 24 jam kemudian:** PM2.5 sekarang 0,40, NO2 0,35, CO 0,34, PM10 0,34. Korelasi PM2.5 dengan nilai sebelumnya turun dari 0,40 (24 jam) ke 0,14 (48 jam) dan 0,05 (72 jam), sehingga *lag* lebih dari dua hari hampir tidak informatif.
+- **Antarstasiun (rata-rata PM2.5 data latih):** Dingling 67,0, Huairou 71,0, Tiantan 82,2, Dongsi 85,7. Rata-rata yang berbeda belum membuktikan stasiun itu paling sulit diprediksi (lihat bagian stasiun uji di bawah).
+- **Fitur dan target:** target PM2.5 pada jam t+24, 29 fitur yang hanya memakai data sampai jam t (kondisi sekarang, *lag* 1 sampai 48 jam, *rolling mean* 6, 24, 72 jam, kalender, arah angin). Baris latih 246.798 (9 stasiun), baris uji 82.151 (61.686 dari stasiun latih dan 20.465 dari stasiun uji; disimpan, tidak dibuka).
 - **Penutupan celah kebocoran:** baris latih yang targetnya jatuh di periode uji (24 jam terakhir) dibuang.
-- **Nilai hilang pada fitur (keputusan 15 Nov 2026: tanpa *forward fill*):** target yang hilang dibuang, fitur hilang diisi median di dalam *pipeline* per *fold*. Interpolasi tidak dipakai karena melihat nilai sesudahnya. Pada berkas latih, 23 dari 29 fitur masih punya sel kosong, tertinggi `CO` 3,20%.
-- **Dasar keputusan *forward fill*:** pengisian 0, 1, 3, 6, 12, dan 24 jam dibandingkan pada 5 *fold* data latih Tiantan (`TimeSeriesSplit(gap=24)`, Ridge dan `HistGradientBoostingRegressor`). Ridge: RMSE 73,42 sampai 73,49. HGB: 76,81 sampai 77,34, dengan *noise* antar *seed* sekitar 0,6 pada pengaturan yang sama. Tidak ada beda yang bisa dibedakan dari *noise*, jadi dipilih yang paling sederhana. Analisis ini ada di *notebook* bagian 04.6 (tabel `Hasil/Tabel/t2_tabel_ffill.csv`) dan angkanya sama dengan hasil skrip sebelumnya. Pada analisis pertama tanpa *gap*, HGB tampak lebih baik 1,2 tanpa pengisian. Keunggulan itu mengecil menjadi 0,3 setelah *gap* 24 jam dipasang, sehingga alasan tersebut tidak dipakai.
-- **Stasiun uji: Dingling (keputusan 15 Nov 2026, digantikan desain 9/3 pada 16 Nov 2026; analisis ini tetap menjadi bahan memilih stasiun uji).** Dasarnya hanya distribusi PM2.5 data latih yang paling berbeda dari Tiantan (rata-rata 67,0, jarak Wasserstein 15,2, KS 0,115, korelasi per jam 0,80). Pada uji transfer (latih di Tiantan, validasi di stasiun lain, data latih saja), biaya transfer semua stasiun kecil: Dingling +0,33% (Ridge) dan −2,74% (HGB), dalam simpangan baku antar *fold*. Jadi Dingling **tidak terbukti paling sulit**, dan hasil di data uji nanti dilaporkan apa adanya. Perhitungan pilot ini ada di versi *notebook* sebelum 16 Nov 2026 (riwayat git, bagian 04.7). *Notebook* 9/3 tidak memuat uji transfer itu lagi, dan `t2_tabel_transfer.csv` di repo adalah sisa pilot.
+- **Nilai hilang pada fitur (keputusan 15 Nov 2026: tanpa *forward fill*):** target yang hilang dibuang, fitur hilang diisi median di dalam *pipeline* per *fold*. Interpolasi tidak dipakai karena melihat nilai sesudahnya. Pada berkas latih, 23 dari 29 fitur masih punya sel kosong, tertinggi `CO` 4,88%.
+- **Dasar keputusan *forward fill*:** pengisian 0, 1, 3, 6, 12, dan 24 jam dibandingkan pada 5 *fold* data latih 9 stasiun (`TimeSeriesSplit(gap=24)`, Ridge dan `HistGradientBoostingRegressor`). Ridge: RMSE 73,16 sampai 73,23 (beda maksimum 0,07). HGB: 76,93 sampai 77,55 (beda maksimum 0,62), dengan rentang RMSE antar *seed* pada pengaturan yang sama 0,87 di lingkungan lokal dan 0,55 di Colab (beda maksimum antar pengaturan di Colab 0,96). Simpangan baku antar *fold* sekitar 19,7 (Ridge) dan 22 (HGB). Tidak ada beda yang bisa dibedakan dari *noise*, jadi dipilih yang paling sederhana (tanpa *forward fill*). Analisis ini ada di *notebook* bagian 04.6 (tabel `Hasil/Tabel/t2_tabel_ffill.csv`, dari jalan lokal). HGB bergeser sekitar 0,5 sampai 1 poin antar lingkungan, jadi selisih RMSE antar model di bawah itu tidak boleh diklaim.
+- **Stasiun uji: Dingling, Wanliu, Shunyi (keputusan penulis 16 Nov 2026).** Dasarnya jarak Wasserstein PM2.5 terhadap gabungan 11 stasiun lain, hanya dari data sebelum batas waktu: Dingling 14,4 (urutan 1, rata-rata 67,0), Wanliu 5,0 (urutan 6), Shunyi 0,9 (urutan 12). Pada versi pilot (latih di Tiantan, validasi di stasiun lain), biaya transfer semua stasiun kecil dan Dingling **tidak terbukti paling sulit**, jadi hasil di data uji nanti dilaporkan apa adanya. Perhitungan pilot itu ada di riwayat git (bagian 04.7 sebelum 16 Nov 2026), dan `t2_tabel_transfer.csv` adalah sisa pilot.
 - **Belum dikerjakan:** penamaan *notebook* akhir (`D082261018_Muhammad Alif Qadri_ProyekML.ipynb`).
 
 ## Tahap 3. Skema validasi
@@ -69,11 +69,11 @@ Keluaran *notebook*: sembilan grafik di `Hasil/Gambar/`, enam tabel di `Hasil/Ta
 
 ## Tahap 4. *Baseline*
 
-Validasi 5 *fold* pada data latih Tiantan, tanpa menyentuh data uji. Baris validasi yang PM2.5 jam *t*-nya kosong (428 dari 22.865) dibuang karena *naive forecast* tidak bisa memprediksi tanpa nilai itu.
+Validasi 5 *fold* pada data latih 9 stasiun, tanpa menyentuh data uji. Baris validasi yang PM2.5 jam *t*-nya kosong (3.625 dari 205.459) dibuang karena *naive forecast* tidak bisa memprediksi tanpa nilai itu.
 
 | Model | RMSE rata-rata ± sd | MAE rata-rata ± sd |
 |---|---|---|
-| *Naive forecast* (PM2.5 jam *t+24* = PM2.5 jam *t*) | 86,97 ± 25,19 | 59,96 ± 16,96 |
+| *Naive forecast* (PM2.5 jam *t+24* = PM2.5 jam *t*) | 86,82 ± 24,70 | 59,39 ± 16,53 |
 
-- RMSE per *fold* naik turun mengikuti periode (*fold* 1, 3, dan 5 lebih tinggi), jadi simpangan baku yang besar kemungkinan berasal dari beda periode antar *fold* (belum diuji penyebabnya).
+- RMSE per *fold* (101,7 / 62,2 / 103,6 / 57,7 / 108,8) naik turun mengikuti periode (*fold* 1, 3, dan 5 lebih tinggi), jadi simpangan baku yang besar kemungkinan berasal dari beda periode antar *fold* (belum diuji penyebabnya).
 - Ini hasil validasi data latih, bukan data uji. Skor uji dibuka satu kali di akhir.
