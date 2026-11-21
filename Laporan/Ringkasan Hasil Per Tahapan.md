@@ -25,7 +25,7 @@ Keputusan penulis 16 Nov 2026 menggantikan skema "latih di Tiantan, uji di Dingl
 - **Syarat teknis:** *fold* dibuat dari stempel waktu unik, `gap` 24 jam dihitung per jam, dan data tidak dipotong menurut urutan stasiun.
 - **Pemeriksaan data mentah (16 Nov 2026, dari 12 CSV di repo):** setiap stasiun 35.064 baris, rentang waktu identik, tanpa duplikat waktu. Jumlah PM2.5 kosong berbeda antar stasiun (382 di Wanliu sampai 953 di Huairou, seluruh periode).
 - **Dampak:** *notebook* menerapkan desain ini dan dijalankan penuh 21 Nov 2026. Hasil Tahap 2 sampai 4 di bawah dan berkas di `Hasil/Tabel/` (kecuali `t2_tabel_transfer.csv`, sisa pilot) berasal dari jalan itu. Dasar pemilihan Dingling di versi pilot tetap berguna sebagai bahan memilih stasiun uji.
-- **Belum diputuskan:** identitas stasiun sebagai fitur. Desain 9/3 sudah disetujui dosen.
+- **Identitas stasiun tidak dipakai sebagai fitur** (keputusan penulis 16 Nov 2026, dikukuhkan 21 Nov 2026). Alasannya: tiga stasiun uji tidak pernah muncul di data latih, dan validasi 5 *fold* hanya memakai 9 stasiun latih sehingga tidak bisa menilai manfaat fitur ini untuk stasiun baru. Dampaknya pada akurasi di stasiun latih belum diuji. Desain 9/3 sudah disetujui dosen.
 
 ## Tahap 1. Proposal
 
