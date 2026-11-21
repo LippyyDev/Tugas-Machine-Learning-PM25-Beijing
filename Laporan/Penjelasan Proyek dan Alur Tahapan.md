@@ -196,7 +196,7 @@ Angka ini hasil pada data latih (9 stasiun), bukan data uji.
 
 ### Tahap 5. Model lanjutan dan *tuning*
 
-Minimal dua model yang lebih kuat (misalnya *random forest* dan *gradient boosting*), disetel dengan validasi silang pada data latih. Data uji tetap tidak disentuh.
+Minimal satu model yang lebih kuat (misalnya *gradient boosting*), model kedua opsional (perubahan dosen 21 Nov 2026 menurut penulis, panduan tertulis menyebut dua), disetel dengan validasi silang pada data latih. Data uji tetap tidak disentuh.
 
 ### Tahap 6. Evaluasi dan diagnosis
 

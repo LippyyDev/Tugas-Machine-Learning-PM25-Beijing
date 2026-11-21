@@ -16,7 +16,7 @@ Dokumen ini adalah konteks utama untuk mengerjakan tugas dalam mode proyek. Isin
 | Tantangan wajib | (1) nilai hilang pada sensor, (2) validasi berurutan waktu, (3) uji model di stasiun lain (pergeseran distribusi) |
 | Skema validasi | Uji = periode paling akhir tanpa diacak, lalu `TimeSeriesSplit` pada data latih; 9 stasiun latih dan 3 stasiun uji [Usulan LIP 16 Nov 2026, menunggu konfirmasi dosen] |
 | *Baseline* wajib | *Naive forecast* (nilai periode sebelumnya) |
-| Model lanjutan | Minimal 2, dengan *tuning* sistematis |
+| Model lanjutan | Minimal 1, model kedua opsional, dengan *tuning* sistematis. [Perubahan dosen 21 Nov 2026, lisan menurut penulis]: dosen menyatakan panduan tertulis ("minimal dua", hal. struktur *notebook*, Tahap 5, rubrik, dan daftar periksa) keliru. Teks panduan di bawah dibiarkan apa adanya sebagai kutipan |
 | Metrik utama (arah panduan) | RMSE (galat besar merugikan; PM2.5 disebut eksplisit). MAE sebagai pendamping |
 | Bobot | 100% nilai mata kuliah ini |
 | Titik temu kelas | Pertemuan 13 (progres, tidak dinilai terpisah) dan Pertemuan 15 (presentasi akhir) |
@@ -149,7 +149,7 @@ Dosen akan menjalankan ulang dari sel pertama sampai terakhir, jadi urutan harus
 | 02 | Muat data dan EDA: statistik deskriptif, distribusi target, nilai hilang, grafik |
 | 03 | Pembagian data: pisahkan data uji, simpan, jangan disentuh lagi |
 | 04 | *Pipeline* praproses dan *baseline*: hasil *cross-validation* |
-| 05 | Model lanjutan dan *tuning*: minimal dua model, tabel perbandingan |
+| 05 | Model lanjutan dan *tuning*: minimal satu model (kedua opsional, lihat ringkasan di atas), tabel perbandingan |
 | 06 | Diagnosis: *learning curve*, bias dan varians |
 | 07 | Evaluasi final: satu kali pada data uji |
 | 08 | Interpretasi dan analisis kesalahan |
@@ -285,11 +285,11 @@ for m in metrik:
 |---|---|---|---|---|
 | *Naive forecast* (*baseline*) | n/a | 0,___ ± 0,___ | … | … |
 | Model lanjutan 1 | … | 0,___ ± 0,___ | … | … |
-| Model lanjutan 2 (*tuned*) | … | 0,___ ± 0,___ | … | … |
+| Model lanjutan 2 (*tuned*, opsional) | … | 0,___ ± 0,___ | … | … |
 
 ### Tahap 5: Model lanjutan dan *tuning*
 
-- Minimal **dua** model lanjutan dengan alasan kuat untuk data. Pada data tabular, model berbasis pohon (*random forest*, *gradient boosting*) biasanya kandidat terkuat.
+- Minimal **satu** model lanjutan dengan alasan kuat untuk data; model kedua opsional [Perubahan dosen 21 Nov 2026, lisan menurut penulis]. Panduan tertulis menyebut dua. Pada data tabular, model berbasis pohon (*random forest*, *gradient boosting*) biasanya kandidat terkuat.
 - *Tuning* dilakukan dengan *cross-validation* pada data latih. Data uji tetap tidak disentuh.
 - Resampling (jika relevan) harus di dalam `imblearn.pipeline.Pipeline`. (Untuk regresi PM2.5, SMOTE tidak relevan.)
 
@@ -444,7 +444,7 @@ Separuh nilai ada di metodologi: skema validasi, evaluasi, dan analisis.
 | Proposal dan rumusan masalah | 10% | Masalah nyata; target dan metrik dijustifikasi dengan biaya kesalahan | Masalah jelas, justifikasi metrik umum | Masalah kabur atau tanpa metrik |
 | Eksplorasi dan praproses | 10% | EDA bermakna; praproses di dalam *pipeline* | EDA standar; sebagian praproses di luar *pipeline* | EDA minim; praproses bocor |
 | **Skema validasi** | **20%** | Sesuai struktur data, bebas kebocoran, data uji dipakai sekali | Benar tetapi kurang dijustifikasi | Ada kebocoran atau tanpa data uji terpisah |
-| Pemodelan | 15% | *Baseline* + 2 model lanjutan, *tuning* sistematis | Model lengkap, *tuning* seadanya | Tanpa *baseline* atau hanya satu model |
+| Pemodelan | 15% | *Baseline* + 2 model lanjutan (kutipan panduan; menurut dosen cukup 1, model kedua opsional), *tuning* sistematis | Model lengkap, *tuning* seadanya | Tanpa *baseline* atau hanya satu model |
 | **Evaluasi dan diagnosis** | **15%** | Metrik tepat dengan ketidakpastian (± sd), *learning curve*, diagnosis bias dan varians | Metrik tepat tanpa diagnosis | Hanya akurasi pada data tak seimbang |
 | **Analisis kesalahan, interpretasi, etika** | **15%** | Pola kesalahan dan risiko etis dianalisis tajam, dengan mitigasi | Ada analisis tetapi dangkal | Tidak ada analisis |
 | Laporan dan *notebook* | 10% | Rapi, berargumen, referensi memadai, *notebook* dapat dijalankan ulang | Lengkap tetapi kurang rapi | Tidak lengkap atau *notebook* gagal dijalankan |
@@ -480,7 +480,7 @@ Proyek dikerjakan sendiri. Prinsip: **boleh dibantu, wajib paham.**
 - [ ] Skema validasi sesuai struktur data (berurutan waktu) dan alasannya dijelaskan.
 
 **Model dan evaluasi**
-- [ ] Ada satu *baseline* dan minimal dua model lanjutan.
+- [ ] Ada satu *baseline* dan minimal satu model lanjutan (kedua opsional, [Perubahan dosen 21 Nov 2026, lisan menurut penulis]; panduan tertulis menyebut dua).
 - [ ] Metrik utama dijustifikasi dengan biaya kesalahan; akurasi bukan satu-satunya metrik.
 - [ ] Hasil CV dilaporkan sebagai rata-rata ± simpangan baku.
 - [ ] Ada *learning curve* dan diagnosis bias dan varians.
