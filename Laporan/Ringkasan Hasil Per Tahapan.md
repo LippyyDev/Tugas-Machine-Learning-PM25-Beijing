@@ -8,7 +8,7 @@ Berisi inti hasil tiap tahap, diperbarui setiap satu tahap selesai. Rincian leng
 | 2. EDA dan praproses | Selesai, dijalankan penuh 21 Nov 2026 pada desain 9/3 (lokal dan Colab, angka sama). Angka di bawah memakai data latih 9 stasiun |
 | 3. Skema validasi | Desain 9/3 sudah diimplementasikan dan dijalankan 21 Nov 2026 (skema, pengecekan otomatis, alasan, dan keterbatasan ada di *notebook* bagian 03). Penjaga pembukaan data uji ada di bagian 03.3 dan protokol [Usulan, menunggu persetujuan] di `Protokol Evaluasi Data Uji.md`. Penjaga hanya mencegah pembukaan ganda yang tidak disengaja, dan baru teruji saat data uji dibuka. Literatur pendukung: lihat `Proposal/Catatan Verifikasi Referensi.md` (aturan `gap` sama dengan horizon belum punya sumber *peer review* yang terbaca) |
 | 4. *Baseline* | Selesai, hasil validasi 9 stasiun latih (dijalankan 21 Nov 2026) |
-| 5. Model lanjutan dan *tuning* | Selesai sebagian: perbandingan awal 3 keluarga model (6 konfigurasi) dengan *cross-validation* pada data latih 9 stasiun, dijalankan 22 Nov 2026. Eksperimen lanjutan fitur, model, *tuning*, dan transformasi target (05.5) dijalankan 22 Nov 2026: RMSE validasi terendah 71,09, tidak ada di bawah 70. *Tuning* sistematis Ridge dan Elastic Net (05.7) juga dijalankan: aturan memilih Ridge `alpha=1000`, RMSE 72,83, kurva datar. Model final belum dipilih, konfigurasi belum dibeku, data uji belum dibuka |
+| 5. Model lanjutan dan *tuning* | Selesai sebagian. *Notebook* kini memuat dua model: Ridge `alpha=1000` (utama, RMSE 72,83) dan Elastic Net `alpha=1`, `l1_ratio=0,9` (pembanding, 72,26), fitur F1, keputusan penulis 22 Nov 2026. Riwayat eksplorasi: perbandingan awal 3 keluarga model (6 konfigurasi) dengan *cross-validation* pada data latih 9 stasiun, dijalankan 22 Nov 2026. Eksperimen lanjutan fitur, model, *tuning*, dan transformasi target (05.5) dijalankan 22 Nov 2026: RMSE validasi terendah 71,09, tidak ada di bawah 70. *Tuning* sistematis Ridge dan Elastic Net (05.7) juga dijalankan: aturan memilih Ridge `alpha=1000`, RMSE 72,83, kurva datar. Model final belum dipilih, konfigurasi belum dibeku, data uji belum dibuka |
 | 6. Evaluasi dan diagnosis | Belum dikerjakan |
 | 7. Analisis kesalahan dan etika | Belum dikerjakan |
 
@@ -102,7 +102,11 @@ Keluarannya: `Hasil/Tabel/t5_tabel_model_lanjutan.csv`, `t5_tabel_rmse_per_fold.
 - **Keterbatasan:** *tuning* belum sistematis (grid `alpha` tiga nilai dan alpha terbaik ada di tepi grid, `l1_ratio` tetap, *boosting* belum dicari *hyperparameter*-nya). Lima *fold* sedikit. Skor model terpilih dari enam konfigurasi dengan validasi yang sama sedikit optimistis, sehingga bukan kinerja akhir. Dugaan bahwa *boosting* lebih lemah karena data latih *fold* awal sedikit belum diuji.
 - **Berikutnya:** (1) putuskan model yang di-*tuning*, lalu cari *hyperparameter* pada *fold* yang sama tanpa data uji, (2) setujui aturan pemilihan di `Protokol Evaluasi Data Uji.md`, (3) bekukan dan *commit* konfigurasi final, lalu tahap 6.
 
-### Eksperimen lanjutan (bagian 05.5, 22 Nov 2026)
+**Catatan 22 Nov 2026 (keputusan penulis):** *notebook* Tahap 5 sekarang hanya memuat dua model lanjutan linear, Ridge sebagai model utama dan Elastic Net sebagai pembanding, keduanya dengan fitur F1. Bagian eksplorasi lama (perbandingan awal enam konfigurasi, 05.5 eksperimen lanjutan, 05.7 dalam bentuk lama) dikeluarkan dari *notebook*. Angka dan berkas CSV-nya tetap tersimpan sebagai arsip, dan kodenya ada di riwayat Git (*commit* `95c32ad`).
+
+Hasil dua model di *notebook* (*tuning* 20 konfigurasi, 5 *fold*, RMSE rata-rata ± sd): utama Ridge `alpha=1000` 72,83 ± 19,38 (MAE 54,51 ± 13,00), pembanding Elastic Net `alpha=1`, `l1_ratio=0,9` 72,26 ± 19,23 (MAE 54,43 ± 13,31), *naive* 86,82 ± 24,70. Keduanya lebih baik dari *naive* di 5 dari 5 *fold*. Pembanding lebih baik dari utama hanya di 3 dari 5 *fold* (selisih rata-rata −0,57), jadi keduanya setara. Berkas: `Hasil/Tabel/t5_tabel_dua_model.csv` dan `t5_tabel_dua_model_per_fold.csv`. Data uji belum dibuka.
+
+### Eksperimen lanjutan (arsip, dulu bagian 05.5, 22 Nov 2026)
 
 Pertanyaannya: adakah cara menurunkan RMSE validasi dari sekitar 72,5 ke bawah 70 tanpa melanggar aturan validasi? Semua eksperimen memakai *fold*, baris validasi, dan praproses per *fold* yang sama dengan 05.1 (`assert` membandingkan galat *naive*). **Data uji tidak dibuka.** Yang dicoba: ablasi fitur (cuaca dinamis, statistik PM2.5 dan polutan, fitur lintas stasiun), *gradient boosting*, Ridge lalu *boosting* pada residual, *random forest*, *Extra Trees*, *tuning* acak, rata-rata sederhana (bobot sama), dan transformasi target (akar kuadrat dan `log1p`). Jumlahnya sekitar 85 konfigurasi di luar enam konfigurasi 05.1. Langkah 1 dan 2 dirancang sebelum dijalankan, langkah 3 sampai 6 ditentukan setelah melihat hasil langkah sebelumnya (dicatat terbuka di *notebook*).
 
@@ -128,7 +132,7 @@ F2 adalah F1 ditambah 11 fitur cuaca dinamis dan 6 fitur statistik. F3 adalah F2
 
 Keluaran: `Hasil/Tabel/t5_tabel_eksperimen_per_fold.csv`, `t5_tabel_eksperimen_ringkas.csv`, `t5_tabel_tuning.csv`, `t5_tabel_tuning_putaran2.csv`, dan grafik `Hasil/Gambar/t5_02_eksperimen_lanjutan.png`. Mengulang semua eksperimen memakan sekitar 45 menit (`CARI_ULANG=1`), sedangkan bawaan membaca hasil tersimpan.
 
-### Tuning sistematis model linear (bagian 05.7, 22 Nov 2026)
+### Tuning sistematis model linear (bagian 05.1 di *notebook* sekarang, 22 Nov 2026)
 
 Dua kandidat utama (Ridge dan Elastic Net) di-*tuning* dengan grid yang **ditetapkan sebelum dijalankan**: Ridge `alpha` 0,1; 1; 10; 100; 1000 (5 konfigurasi) dan Elastic Net `alpha` 0,01; 0,1; 1; 3; 10 dengan `l1_ratio` 0,1; 0,5; 0,9 (15 konfigurasi). Fitur F1, praproses, *fold*, dan baris validasi sama dengan 05.1 (`assert` galat *naive*). **Data uji tidak dibuka.** Tidak ada peringatan konvergensi.
 

@@ -1,0 +1,4 @@
+Peran,Model,RMSE rata-rata,RMSE sd,MAE rata-rata,MAE sd,Perbaikan RMSE vs naive (%),Fold lebih baik dari naive
+Baseline,Naive forecast,86.82,24.7,59.39,16.53,0.0,n/a
+Utama,Ridge (alpha=1000),72.83,19.38,54.51,13.0,16.11,5 dari 5
+Pembanding,"Elastic Net (alpha=1, l1_ratio=0.9)",72.26,19.23,54.43,13.31,16.76,5 dari 5

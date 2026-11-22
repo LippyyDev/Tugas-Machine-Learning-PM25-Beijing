@@ -15,6 +15,6 @@ Dua belas grafik dari *notebook* (`Notebook/Tahap 2 EDA dan Praproses.ipynb`), s
 | `t3_01_fold_validasi.png` | Skema validasi | Lima *fold* `TimeSeriesSplit` dan posisi data uji |
 | `t4_01_baseline_rmse_per_fold.png` | *Baseline* | RMSE *naive forecast* di tiap *fold* |
 | `t4_02_pemeriksaan_desain.png` | Uji kebocoran | Ringkasan enam pemeriksaan desain 9/3 |
-| `t5_01_rmse_model_lanjutan.png` | Model lanjutan | Rata-rata RMSE ± sd dan nilai tiap *fold* untuk *naive* dan enam konfigurasi model lanjutan (validasi silang, data uji tidak dipakai) |
-| `t5_02_eksperimen_lanjutan.png` | Eksperimen lanjutan | Rata-rata RMSE ± sd dan nilai tiap *fold*: *naive*, Ridge F1, terbaik tanpa fitur lintas stasiun, dan terbaik dengan fitur lintas stasiun, dengan garis 70 |
+| `t5_01_rmse_model_lanjutan.png` | Model lanjutan | Rata-rata RMSE ± sd dan nilai tiap *fold* untuk *naive* dan enam konfigurasi model lanjutan (validasi silang, data uji tidak dipakai) (arsip, tidak dibuat ulang oleh *notebook* saat ini) |
+| `t5_02_eksperimen_lanjutan.png` | Eksperimen lanjutan | Rata-rata RMSE ± sd dan nilai tiap *fold*: *naive*, Ridge F1, terbaik tanpa fitur lintas stasiun, dan terbaik dengan fitur lintas stasiun, dengan garis 70 (arsip, tidak dibuat ulang oleh *notebook* saat ini) |
 | `t5_03_tuning_linear.png` | *Tuning* model linear | Rata-rata RMSE validasi silang Ridge dan Elastic Net terhadap `alpha` (skala log) untuk tiga nilai `l1_ratio`, dengan garis *naive* |

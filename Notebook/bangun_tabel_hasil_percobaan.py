@@ -119,16 +119,15 @@ def tabel_md(kolom, baris_fn, judul_kolom):
         out.append("| " + " | ".join(baris_fn(r)) + " |")
     return "\n".join(out)
 
-A = tabel_md(None, lambda r: [str(r["Peringkat"]), r["Konfigurasi"], r["Fitur"], f'{r["Tingkat kesulitan"]} ({r["Skor kesulitan"]})', c(r["RMSE rata-rata"]), c(r["RMSE sd"]),
-                              c(r["MSE rata-rata"], 0), c(r["MAE rata-rata"]), c(r["MAE sd"]),
-                              c(r["Perbaikan vs naive (%)"], 1), f'{r["Fold lebih baik dari naive"]} dari 5',
-                              f'{c(r["Selisih vs Ridge alpha=1"])} ({c(r["sd selisih vs Ridge"])})',
-                              f'{r["Fold lebih baik dari Ridge alpha=1"]} dari 5', r["Sumber"]],
-             ["No", "Konfigurasi", "Fitur", "Kesulitan (skor)", "RMSE", "sd RMSE", "MSE", "MAE", "sd MAE", "Perbaikan vs *naive* (%)",
-              "*Fold* lebih baik dari *naive*", "Selisih RMSE vs Ridge `alpha=1` (sd selisih)", "*Fold* lebih baik dari Ridge", "Sumber"])
-B = tabel_md(None, lambda r: [str(r["Peringkat"]), r["Konfigurasi"]] + [c(r[f"RMSE fold {i}"], 1) for i in range(1, 6)],
-             ["No", "Konfigurasi", "*Fold* 1", "*Fold* 2", "*Fold* 3", "*Fold* 4", "*Fold* 5"])
+def beri_peran(r):
+    k = r["Konfigurasi"] + ("" if pd.isna(r["Fitur"]) else "")
+    if r["Konfigurasi"] == "Ridge (alpha=1000)" and r["Fitur"].startswith("F1 (29"): return "**Ridge (alpha=1000), model utama**"
+    if r["Konfigurasi"] == "Elastic Net (alpha=1, l1_ratio=0,9)" and r["Fitur"].startswith("F1 (29"): return "**Elastic Net (alpha=1, l1_ratio=0,9), pembanding**"
+    return r["Konfigurasi"]
 
+A = tabel_md(None, lambda r: [str(r["Peringkat"]), beri_peran(r), "" if pd.isna(r["Fitur"]) else r["Fitur"], c(r["RMSE rata-rata"]), c(r["RMSE sd"]),
+                              c(r["MAE rata-rata"]), c(r["Perbaikan vs naive (%)"], 1), f'{r["Fold lebih baik dari naive"]} dari 5'],
+             ["No", "Konfigurasi", "Fitur", "RMSE", "sd RMSE", "MAE", "Perbaikan vs *naive* (%)", "*Fold* lebih baik dari *naive*"])
 
 rt = df_penuh[df_penuh["Konfigurasi"] != "*Naive forecast*"].groupby("Tingkat kesulitan").agg(n=("Konfigurasi", "size"), terbaik=("RMSE rata-rata", "min"), median=("RMSE rata-rata", "median"), terburuk=("RMSE rata-rata", "max"))
 RT = "| Tingkat | Jumlah konfigurasi | RMSE terbaik | RMSE median | RMSE terburuk |\n|---|---|---|---|---|\n" + "\n".join(
@@ -138,54 +137,26 @@ sulit = df_penuh[df_penuh["Tingkat kesulitan"] == "4 Sangat sulit"]["RMSE rata-r
 
 md = f"""# Tabel Hasil Percobaan Tahap 5
 
-Semua percobaan model lanjutan pada validasi silang `TimeSeriesSplit(n_splits=5, gap=24)` di data latih 9 stasiun, diurutkan dari RMSE rata-rata terendah (terbaik) ke tertinggi (terburuk).
+Percobaan model lanjutan pada validasi silang `TimeSeriesSplit(n_splits=5, gap=24)` di data latih 9 stasiun, urut dari RMSE rata-rata terendah. Tabel hanya memuat konfigurasi yang dilatih langsung pada 9 stasiun dengan *fold*, baris validasi, dan praproses per *fold* yang sama dengan *naive forecast*, dan hanya tingkat kesulitan 1 (Mudah) atas permintaan penulis (22 Nov 2026). **Data uji tidak dibuka.** Dua model yang dipakai di *notebook* Tahap 5 ditebalkan.
 
-**Kriteria masuk tabel:** model dijalankan dan dilatih langsung pada data latih 9 stasiun yang digabung, dengan *fold*, baris validasi, dan praproses per *fold* yang sama dengan *naive forecast*, sehingga punya nilai RMSE di kelima *fold*. **Hanya tingkat kesulitan 1 (Mudah) yang dimasukkan** atas permintaan penulis (22 Nov 2026); tingkat 2 (Sedang), 3 (Sulit), dan 4 (Sangat sulit) tidak ditampilkan. Konfigurasi *tuning* acak yang hanya tercatat rata-rata dan simpangan baku (tanpa nilai tiap *fold*) tidak dimasukkan. Catatannya tetap ada di `Hasil/Tabel/t5_tabel_tuning.csv` dan `t5_tabel_tuning_putaran2.csv`. **Data uji tidak dibuka.** Angka berasal dari eksekusi `Notebook/Tahap 2 EDA dan Praproses.ipynb` (bagian 05.1, 05.5, dan 05.7) dan digabung oleh `Notebook/bangun_tabel_hasil_percobaan.py` dari CSV di `Hasil/Tabel/`. Berkas CSV gabungan: `Hasil/Tabel/t5_tabel_semua_eksperimen.csv`.
-
-## Cara membaca
-
-* **RMSE** adalah rata-rata RMSE dari 5 *fold* (µg/m³, makin kecil makin baik). **sd RMSE** adalah simpangan baku RMSE antar 5 *fold* (n minus 1), yaitu sebaran kesulitan antar periode, bukan ketidakpastian rata-rata.
-* **MSE** adalah rata-rata dari RMSE kuadrat di tiap *fold* (jadi bukan kuadrat dari RMSE rata-rata). **MAE** dan **sd MAE** dihitung dengan cara yang sama seperti RMSE.
-* **Perbaikan vs *naive*** memakai RMSE *naive forecast* 86,82. **Selisih vs Ridge `alpha=1`** dihitung berpasangan per *fold* (negatif berarti lebih baik dari Ridge), dengan simpangan baku selisih di dalam kurung.
-* **Periode validasi tiap *fold*:** *fold* 1 2013-09-11 sampai 2014-03-25, *fold* 2 sampai 2014-10-05, *fold* 3 sampai 2015-04-18, *fold* 4 sampai 2015-10-30, *fold* 5 sampai 2016-05-11. *Fold* 1, 3, dan 5 lebih sulit (RMSE *naive* 101,7; 103,6; 108,8).
-* **Fitur:** F1 adalah 29 fitur awal, F2 menambah 11 fitur cuaca dinamis dan 6 fitur statistik, F3 menambah 4 fitur **lintas stasiun** (rata-rata stasiun latih lain pada jam yang sama). F3 mengubah aturan di bagian 01 dan keputusan memakainya ada pada penulis.
-
-## Peringatan
-
-1. Selisih antar hampir semua konfigurasi jauh di bawah sd RMSE antar *fold* (sekitar 19), jadi urutan di tabel **tidak berarti** bahwa peringkat yang berdekatan berbeda nyata.
-2. Skor terbaik dipilih dari puluhan konfigurasi pada lima *fold* yang sama, sehingga optimistis dan bukan kinerja akhir. Kinerja akhir hanya dari data uji, satu kali.
-3. Langkah 3 sampai 6 di bagian 05.5 ditentukan setelah melihat hasil langkah sebelumnya. Grid 05.7 ditetapkan sebelum dijalankan.
-4. Baris yang sama di beberapa bagian (misalnya Ridge `alpha=1`) digabung, kolom Sumber menunjukkan asalnya. Nilai per *fold* di bagian 05.1 dibulatkan dua desimal di berkasnya.
-
-## Tingkat kesulitan
-
-Kolom "Kesulitan (skor)" di Tabel 1 menilai seberapa sulit konfigurasi itu **diimplementasikan, dijalankan, dan dipertanggungjawabkan**. Rubrik ini **[Usulan]**, dibuat dari struktur konfigurasi saja dan **tidak memakai hasil RMSE**, jadi tidak ada pengaruh dari peringkat. Skor adalah jumlah lima komponen:
-
-| Komponen | Skor | Alasan kesulitan |
-|---|---|---|
-| Jenis model | *Naive* 0, linear (Ridge, Elastic Net) 1, pohon atau *boosting* (*gradient boosting*, HGB, *random forest*, *Extra Trees*) 3 | Linear tinggal satu pemanggilan dan koefisiennya bisa dibaca. Model pohon memiliki banyak hiperparameter, hubungannya nonlinear sehingga sulit dijelaskan per fitur, lebih lambat dilatih, dan hasilnya peka pada seed. |
-| Komposisi | Tunggal 0, dua model (rata-rata atau dua tahap) 1, tiga model atau lebih 2 | Setiap model tambahan perlu dilatih per *fold*, prediksinya disimpan dan digabung, dan satu kesalahan di satu model memengaruhi semuanya. |
-| Fitur | F1 0, F2 1, F3 2 | F2 memerlukan fitur turunan baru (angin u dan v, hujan kumulatif, statistik mingguan) beserta uji kebocoran. F3 memerlukan penggabungan deret antar stasiun (rata-rata stasiun lain, tanpa stasiun itu sendiri), mengubah aturan bagian 01, dan di data uji harus diisi dari 9 stasiun latih. |
-| *Tuning* | Tanpa pencarian 0, hasil pencarian acak 2 | Perlu pencarian beberapa hiperparameter, pemilihan jumlah iterasi dari kurva rata-rata 5 *fold*, dan waktu komputasi besar (mengulang seluruh eksperimen sekitar 45 menit pada 2 inti CPU). Skor terpilihnya juga lebih optimistis. |
-| Transformasi target | Tidak ada 0, akar kuadrat atau `log1p` 1 | Prediksi harus dikembalikan ke skala asli, dan koreksi bias bisa diperlukan (di sini tidak dikoreksi). |
-
-Tingkat dari skor: **1 Mudah** (0 sampai 1), **2 Sedang** (2 sampai 3), **3 Sulit** (4 sampai 6), **4 Sangat sulit** (7 atau lebih). Contoh: Ridge dengan F1 skor 1 (Mudah), Ridge dengan F3 skor 3 (Sedang), *random forest* bawaan dengan F3 skor 5 (Sulit), Ridge + *random forest* hasil *tuning* dengan F3 skor 8 (Sangat sulit).
-
-Hubungan kesulitan dan hasil, dihitung **sebelum** {N_DIKELUARKAN} konfigurasi tingkat 2 sampai 4 dikeluarkan dari tabel, tanpa *naive forecast* (nilai per *fold*-nya tetap ada di `Hasil/Tabel/t5_tabel_eksperimen_per_fold.csv` dan semuanya tetap dicatat di *notebook* bagian 05.5):
-
-{RT}
-
-Tingkat 2 sampai 4 **tidak tampil di Tabel 1 dan 2**, tetapi angkanya perlu disebut agar pembaca tidak mengira tidak ada yang lebih baik: model tingkat 1 terbaik (selain *naive*) mendapat RMSE {c(mudah)}, sedangkan tingkat 4 terbaik {c(sulit)}. Naiknya kesulitan implementasi dari tingkat 1 ke tingkat 4 hanya menurunkan RMSE sekitar {c(mudah - sulit)} (sekitar {c(100 * (mudah - sulit) / mudah, 1)}%), jauh di bawah simpangan baku antar *fold* (sekitar 19), dan sebagian dari selisih itu masih optimisme pemilihan dari banyak konfigurasi. Ini alasan memilih model yang mudah dijelaskan dan dipertanggungjawabkan: ongkos implementasi, risiko kebocoran, dan beban penjelasannya jauh lebih besar daripada perbaikan yang didapat.
-
-Keterbatasan rubrik: bobot skor adalah usulan dan bukan standar baku, dan skor tidak mengukur waktu latih tiap model (waktu per model tidak diukur terpisah).
-
-## Tabel 1. Ringkasan, urut dari terbaik ke terburuk ({len(df)} konfigurasi)
+## Tabel ({len(df)} konfigurasi)
 
 {A}
 
-## Tabel 2. RMSE tiap *fold*, urutan sama dengan Tabel 1
+## Cara membaca
 
-{B}
+* **RMSE** dan **MAE** adalah rata-rata 5 *fold* (µg/m³, makin kecil makin baik). **sd RMSE** adalah simpangan baku antar *fold*, yaitu sebaran kesulitan antar periode. Perbaikan dihitung terhadap RMSE *naive forecast* 86,82.
+* Selisih antar hampir semua konfigurasi jauh di bawah sd RMSE (sekitar 19), jadi urutan **tidak berarti** peringkat yang berdekatan berbeda nyata.
+* Skor dipilih dari puluhan konfigurasi pada lima *fold* yang sama, sehingga optimistis dan bukan kinerja akhir. Kinerja akhir hanya dari data uji, satu kali.
+* Tingkat kesulitan memakai rubrik **[Usulan]** dari struktur konfigurasi saja, tanpa melihat RMSE (lihat kolom skor di `Hasil/Tabel/t5_tabel_semua_eksperimen.csv`). Tingkat 1 berarti *naive* atau model linear (Ridge, Elastic Net) dengan F1 atau F1 ditambah satu kelompok fitur, tanpa penggabungan model, *tuning* acak, atau transformasi target.
+
+## Yang tidak ditampilkan
+
+Konfigurasi tingkat 2 sampai 4 ({N_DIKELUARKAN} konfigurasi) dikeluarkan dari tabel. Ringkasannya, dihitung sebelum dikeluarkan:
+
+{RT}
+
+RMSE terbaik tingkat 1 (selain *naive*) adalah {c(mudah)}, sedangkan tingkat 4 terbaik {c(sulit)}. Selisih sekitar {c(mudah - sulit)} ({c(100 * (mudah - sulit) / mudah, 1)}%) jauh di bawah sd antar *fold*, jadi model yang lebih sulit tidak sepadan dengan beban implementasi dan penjelasannya. Nilai per *fold* semuanya ada di `Hasil/Tabel/t5_tabel_eksperimen_per_fold.csv`, dan tabel lengkap tiap *fold* untuk yang tampil ada di `Hasil/Tabel/t5_tabel_semua_eksperimen.csv`.
 """
 open(os.path.join(AKAR, "Laporan", "Tabel Hasil Percobaan Tahap 5.md"), "w", encoding="utf-8").write(md)
 print("baris tabel:", len(df))
