@@ -185,19 +185,22 @@ svg .fade{transition:opacity .45s ease}
     <div class="blk" id="b1"><span class="lbl">01 · Ridge dan Elastic Net</span>
       <p><b>Ridge</b> adalah model linear yang <b>mengecilkan semua bobot</b> fitur, tetapi tidak ada yang jadi nol.</p>
       <p style="margin-top:12px"><b>Elastic Net</b> sama, tetapi bisa <b>membuat bobot fitur yang tidak berguna menjadi nol</b>.</p></div>
-    <div class="blk" id="b2"><span class="lbl">02 · Diuji Sama Seperti <em>Naive</em></span>
+    <div class="blk" id="b2"><span class="lbl">02 · Apa Itu <em>Tuning</em></span>
+      <p><b><em>Tuning</em></b> adalah mencoba beberapa nilai pengaturan (<b>hiperparameter</b>) model, lalu memilih yang RMSE-nya paling rendah.</p>
+      <p style="margin-top:12px"><b>Ridge</b> punya satu pengaturan: <em>alpha</em>. <b>Elastic Net</b> punya dua: <em>alpha</em> dan <em>l1_ratio</em>.</p></div>
+    <div class="blk" id="b3"><span class="lbl">03 · Nilai yang Dicoba</span>
+      <p>Daftar nilai ditetapkan <b>sebelum</b> dijalankan: Ridge 5, Elastic Net 15, total <b>20 pengaturan</b>. Tiap pengaturan diuji di 5 <em>fold</em>, dan dipilih yang RMSE rata-ratanya paling rendah.</p></div>
+    <div class="blk" id="b4"><span class="lbl">04 · Diuji Sama Seperti <em>Naive</em></span>
       <p>Lima <em>fold</em>, baris yang dinilai, dan praproses sama dengan <em>naive forecast</em>, jadi angkanya bisa dibandingkan langsung. <b>Data uji tidak dibuka.</b> Bedanya, kedua model dilatih dan pengaturannya dipilih di <em>fold</em> yang sama, sehingga skornya sedikit optimistis.</p></div>
-    <div class="blk" id="b3"><span class="lbl">03 · Apa yang Disetel (<em>Tuning</em>)</span>
-      <p>Pengaturan model disebut <b>hiperparameter</b>. Ridge punya satu, <em>alpha</em> (kekerasan &ldquo;rem&rdquo; pada bobot). Elastic Net punya dua, <em>alpha</em> dan <em>l1_ratio</em> (seberapa kuat ia membuang fitur). Daftar nilainya ditetapkan sebelum dijalankan: <b>5 + 15 = 20 pengaturan</b>. Dipilih yang RMSE rata-rata 5 <em>fold</em>-nya paling rendah.</p></div>
-    <div class="blk" id="b4"><span class="lbl">04 · Hasil <em>Tuning</em></span>
+    <div class="blk" id="b5"><span class="lbl">05 · Hasil <em>Tuning</em></span>
       <p>Kurvanya <b>hampir datar</b>: RMSE Ridge hanya bergeser 72,83 sampai 72,94 untuk <em>alpha</em> 0,1 sampai 1000, jadi hasil tidak bergantung pada angka <em>alpha</em>. Terpilih Ridge <em>alpha</em> 1000 (utama) dan Elastic Net <em>alpha</em> 1, <em>l1_ratio</em> 0,9 (pembanding).</p></div>
-    <div class="blk" id="b5"><span class="lbl">05 · RMSE di Lima <em>Fold</em></span>
+    <div class="blk" id="b6"><span class="lbl">06 · RMSE di Lima <em>Fold</em></span>
       <p>Di <b>setiap <em>fold</em></b>, Ridge dan Elastic Net lebih rendah dari <em>naive</em>. Rata-rata lima <em>fold</em>: <em>naive</em> <b>86,82</b>, Ridge <b>72,83</b>, Elastic Net <b>72,26</b>.</p></div>
-    <div class="blk" id="b6"><span class="lbl">06 · Total RMSE, MAE, dan Selisihnya</span>
+    <div class="blk" id="b7"><span class="lbl">07 · Total RMSE, MAE, dan Selisihnya</span>
       <p>Dibanding <em>naive</em>, RMSE turun <b>13,99</b> (Ridge) dan <b>14,56</b> (Elastic Net), yaitu sekitar <b>16%</b>. MAE turun <b>4,88</b> dan <b>4,96</b>, sekitar <b>8%</b>. Persentasenya berbeda karena RMSE lebih peka pada galat besar daripada MAE.</p></div>
-    <div class="blk" id="b7"><span class="lbl">07 · Kedua Model Setara</span>
+    <div class="blk" id="b8"><span class="lbl">08 · Kedua Model Setara</span>
       <p>Selisih kedua model hanya <b>0,57</b>, jauh di bawah sebaran antar <em>fold</em> (sekitar 19), dan Elastic Net lebih baik di 3 dari 5 <em>fold</em> saja. Jadi keduanya <b>setara</b>, dan skor validasi tidak bisa menentukan pemenang.</p></div>
-    <div class="blk" id="b8"><span class="lbl">08 · Kenapa Ridge Utama</span>
+    <div class="blk" id="b9"><span class="lbl">09 · Kenapa Ridge Utama</span>
       <p>Karena skor tidak bisa memilih, dipakai aturan yang <b>ditetapkan sebelum hasil keluar</b>: bila selisih kurang dari satu sebaran <em>fold</em>, ambil model yang lebih sederhana, yaitu <b>Ridge</b>. Elastic Net tetap jadi pembanding untuk menguji apakah membuang fitur membantu. Ini aturan kerja, <b>bukan klaim</b> Ridge lebih akurat.</p></div>
   </div>
 
@@ -209,6 +212,7 @@ svg .fade{transition:opacity .45s ease}
     </div>
     <div class="vwrap">
       <div class="view" id="v-model"><svg class="vz" id="svg-model" viewBox="0 0 942 526"></svg></div>
+      <div class="view" id="v-konsep"><svg class="vz" id="svg-konsep" viewBox="0 0 942 526"></svg></div>
       <div class="view" id="v-aturan"><svg class="vz" id="svg-aturan" viewBox="0 0 942 526"></svg></div>
       <div class="view" id="v-grid"><svg class="vz" id="svg-grid" viewBox="0 0 942 526"></svg></div>
       <div class="view" id="v-tuning"><svg class="vz" id="svg-tuning" viewBox="0 0 942 526"></svg></div>
@@ -311,7 +315,7 @@ const mKnob=mk('circle',{cx:MX0,cy:MY,r:9,fill:'#0a0b10',stroke:AMB,'stroke-widt
 tx(gM,'lemah',[MX0,506],14,'#c4c7d4',{'font-family':SANS}); tx(gM,'kuat',[MX1,506],14,'#c4c7d4',{'text-anchor':'end','font-family':SANS});
 tx(gM,'garis putus = bobot tanpa rem · batang = setelah dikecilkan',[MX1,452],12,GREY,{'text-anchor':'end'});
 tx(gM,'ilustrasi cara kerja, bukan bobot sebenarnya',[471,506],13,AMB,{'text-anchor':'middle'});
-const alphaAt=ms=>{ const u=(ms/1000)%9, sm=x=>x*x*(3-2*x);
+const alphaAt=ms=>{ const u=(Math.max(0,ms)/1000)%9, sm=x=>x*x*(3-2*x);
   if(u<1) return 0; if(u<4.5) return sm((u-1)/3.5); if(u<5.5) return 1; return 1-sm((u-5.5)/3.5); };
 function drawAnim(a){
   CARD0.forEach(c=>{ let n=0;
@@ -499,20 +503,58 @@ ALS.forEach((r,i)=>{
 const gAN=fade(s7); G7.push(gAN);
 tx(gAN,'Label utama dan pembanding adalah aturan kerja, bukan klaim bahwa Ridge lebih akurat.',[471,500],16,AMB,{'text-anchor':'middle','font-family':SANS,'font-weight':500});
 
+
+/* ═════════ V8: apa itu tuning (animasi otomatis, angka RMSE Ridge asli) ═════════ */
+const sk=$('#svg-konsep'); const G8=[];
+const gk0=fade(sk); G8.push(gk0);
+mk('rect',{x:24,y:16,width:894,height:62,fill:'#07080b',stroke:'rgba(255,255,255,.14)'},gk0);
+tx(gk0,'TUNING',[44,38],12,GREY,{'letter-spacing':'.14em'});
+tx(gk0,'coba beberapa nilai pengaturan  →  pilih yang RMSE-nya paling rendah',[44,64],21,'#f1f2f6',{'font-family':SANS,'font-weight':500});
+const gk1=fade(sk); G8.push(gk1);
+[{x:24,col:BLUE,nm:'Ridge',n:'1 pengaturan',l:[['alpha','kekuatan "rem" pada bobot']]},
+ {x:488,col:LIGHT,nm:'Elastic Net',n:'2 pengaturan',l:[['alpha','kekuatan "rem" pada bobot'],['l1_ratio','0 = seperti Ridge, 1 = banyak membuang fitur']]}].forEach(c=>{
+  mk('rect',{x:c.x,y:92,width:430,height:134,fill:'#07080b',stroke:'rgba(255,255,255,.14)'},gk1);
+  tx(gk1,c.nm,[c.x+20,124],26,'#f1f2f6',{'font-family':SANS,'font-weight':600}); tx(gk1,c.n,[c.x+410,122],14,c.col,{'text-anchor':'end'});
+  c.l.forEach((r,k)=>{ tx(gk1,r[0],[c.x+20,160+k*34],18,c.col,{'font-weight':600}); tx(gk1,r[1],[c.x+112,160+k*34],r[1].length>30?13:15,'#c4c7d4',{'font-family':SANS}); });
+});
+const gk2=fade(sk); G8.push(gk2);
+tx(gk2,'CONTOH: MENYETEL ALPHA PADA RIDGE (RMSE RATA-RATA 5 FOLD, ANGKA ASLI)',[24,262],12,GREY,{'letter-spacing':'.1em'});
+const TC=[['0,1','72,94'],['1','72,94'],['10','72,94'],['100','72,93'],['1000','72,83']];
+const kChip=[],kFold=[],kVal=[],kTag=[];
+TC.forEach((c,i)=>{ const x=34+i*178;
+  kChip.push(mk('rect',{x:x,y:282,width:150,height:54,fill:'#0b0c11',stroke:'rgba(255,255,255,.22)','stroke-width':1},gk2));
+  tx(gk2,'alpha',[x+75,302],12,GREY,{'text-anchor':'middle'}); tx(gk2,c[0],[x+75,326],22,'#f1f2f6',{'text-anchor':'middle'});
+  const fs=[]; for(let f=0;f<5;f++) fs.push(mk('rect',{x:x+15+f*25,y:352,width:20,height:12,fill:'rgba(255,255,255,.1)'},gk2)); kFold.push(fs);
+  tx(gk2,'5 fold',[x+75,386],12,GREY,{'text-anchor':'middle'});
+  kVal.push(tx(gk2,c[1],[x+75,424],26,'#f1f2f6',{'text-anchor':'middle','font-weight':500,opacity:0}));
+  kTag.push(tx(gk2,'terendah',[x+75,448],14,AMB,{'text-anchor':'middle',opacity:0}));
+});
+const kSt=tx(gk2,'',[471,496],17,'#c4c7d4',{'text-anchor':'middle','font-family':SANS});
+function drawTune(ms){ const u=(Math.max(0,ms)/1000)%9.4, per=1.1;
+  const act=Math.min(4,Math.floor(u/per)), done=u>=5*per;
+  TC.forEach((c,i)=>{ const st=done?2:(i<act?2:(i===act?1:0)), sel=done&&i===4;
+    kChip[i].setAttribute('stroke',sel?AMB:(st===1?BLUE:'rgba(255,255,255,.22)')); kChip[i].setAttribute('stroke-width',(sel||st===1)?2.4:1);
+    const prog=st===2?5:(st===1?Math.min(5,Math.floor(((u-act*per)/(per*0.8))*5)):0);
+    kFold[i].forEach((r,f)=>r.setAttribute('fill',f<prog?(sel?AMB:BLUE):'rgba(255,255,255,.1)'));
+    kVal[i].setAttribute('opacity',st===2?1:0); kTag[i].setAttribute('opacity',sel?1:0); });
+  kSt.textContent=done?'RMSE paling rendah di alpha 1000, maka alpha 1000 dipilih (selisihnya sangat kecil)':(act<5?'menguji alpha = '+TC[act][0]+' di 5 fold…':''); }
+function startTune(){ const my=runId,t0=performance.now(); const loop=n=>{ if(my!==runId)return; drawTune(n-t0); requestAnimationFrame(loop); }; drawTune(0); requestAnimationFrame(loop); }
+
 /* ═════════ Langkah ═════════ */
-const FIG=['Gambar 22 · Ridge dan Elastic Net','Gambar 23 · Aturan uji sama dengan naive','Gambar 24 · Yang disetel dan cara memilih','Gambar 25 · Hasil tuning','Gambar 26 · RMSE tiap fold dan rata-rata','Gambar 27 · Total RMSE, MAE, dan selisih','Gambar 28 · Selisih kedua model','Gambar 29 · Alasan memilih Ridge sebagai model utama'];
-const VIEWS=['v-model','v-aturan','v-grid','v-tuning','v-hasil','v-total','v-setara','v-alasan'];
-const GRP=[G0,G1,G2,G3,G4,G5,G6,G7];
-function setView(i){ $$('.view').forEach(v=>v.classList.toggle('on',v.id===VIEWS[i])); $('#fig').innerHTML=FIG[i].replace(/^(Gambar \d+)/,'<b>$1</b>'); tipOff(); play(GRP[i], [150,170,170,160,90,260,160,230][i]); }
+const FIG=['Gambar 22 · Ridge dan Elastic Net','Gambar 23 · Apa itu tuning','Gambar 24 · Yang disetel dan cara memilih','Gambar 25 · Aturan uji sama dengan naive','Gambar 26 · Hasil tuning','Gambar 27 · RMSE tiap fold dan rata-rata','Gambar 28 · Total RMSE, MAE, dan selisih','Gambar 29 · Selisih kedua model','Gambar 30 · Alasan memilih Ridge sebagai model utama'];
+const VIEWS=['v-model','v-konsep','v-grid','v-aturan','v-tuning','v-hasil','v-total','v-setara','v-alasan'];
+const GRP=[G0,G8,G2,G1,G3,G4,G5,G6,G7];
+function setView(i){ $$('.view').forEach(v=>v.classList.toggle('on',v.id===VIEWS[i])); $('#fig').innerHTML=FIG[i].replace(/^(Gambar \d+)/,'<b>$1</b>'); tipOff(); play(GRP[i], [150,230,170,170,160,90,260,160,230][i]); }
 const STEPS=[
   ()=>{ blocks(0); setView(0); startAnim(); readoutNow('Model lanjutan','2 <span class="u">linear</span>'); caption('Saat &ldquo;rem&rdquo; makin kuat, <b>Ridge</b> mengecilkan semua bobot tetapi semuanya tetap dipakai, sedangkan <b>Elastic Net</b> membuat bobot kecil menjadi nol.'); },
-  ()=>{ blocks(1); setView(1); readoutNow('Aturan uji','sama <span class="u">dgn naive</span>'); caption('Syarat perbandingan yang adil. Satu perbedaan perlu diakui: pengaturan dipilih di <em>fold</em> yang sama dengan yang dilaporkan.'); },
+  ()=>{ blocks(1); setView(1); startTune(); readoutNow('Tuning','coba lalu <span class="u">pilih</span>'); caption('<b>Tuning</b>: tiap nilai diuji di 5 <em>fold</em>, lalu dipilih yang RMSE-nya paling rendah. Animasi memakai angka RMSE Ridge yang asli.'); },
   ()=>{ blocks(2); setView(2); readoutNow('Pengaturan','20 <span class="u">diuji</span>'); caption('Nilai yang dicoba ditetapkan <b>sebelum</b> dijalankan. Kuning = yang akhirnya terpilih karena RMSE rata-rata 5 <em>fold</em>-nya paling rendah.'); },
-  ()=>{ blocks(3); setView(3); readoutNow('RMSE terbaik','72,26 <span class="u">µg/m³</span>'); caption('Semua titik jauh di bawah garis <em>naive</em> dan hampir datar. <em>alpha</em> yang terlalu besar baru merugikan Elastic Net (di kanan).'); },
-  ()=>{ blocks(4); setView(4); readoutNow('Rata-rata 5 fold','86,82 · 72,83 · 72,26'); caption('Di <b>setiap</b> <em>fold</em>, kedua model lebih rendah dari <em>naive</em>. Kolom terakhir adalah rata-rata lima <em>fold</em>.'); },
-  ()=>{ blocks(5); setView(5); readoutNow('RMSE turun','13,99 · 14,56'); caption('Panjang batang = nilai rata-rata. Angka kuning = berapa turun dari <em>naive</em>. Perbaikan RMSE sekitar <b>16%</b>, MAE sekitar <b>8%</b>.'); },
-  ()=>{ blocks(6); setView(6); readoutNow('Selisih rata-rata','0,57 <span class="u">µg/m³</span>'); caption('Selisihnya sangat kecil dibanding sebaran antar <em>fold</em>, jadi dua model ini <b>setara</b>. Skor validasi tidak bisa menentukan pemenangnya.'); },
-  ()=>{ blocks(7); setView(7); readoutNow('Model utama','Ridge'); caption('Pemilihan memakai <b>aturan yang dibuat sebelum melihat hasil</b>, bukan memilih angka yang kebetulan lebih bagus.'); }
+  ()=>{ blocks(3); setView(3); readoutNow('Aturan uji','sama <span class="u">dgn naive</span>'); caption('Syarat perbandingan yang adil. Satu perbedaan perlu diakui: pengaturan dipilih di <em>fold</em> yang sama dengan yang dilaporkan.'); },
+  ()=>{ blocks(4); setView(4); readoutNow('RMSE terbaik','72,26 <span class="u">µg/m³</span>'); caption('Semua titik jauh di bawah garis <em>naive</em> dan hampir datar. <em>alpha</em> yang terlalu besar baru merugikan Elastic Net (di kanan).'); },
+  ()=>{ blocks(5); setView(5); readoutNow('Rata-rata 5 fold','86,82 · 72,83 · 72,26'); caption('Di <b>setiap</b> <em>fold</em>, kedua model lebih rendah dari <em>naive</em>. Kolom terakhir adalah rata-rata lima <em>fold</em>.'); },
+  ()=>{ blocks(6); setView(6); readoutNow('RMSE turun','13,99 · 14,56'); caption('Panjang batang = nilai rata-rata. Angka kuning = berapa turun dari <em>naive</em>. Perbaikan RMSE sekitar <b>16%</b>, MAE sekitar <b>8%</b>.'); },
+  ()=>{ blocks(7); setView(7); readoutNow('Selisih rata-rata','0,57 <span class="u">µg/m³</span>'); caption('Selisihnya sangat kecil dibanding sebaran antar <em>fold</em>, jadi dua model ini <b>setara</b>. Skor validasi tidak bisa menentukan pemenangnya.'); },
+  ()=>{ blocks(8); setView(8); readoutNow('Model utama','Ridge'); caption('Pemilihan memakai <b>aturan yang dibuat sebelum melihat hasil</b>, bukan memilih angka yang kebetulan lebih bagus.'); }
 ];
 function RESET_HOOK(){ $$('.copy .blk').forEach(b=>b.classList.remove('show','active','seen','old')); $$('.view').forEach(v=>v.classList.remove('on')); }
 

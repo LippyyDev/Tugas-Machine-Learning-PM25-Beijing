@@ -24,7 +24,7 @@ Maju di langkah terakhir pindah ke slide berikutnya, mundur di langkah pertama k
 | 3 | Tahap 2: eksplorasi dan praproses | 2,5 | 6 | 12 × 35.064 = 420.768 baris, satu baris latihan dengan 29 fitur, aturan fitur (aman atau bocor), EDA, nilai hilang, alur praproses | Tahap 2 |
 | 4 | Tahap 3: skema validasi | 2,5 | 6 | Berurutan lawan acak, lima *fold*, *gap* 24 jam, praproses di dalam *pipeline*, 9 stasiun latih dan 3 stasiun uji, yang dicegah dan yang diakui | Tahap 3 |
 | 5 | Tahap 4: *baseline* | 1,5 | 4 | *Naive forecast*, RMSE 86,82 ± 24,70 per *fold*, RMSE dan MAE, cara membaca hasil model nanti | Tahap 4 |
-| 6 | Tahap 5: model lanjutan | 3 | 8 | Definisi langsung Ridge dan Elastic Net dengan animasi otomatis (rem *alpha* diperkuat lalu dilepas: Ridge mengecilkan semua bobot, Elastic Net membuat bobot kecil menjadi nol; batang bobot hanya ilustrasi), aturan uji sama dengan *naive* (satu perbedaan diakui), apa yang disetel (20 pengaturan), kurva RMSE terhadap *alpha* (hampir datar), RMSE per *fold* dan rata-rata (86,82 *naive*, 72,83 Ridge, 72,26 Elastic Net), total RMSE dan MAE dengan selisih terhadap *naive*, selisih kedua model 0,57 (setara), alasan Ridge dipilih sebagai utama (aturan sebelum hasil, bukan klaim lebih akurat). Slide ringkasan lama diganti | Tahap 5, hasil eksekusi *notebook* bagian 05 |
+| 6 | Tahap 5: model lanjutan | 3 | 9 | Definisi langsung Ridge dan Elastic Net dengan animasi otomatis (rem *alpha* diperkuat lalu dilepas; batang bobot hanya ilustrasi), apa itu *tuning* dan pengaturan tiap model (Ridge: *alpha*; Elastic Net: *alpha* dan *l1_ratio*) dengan animasi menguji nilai *alpha* memakai angka RMSE Ridge asli, nilai yang dicoba (20 pengaturan), aturan uji sama dengan *naive* (satu perbedaan diakui), apa yang disetel (20 pengaturan), kurva RMSE terhadap *alpha* (hampir datar), RMSE per *fold* dan rata-rata (86,82 *naive*, 72,83 Ridge, 72,26 Elastic Net), total RMSE dan MAE dengan selisih terhadap *naive*, selisih kedua model 0,57 (setara), alasan Ridge dipilih sebagai utama (aturan sebelum hasil, bukan klaim lebih akurat). Slide ringkasan lama diganti | Tahap 5, hasil eksekusi *notebook* bagian 05 |
 
 Total 11,5 menit.
 
@@ -34,7 +34,7 @@ Total 11,5 menit.
 * Panduan dosen membatasi slide progres Pertemuan 13 hingga 5 slide. Presentasi ini 6 halaman karena memakai satu slide judul. Konfirmasikan apakah slide judul dihitung.
 * Desain 9 stasiun latih dan 3 stasiun uji adalah keputusan penulis (16 Nov 2026) dan belum dikonfirmasi dosen. Penanda "usulan penulis, belum dikonfirmasi dosen" di slide 4 dan 6 dihapus atas permintaan penulis (17 Nov 2026), jadi statusnya tidak lagi terlihat di slide dan perlu disampaikan lisan atau di laporan.
 * Slide ringkasan Tahap 1 sampai 4 sudah diganti slide Tahap 5 atas permintaan penulis (22 Nov 2026). Slide 6 tidak lagi merangkum Tahap 1 sampai 4 dan tidak memuat rencana tahap 6 dan 7. Pengakuan bahwa statistik ringkas periode uji pernah terlihat tetap ada di slide 4.
-* Slide 6 berisi 8 langkah dalam jatah 3 menit, jadi latih waktunya. Total durasi kini 11,5 menit.
+* Slide 6 berisi 9 langkah dalam jatah 3 menit, jadi latih waktunya. Total durasi kini 11,5 menit.
 * Slide 6 menyebut Ridge dipilih karena lebih sederhana. Model belum dibekukan dan belum final, dan aturan pemilihan di protokol masih menunggu persetujuan.
 * Nama folder `Presentasi Tahap 1-4` tidak diubah supaya tautan lama tetap berlaku, walaupun isinya sampai Tahap 5.
 * Nama dosen tidak dicantumkan karena belum tertulis di sumber.
