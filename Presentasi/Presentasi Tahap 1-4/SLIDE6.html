@@ -182,8 +182,9 @@ svg .fade{transition:opacity .45s ease}
   <div class="kicker"><h1><em>Model lanjutan</em></h1></div>
 
   <div class="copy">
-    <div class="blk" id="b1"><span class="lbl">01 · Apa Itu Ridge dan Elastic Net</span>
-      <p>Keduanya model <b>linear</b>: ramalan dihitung dari jumlah 29 fitur yang masing-masing dikali sebuah <b>bobot</b>. <b>Ridge</b> menjaga bobot agar tidak terlalu besar. <b>Elastic Net</b> sama, dan bisa membuat bobot fitur yang tidak berguna menjadi nol. Bobot yang bisa dibaca membuat keduanya mudah dijelaskan.</p></div>
+    <div class="blk" id="b1"><span class="lbl">01 · Ridge dan Elastic Net</span>
+      <p><b>Ridge</b> adalah model linear: ramalan dihitung dari 29 fitur yang masing-masing dikali sebuah <b>bobot</b>. Ridge <b>mengecilkan semua bobot</b> supaya tidak terlalu besar, tetapi tidak ada yang jadi nol, jadi semua fitur tetap dipakai.</p>
+      <p style="margin-top:14px"><b>Elastic Net</b> sama, tetapi bisa <b>membuat bobot fitur yang tidak berguna menjadi nol</b>, sehingga fitur itu dibuang.</p></div>
     <div class="blk" id="b2"><span class="lbl">02 · Diuji Sama Seperti <em>Naive</em></span>
       <p>Lima <em>fold</em>, baris yang dinilai, dan praproses sama dengan <em>naive forecast</em>, jadi angkanya bisa dibandingkan langsung. <b>Data uji tidak dibuka.</b> Bedanya, kedua model dilatih dan pengaturannya dipilih di <em>fold</em> yang sama, sehingga skornya sedikit optimistis.</p></div>
     <div class="blk" id="b3"><span class="lbl">03 · Apa yang Disetel (<em>Tuning</em>)</span>
@@ -274,39 +275,55 @@ const play=(items,gap=150)=>{ items.forEach((g,k)=>{ g.style.opacity=0; }); item
 const fade=(parent)=>mk('g',{class:'fade'},parent);
 
 
-/* ═════════ V0: apa itu Ridge dan Elastic Net ═════════ */
+/* ═════════ V0: apa itu Ridge dan Elastic Net (animasi otomatis) ═════════ */
 const s0=$('#svg-model'); const G0=[];
 const gF=fade(s0); G0.push(gF);
-mk('rect',{x:24,y:18,width:894,height:62,fill:'#07080b',stroke:'rgba(255,255,255,.14)'},gF);
-tx(gF,'MODEL LINEAR',[44,40],12,GREY,{'letter-spacing':'.14em'});
-tx(gF,'ramalan = (bobot × fitur 1) + (bobot × fitur 2) + … + (bobot × fitur 29)',[44,66],21,'#f1f2f6',{'font-family':SANS,'font-weight':500});
-const CARD=[
-  {x:24,  lbl:'MODEL UTAMA', nm:'Ridge', col:BLUE, desc:['Menjaga semua bobot agar tidak terlalu besar,','sehingga model tidak berlebihan mengikuti','data latih.'], set:'pengaturan: alpha'},
-  {x:488, lbl:'PEMBANDING', nm:'Elastic Net', col:LIGHT, desc:['Seperti Ridge, dan bisa membuat bobot fitur','yang tidak berguna menjadi nol, sehingga','fitur itu tidak dipakai.'], set:'pengaturan: alpha dan l1_ratio'}
+mk('rect',{x:24,y:16,width:894,height:52,fill:'#07080b',stroke:'rgba(255,255,255,.14)'},gF);
+tx(gF,'ramalan = (bobot × fitur 1) + (bobot × fitur 2) + … + (bobot × fitur 29)',[471,49],20,'#f1f2f6',{'text-anchor':'middle','font-family':SANS,'font-weight':500});
+const W0=[34,-22,48,12,-40,28,-8,20,-30,16];
+const ridgeW=(w,a)=>w/(1+3.5*a);
+const enW=(w,a)=>{ const t=26*a, m=Math.max(Math.abs(w)-t,0); return Math.sign(w)*m/(1+1.2*a); };
+const CARD0=[
+  {x:24,  lbl:'MODEL UTAMA', nm:'Ridge', col:BLUE, f:ridgeW, desc:'semua bobot mengecil, tidak ada yang nol'},
+  {x:488, lbl:'PEMBANDING', nm:'Elastic Net', col:LIGHT, f:enW, desc:'bobot kecil menjadi nol, fiturnya dibuang'}
 ];
-const W0=[34,-22,48,12,-40,28,-8,20,-30,16], WR=W0.map(v=>v*0.62), WE=[30,-18,44,0,-36,24,0,16,-26,0];
-CARD.forEach((c,ci)=>{
-  const g=fade(s0); G0.push(g);
-  mk('rect',{x:c.x,y:100,width:430,height:394,fill:'#07080b',stroke:ci===0?'rgba(125,180,255,.55)':'rgba(255,255,255,.14)','stroke-width':ci===0?2:1},g);
-  tx(g,c.lbl,[c.x+22,128],13,c.col,{'letter-spacing':'.14em'});
-  tx(g,c.nm,[c.x+22,166],30,'#f1f2f6',{'font-family':SANS,'font-weight':600});
-  const base=262, sc=1.75, bw=24, gx=c.x+46;
-  mk('line',{x1:c.x+22,x2:c.x+408,y1:base,y2:base,stroke:'rgba(255,255,255,.3)'},g);
-  const W=ci===0?WR:WE;
-  W0.forEach((w0,k)=>{ const x=gx+k*35, h0=w0*sc, h=W[k]*sc;
-    mk('rect',{x:x,y:h0>=0?base-h0:base,width:bw,height:Math.abs(h0),fill:'none',stroke:'rgba(255,255,255,.28)','stroke-dasharray':'3 3'},g);
-    if(Math.abs(h)>0.1) mk('rect',{x:x,y:h>=0?base-h:base,width:bw,height:Math.abs(h),fill:c.col,'fill-opacity':.85},g);
-    else tx(g,'×',[x+bw/2,base-6],20,AMB,{'text-anchor':'middle','font-weight':600}); });
-  tx(g,'ilustrasi 10 bobot · garis putus = tanpa rem',[c.x+215,base+94],12,AMB,{'text-anchor':'middle','letter-spacing':'.02em'});
-  c.desc.forEach((t,k)=>tx(g,t,[c.x+22,392+k*25],18,'#c4c7d4',{'font-family':SANS}));
-  mk('line',{x1:c.x+22,x2:c.x+408,y1:458,y2:458,stroke:'rgba(255,255,255,.1)'},g);
-  tx(g,c.set,[c.x+22,484],15,c.col,{'letter-spacing':'.06em'});
-  const hr=mk('rect',{x:c.x,y:100,width:430,height:394,fill:'transparent',class:'hov'},g);
-  const tipt=['<small>Ridge · model utama</small>Satu pengaturan: alpha.<br><span class="hs">Garis putus = bobot tanpa rem,<br>batang biru = setelah dikecilkan.</span>',
-              '<small>Elastic Net · pembanding</small>Dua pengaturan: alpha dan l1_ratio.<br><span class="hs">Tanda × = bobot yang dibuat nol,<br>fitur itu tidak dipakai.</span>'];
-  hr.addEventListener('mousemove',ev=>tip(tipt[ci],ev)); hr.addEventListener('mouseleave',tipOff);
+const SC0=1.45, BASE0=252, BW0=24;
+CARD0.forEach((c,ci)=>{
+  const g=fade(s0); G0.push(g); c.bars=[]; c.xs=[]; c.cnt=null;
+  mk('rect',{x:c.x,y:84,width:430,height:340,fill:'#07080b',stroke:ci===0?'rgba(125,180,255,.55)':'rgba(255,255,255,.14)','stroke-width':ci===0?2:1},g);
+  tx(g,c.lbl,[c.x+22,112],13,c.col,{'letter-spacing':'.14em'});
+  tx(g,c.nm,[c.x+22,150],30,'#f1f2f6',{'font-family':SANS,'font-weight':600});
+  mk('line',{x1:c.x+22,x2:c.x+408,y1:BASE0,y2:BASE0,stroke:'rgba(255,255,255,.3)'},g);
+  W0.forEach((w0,k)=>{ const x=c.x+46+k*35, h0=w0*SC0;
+    mk('rect',{x:x,y:h0>=0?BASE0-h0:BASE0,width:BW0,height:Math.abs(h0),fill:'none',stroke:'rgba(255,255,255,.26)','stroke-dasharray':'3 3'},g);
+    c.bars.push(mk('rect',{x:x,y:BASE0,width:BW0,height:0,fill:c.col,'fill-opacity':.88},g));
+    c.xs.push(tx(g,'×',[x+BW0/2,BASE0-8],22,AMB,{'text-anchor':'middle','font-weight':700,opacity:0})); });
+  tx(g,'FITUR YANG MASIH DIPAKAI',[c.x+22,350],12,GREY,{'letter-spacing':'.12em'});
+  c.cnt=tx(g,'10 dari 10',[c.x+22,382],26,'#f1f2f6',{'font-weight':500});
+  tx(g,c.desc,[c.x+22,410],16,c.col,{'font-family':SANS});
 });
-
+const gM=fade(s0); G0.push(gM);
+tx(gM,'KEKUATAN "REM" (ALPHA), BERGERAK SENDIRI',[24,452],13,GREY,{'letter-spacing':'.12em'});
+const MX0=24, MX1=918, MY=480;
+mk('line',{x1:MX0,x2:MX1,y1:MY,y2:MY,stroke:'rgba(255,255,255,.22)','stroke-width':3,'stroke-linecap':'round'},gM);
+const mFill=mk('line',{x1:MX0,x2:MX0,y1:MY,y2:MY,stroke:AMB,'stroke-width':3,'stroke-linecap':'round'},gM);
+const mKnob=mk('circle',{cx:MX0,cy:MY,r:9,fill:'#0a0b10',stroke:AMB,'stroke-width':3},gM);
+tx(gM,'lemah',[MX0,506],14,'#c4c7d4',{'font-family':SANS}); tx(gM,'kuat',[MX1,506],14,'#c4c7d4',{'text-anchor':'end','font-family':SANS});
+tx(gM,'garis putus = bobot tanpa rem · batang = setelah dikecilkan',[MX1,452],12,GREY,{'text-anchor':'end'});
+tx(gM,'ilustrasi cara kerja, bukan bobot sebenarnya',[471,506],13,AMB,{'text-anchor':'middle'});
+const alphaAt=ms=>{ const u=(ms/1000)%9, sm=x=>x*x*(3-2*x);
+  if(u<1) return 0; if(u<4.5) return sm((u-1)/3.5); if(u<5.5) return 1; return 1-sm((u-5.5)/3.5); };
+function drawAnim(a){
+  CARD0.forEach(c=>{ let n=0;
+    W0.forEach((w0,k)=>{ const w=c.f(w0,a), h=Math.abs(w*SC0), z=Math.abs(w)<0.05;
+      c.bars[k].setAttribute('height',z?0:h); c.bars[k].setAttribute('y',w>=0?BASE0-h:BASE0);
+      c.xs[k].setAttribute('opacity',z?1:0); if(!z) n++; });
+    c.cnt.textContent=n+' dari 10'; });
+  const x=MX0+a*(MX1-MX0); mKnob.setAttribute('cx',x); mFill.setAttribute('x2',x);
+}
+function startAnim(){ const my=runId, t0=performance.now();
+  const loop=now=>{ if(my!==runId) return; drawAnim(alphaAt(now-t0)); requestAnimationFrame(loop); };
+  drawAnim(0); requestAnimationFrame(loop); }
 /* ═════════ V1: aturan sama dengan naive ═════════ */
 const s1=$('#svg-aturan'); const G1=[];
 const ROWS=[
@@ -488,7 +505,7 @@ const VIEWS=['v-model','v-aturan','v-grid','v-tuning','v-hasil','v-total','v-set
 const GRP=[G0,G1,G2,G3,G4,G5,G6,G7];
 function setView(i){ $$('.view').forEach(v=>v.classList.toggle('on',v.id===VIEWS[i])); $('#fig').innerHTML=FIG[i].replace(/^(Gambar \d+)/,'<b>$1</b>'); tipOff(); play(GRP[i], [150,170,170,160,90,260,160,230][i]); }
 const STEPS=[
-  ()=>{ blocks(0); setView(0); readoutNow('Model lanjutan','2 <span class="u">linear</span>'); caption('Dua model linear dengan <b>29 fitur yang sama</b>. Batang bobot hanya ilustrasi cara kerja, bukan bobot sebenarnya. Arahkan kursor ke kartu.'); },
+  ()=>{ blocks(0); setView(0); startAnim(); readoutNow('Model lanjutan','2 <span class="u">linear</span>'); caption('Saat &ldquo;rem&rdquo; makin kuat, <b>Ridge</b> mengecilkan semua bobot tetapi semuanya tetap dipakai, sedangkan <b>Elastic Net</b> membuat bobot kecil menjadi nol.'); },
   ()=>{ blocks(1); setView(1); readoutNow('Aturan uji','sama <span class="u">dgn naive</span>'); caption('Syarat perbandingan yang adil. Satu perbedaan perlu diakui: pengaturan dipilih di <em>fold</em> yang sama dengan yang dilaporkan.'); },
   ()=>{ blocks(2); setView(2); readoutNow('Pengaturan','20 <span class="u">diuji</span>'); caption('Nilai yang dicoba ditetapkan <b>sebelum</b> dijalankan. Kuning = yang akhirnya terpilih karena RMSE rata-rata 5 <em>fold</em>-nya paling rendah.'); },
   ()=>{ blocks(3); setView(3); readoutNow('RMSE terbaik','72,26 <span class="u">µg/m³</span>'); caption('Semua titik jauh di bawah garis <em>naive</em> dan hampir datar. <em>alpha</em> yang terlalu besar baru merugikan Elastic Net (di kanan).'); },
