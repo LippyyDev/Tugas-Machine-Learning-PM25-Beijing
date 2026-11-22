@@ -18,7 +18,7 @@ Lima belas tabel dibuat *notebook*: tiga dari EDA dan pemilihan stasiun uji (bag
 | `t5_tabel_tuning_putaran2.csv` | Rata-rata dan sd RMSE 9 konfigurasi putaran 2 (*random forest* yang diperluas dan *Extra Trees*, F3) |
 | `t5_tabel_tuning_linear.csv` | Ringkasan 20 konfigurasi *tuning* Ridge dan Elastic Net (bagian 05.7): RMSE dan MAE rata-rata dan sd, selisih berpasangan terhadap Ridge `alpha=1`, peringatan konvergensi |
 | `t5_tabel_tuning_linear_per_fold.csv` | RMSE dan MAE tiap *fold* untuk 20 konfigurasi *tuning* linear |
-| `t5_tabel_semua_eksperimen.csv` | Gabungan 73 konfigurasi percobaan Tahap 5 yang punya nilai tiap *fold*, urut dari RMSE terendah: RMSE, sd, MSE, MAE, perbaikan vs *naive*, selisih vs Ridge, RMSE tiap *fold*. Dibuat oleh `Notebook/bangun_tabel_hasil_percobaan.py` |
+| `t5_tabel_semua_eksperimen.csv` | Gabungan 47 konfigurasi percobaan Tahap 5 (tingkat kesulitan 1 sampai 3; tingkat 4 tidak dimasukkan atas permintaan penulis) yang punya nilai tiap *fold*, urut dari RMSE terendah: RMSE, sd, MSE, MAE, perbaikan vs *naive*, selisih vs Ridge, RMSE tiap *fold*. Dibuat oleh `Notebook/bangun_tabel_hasil_percobaan.py` |
 
 Dibuat ulang setiap *notebook* tahap 2 dijalankan.
 
