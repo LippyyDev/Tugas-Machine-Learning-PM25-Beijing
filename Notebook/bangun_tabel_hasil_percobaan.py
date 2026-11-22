@@ -106,8 +106,8 @@ sk = [skor_kesulitan(n, f) for n, f in zip(df["Konfigurasi"], df["Fitur"])]
 df["Skor kesulitan"] = [a for a, _ in sk]
 df["Tingkat kesulitan"] = [tingkat(a) for a, _ in sk]
 df_penuh = df.copy()          # untuk ringkasan per tingkat, dihitung sebelum tingkat 4 dikeluarkan
-N_DIKELUARKAN = int((df["Tingkat kesulitan"] == "4 Sangat sulit").sum())
-df = df[df["Tingkat kesulitan"] != "4 Sangat sulit"].reset_index(drop=True)      # permintaan penulis 22 Nov 2026
+N_DIKELUARKAN = int((df["Tingkat kesulitan"] != "1 Mudah").sum())
+df = df[df["Tingkat kesulitan"] == "1 Mudah"].reset_index(drop=True)      # permintaan penulis 22 Nov 2026: hanya tingkat Mudah
 df["Peringkat"] = df.index + 1
 df.round(4).to_csv(os.path.join(T, "t5_tabel_semua_eksperimen.csv"), index=False)
 
@@ -140,7 +140,7 @@ md = f"""# Tabel Hasil Percobaan Tahap 5
 
 Semua percobaan model lanjutan pada validasi silang `TimeSeriesSplit(n_splits=5, gap=24)` di data latih 9 stasiun, diurutkan dari RMSE rata-rata terendah (terbaik) ke tertinggi (terburuk).
 
-**Kriteria masuk tabel:** model dijalankan dan dilatih langsung pada data latih 9 stasiun yang digabung, dengan *fold*, baris validasi, dan praproses per *fold* yang sama dengan *naive forecast*, sehingga punya nilai RMSE di kelima *fold*. **Tingkat kesulitan 4 (Sangat sulit) tidak dimasukkan** atas permintaan penulis (22 Nov 2026), sehingga tabel hanya memuat tingkat 1 sampai 3. Konfigurasi *tuning* acak yang hanya tercatat rata-rata dan simpangan baku (tanpa nilai tiap *fold*) tidak dimasukkan. Catatannya tetap ada di `Hasil/Tabel/t5_tabel_tuning.csv` dan `t5_tabel_tuning_putaran2.csv`. **Data uji tidak dibuka.** Angka berasal dari eksekusi `Notebook/Tahap 2 EDA dan Praproses.ipynb` (bagian 05.1, 05.5, dan 05.7) dan digabung oleh `Notebook/bangun_tabel_hasil_percobaan.py` dari CSV di `Hasil/Tabel/`. Berkas CSV gabungan: `Hasil/Tabel/t5_tabel_semua_eksperimen.csv`.
+**Kriteria masuk tabel:** model dijalankan dan dilatih langsung pada data latih 9 stasiun yang digabung, dengan *fold*, baris validasi, dan praproses per *fold* yang sama dengan *naive forecast*, sehingga punya nilai RMSE di kelima *fold*. **Hanya tingkat kesulitan 1 (Mudah) yang dimasukkan** atas permintaan penulis (22 Nov 2026); tingkat 2 (Sedang), 3 (Sulit), dan 4 (Sangat sulit) tidak ditampilkan. Konfigurasi *tuning* acak yang hanya tercatat rata-rata dan simpangan baku (tanpa nilai tiap *fold*) tidak dimasukkan. Catatannya tetap ada di `Hasil/Tabel/t5_tabel_tuning.csv` dan `t5_tabel_tuning_putaran2.csv`. **Data uji tidak dibuka.** Angka berasal dari eksekusi `Notebook/Tahap 2 EDA dan Praproses.ipynb` (bagian 05.1, 05.5, dan 05.7) dan digabung oleh `Notebook/bangun_tabel_hasil_percobaan.py` dari CSV di `Hasil/Tabel/`. Berkas CSV gabungan: `Hasil/Tabel/t5_tabel_semua_eksperimen.csv`.
 
 ## Cara membaca
 
@@ -171,11 +171,11 @@ Kolom "Kesulitan (skor)" di Tabel 1 menilai seberapa sulit konfigurasi itu **dii
 
 Tingkat dari skor: **1 Mudah** (0 sampai 1), **2 Sedang** (2 sampai 3), **3 Sulit** (4 sampai 6), **4 Sangat sulit** (7 atau lebih). Contoh: Ridge dengan F1 skor 1 (Mudah), Ridge dengan F3 skor 3 (Sedang), *random forest* bawaan dengan F3 skor 5 (Sulit), Ridge + *random forest* hasil *tuning* dengan F3 skor 8 (Sangat sulit).
 
-Hubungan kesulitan dan hasil, dihitung **sebelum** {N_DIKELUARKAN} konfigurasi tingkat 4 dikeluarkan dari tabel, tanpa *naive forecast* (nilai per *fold*-nya tetap ada di `Hasil/Tabel/t5_tabel_eksperimen_per_fold.csv` dan semuanya tetap dicatat di *notebook* bagian 05.5):
+Hubungan kesulitan dan hasil, dihitung **sebelum** {N_DIKELUARKAN} konfigurasi tingkat 2 sampai 4 dikeluarkan dari tabel, tanpa *naive forecast* (nilai per *fold*-nya tetap ada di `Hasil/Tabel/t5_tabel_eksperimen_per_fold.csv` dan semuanya tetap dicatat di *notebook* bagian 05.5):
 
 {RT}
 
-Tingkat 4 **tidak tampil di Tabel 1 dan 2**, tetapi angkanya perlu disebut agar pembaca tidak mengira tidak ada yang lebih baik: model tingkat 1 terbaik (selain *naive*) mendapat RMSE {c(mudah)}, sedangkan tingkat 4 terbaik {c(sulit)}. Naiknya kesulitan implementasi dari tingkat 1 ke tingkat 4 hanya menurunkan RMSE sekitar {c(mudah - sulit)} (sekitar {c(100 * (mudah - sulit) / mudah, 1)}%), jauh di bawah simpangan baku antar *fold* (sekitar 19), dan sebagian dari selisih itu masih optimisme pemilihan dari banyak konfigurasi. Ini alasan memilih model yang mudah dijelaskan dan dipertanggungjawabkan: ongkos implementasi, risiko kebocoran, dan beban penjelasannya jauh lebih besar daripada perbaikan yang didapat.
+Tingkat 2 sampai 4 **tidak tampil di Tabel 1 dan 2**, tetapi angkanya perlu disebut agar pembaca tidak mengira tidak ada yang lebih baik: model tingkat 1 terbaik (selain *naive*) mendapat RMSE {c(mudah)}, sedangkan tingkat 4 terbaik {c(sulit)}. Naiknya kesulitan implementasi dari tingkat 1 ke tingkat 4 hanya menurunkan RMSE sekitar {c(mudah - sulit)} (sekitar {c(100 * (mudah - sulit) / mudah, 1)}%), jauh di bawah simpangan baku antar *fold* (sekitar 19), dan sebagian dari selisih itu masih optimisme pemilihan dari banyak konfigurasi. Ini alasan memilih model yang mudah dijelaskan dan dipertanggungjawabkan: ongkos implementasi, risiko kebocoran, dan beban penjelasannya jauh lebih besar daripada perbaikan yang didapat.
 
 Keterbatasan rubrik: bobot skor adalah usulan dan bukan standar baku, dan skor tidak mengukur waktu latih tiap model (waktu per model tidak diukur terpisah).
 
