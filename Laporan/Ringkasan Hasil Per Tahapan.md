@@ -8,7 +8,7 @@ Berisi inti hasil tiap tahap, diperbarui setiap satu tahap selesai. Rincian leng
 | 2. EDA dan praproses | Selesai, dijalankan penuh 21 Nov 2026 pada desain 9/3 (lokal dan Colab, angka sama). Angka di bawah memakai data latih 9 stasiun |
 | 3. Skema validasi | Desain 9/3 sudah diimplementasikan dan dijalankan 21 Nov 2026 (skema, pengecekan otomatis, alasan, dan keterbatasan ada di *notebook* bagian 03). Penjaga pembukaan data uji ada di bagian 03.3 dan protokol [Usulan, menunggu persetujuan] di `Protokol Evaluasi Data Uji.md`. Penjaga hanya mencegah pembukaan ganda yang tidak disengaja, dan baru teruji saat data uji dibuka. Literatur pendukung: lihat `Proposal/Catatan Verifikasi Referensi.md` (aturan `gap` sama dengan horizon belum punya sumber *peer review* yang terbaca) |
 | 4. *Baseline* | Selesai, hasil validasi 9 stasiun latih (dijalankan 21 Nov 2026) |
-| 5. Model lanjutan dan *tuning* | Selesai sebagian. *Notebook* kini memuat dua model: Ridge `alpha=1000` (utama, RMSE 72,83) dan Elastic Net `alpha=1`, `l1_ratio=0,9` (pembanding, 72,26), fitur F1, keputusan penulis 22 Nov 2026. Riwayat eksplorasi: perbandingan awal 3 keluarga model (6 konfigurasi) dengan *cross-validation* pada data latih 9 stasiun, dijalankan 22 Nov 2026. Eksperimen lanjutan fitur, model, *tuning*, dan transformasi target (05.5) dijalankan 22 Nov 2026: RMSE validasi terendah 71,09, tidak ada di bawah 70. *Tuning* sistematis Ridge dan Elastic Net (05.7) juga dijalankan: aturan memilih Ridge `alpha=1000`, RMSE 72,83, kurva datar. Model final belum dipilih, konfigurasi belum dibeku, data uji belum dibuka |
+| 5. Model lanjutan dan *tuning* | Selesai sebagian: dua model lanjutan, Ridge `alpha=1000` (utama, RMSE 72,83) dan Elastic Net `alpha=1`, `l1_ratio=0,9` (pembanding, 72,26), fitur F1, keputusan penulis 22 Nov 2026. Belum: persetujuan aturan pemilihan, pembekuan konfigurasi. Data uji belum dibuka |
 | 6. Evaluasi dan diagnosis | Belum dikerjakan |
 | 7. Analisis kesalahan dan etika | Belum dikerjakan |
 
@@ -78,77 +78,21 @@ Validasi 5 *fold* pada data latih 9 stasiun, tanpa menyentuh data uji. Baris val
 - RMSE per *fold* (101,7 / 62,2 / 103,6 / 57,7 / 108,8) naik turun mengikuti periode (*fold* 1, 3, dan 5 lebih tinggi), jadi simpangan baku yang besar kemungkinan berasal dari beda periode antar *fold* (belum diuji penyebabnya).
 - Ini hasil validasi data latih, bukan data uji. Skor uji dibuka satu kali di akhir.
 
-## Tahap 5. Model lanjutan dan *tuning* (perbandingan awal, 22 Nov 2026)
+## Tahap 5. Model lanjutan dan *tuning* (22 Nov 2026)
 
-Aturan evaluasi sama dengan Tahap 4: `TimeSeriesSplit(n_splits=5, gap=24)` pada jam unik data latih 9 stasiun, baris validasi yang sama dengan *naive forecast* (PM2.5 jam *t* tidak kosong), imputer median dan *scaler* di dalam *pipeline* per *fold*. **Data uji tidak dibuka** (tidak ada log pembukaan). Angka berasal dari eksekusi penuh `Notebook/Tahap 2 EDA dan Praproses.ipynb` bagian 05, tanpa *error*. *Notebook* memeriksa dengan `assert` bahwa galat *naive* di bagian ini sama persis dengan 04.5.
+Aturan evaluasi sama dengan Tahap 4: `TimeSeriesSplit(n_splits=5, gap=24)` pada jam unik data latih 9 stasiun, baris validasi yang sama dengan *naive*, imputer median dan *scaler* hanya belajar dari data latih tiap *fold*. **Data uji tidak dibuka.** Dua model lanjutan, keputusan penulis: **Ridge sebagai model utama dan Elastic Net sebagai pembanding**, keduanya dengan 29 fitur awal (F1).
+
+*Tuning* memakai *grid* yang ditetapkan sebelum dijalankan: Ridge `alpha` 0,1; 1; 10; 100; 1000 (5 konfigurasi), Elastic Net `alpha` 0,01; 0,1; 1; 3; 10 dan `l1_ratio` 0,1; 0,5; 0,9 (15 konfigurasi). Aturan pemilihan ditulis sebelum hasil dilihat: keluarga model dipilih dengan protokol butir 2 (bila selisih RMSE kurang dari satu sd antar *fold*, yang lebih sederhana dipilih), lalu `alpha` dengan RMSE terendah di keluarga itu.
 
 | Model | RMSE rata-rata ± sd | MAE rata-rata ± sd | Perbaikan RMSE vs *naive* | *Fold* lebih baik dari *naive* |
 |---|---|---|---|---|
 | *Naive forecast* | 86,82 ± 24,70 | 59,39 ± 16,53 | n/a | n/a |
-| Ridge (`alpha=1`) | 72,94 ± 19,39 | 54,58 ± 12,97 | 16,0% | 5 dari 5 |
-| Elastic Net (`alpha=1`) | 72,53 ± 19,37 | 54,79 ± 13,38 | 16,5% | 5 dari 5 |
-| Elastic Net (`alpha=0,1`) | 72,60 ± 19,33 | 54,35 ± 13,04 | 16,4% | 5 dari 5 |
-| Elastic Net (`alpha=0,01`) | 72,88 ± 19,38 | 54,54 ± 12,97 | 16,0% | 5 dari 5 |
-| *Gradient boosting* | 77,10 ± 22,10 | 56,11 ± 14,50 | 11,2% | 5 dari 5 |
-| *Gradient boosting* (*early stopping* bawaan) | 76,97 ± 21,75 | 56,04 ± 14,07 | 11,4% | 5 dari 5 |
+| Ridge `alpha=1000` (utama, terpilih aturan) | 72,83 ± 19,38 | 54,51 ± 13,00 | 16,1% | 5 dari 5 |
+| Elastic Net `alpha=1`, `l1_ratio=0,9` (pembanding, RMSE terendah) | 72,26 ± 19,23 | 54,43 ± 13,31 | 16,8% | 5 dari 5 |
 
-Keluarannya: `Hasil/Tabel/t5_tabel_model_lanjutan.csv`, `t5_tabel_rmse_per_fold.csv`, `t5_tabel_selisih_vs_ridge.csv`, dan grafik `Hasil/Gambar/t5_01_rmse_model_lanjutan.png`.
+- **Yang berdiri di data:** kedua model lebih baik dari *naive* di kelima *fold*, sekitar 16% di bawah RMSE *naive*.
+- **Yang tidak berdiri di data:** selisih kedua model (0,57) jauh di bawah sd antar *fold* (sekitar 19), dan pembanding lebih baik dari utama hanya di 3 dari 5 *fold*. Keduanya setara dan tidak diklaim berbeda.
+- **Kurva Ridge praktis datar:** RMSE 72,94 pada `alpha` 0,1 sampai 10, 72,93 pada 100, 72,83 pada 1000. Dengan 246.798 baris latih dan 29 fitur terstandarisasi, regularisasi hampir tidak berpengaruh. `alpha=1000` ada di tepi *grid*, dan sesuai aturan *grid* tidak diperluas.
+- **Keterbatasan:** skor terpilih dari 20 konfigurasi pada validasi yang sama (sedikit optimistis, terutama pembanding yang dipilih dari 15), lima *fold*, dan model linear dengan F1 saja. Ini kandidat, bukan model final. Konfigurasi belum dibekukan dan data uji belum dibuka.
 
-- **Yang berdiri di data:** semua konfigurasi lebih baik dari *naive* di kelima *fold*. Model linear sekitar 16% di bawah RMSE *naive*, *boosting* sekitar 11%.
-- **Yang tidak berdiri di data:** selisih antar model linear sangat kecil (paling besar 0,41, sekitar 0,6% dari RMSE) dibanding simpangan baku antar *fold* sekitar 19. Elastic Net `alpha=0,1` lebih baik dari Ridge di 5 dari 5 *fold*, tetapi hanya 0,34 µg/m³ (rata-rata, sd selisih 0,26) dan terpilih dari enam konfigurasi, jadi tidak diklaim nyata. *Gradient boosting* rata-rata 4,0 sampai 4,2 lebih buruk dari Ridge dan lebih baik hanya di 1 dari 5 *fold*.
-- **Aturan pemilihan (protokol butir 2, [Usulan], menunggu persetujuan):** RMSE terendah adalah Elastic Net `alpha=1` (72,53, sd 19,37). Semua konfigurasi dalam satu simpangan baku darinya, jadi dianggap tidak terbedakan dan yang paling sederhana menjadi **kandidat: Ridge**. Ini kandidat, bukan model final. Konfigurasi belum dibekukan.
-- ***Early stopping* bawaan tidak pernah berhenti:** jumlah iterasi yang dipakai 200 di kelima *fold* (batas maksimum). Varian ini praktis hanya melatih *boosting* pada sebagian data latih *fold*, dan hasilnya hampir sama dengan *boosting* tanpa *early stopping*. Pemisahan validasi internalnya acak, bukan menurut waktu.
-- **Reproduksi angka penulis:** angka Ridge (72,94 ± 19,39) dan Elastic Net (72,88, 72,60, 72,53 dengan `l1_ratio=0,5`) sama dengan tangkapan layar penulis sampai dua desimal. Angka *gradient boosting* berbeda 0,3 sampai 0,4 (penulis: 76,66 ± 20,77 dan 76,77 ± 20,74), karena pengaturan *boosting* penulis tidak diketahui. Yang dipakai di sini mengikuti 04.6 (200 iterasi, *learning rate* 0,1, kedalaman 4). Selisih sebesar itu masih dalam kisaran pergeseran HGB antar lingkungan yang dicatat di Tahap 2.
-- **Keterbatasan:** *tuning* belum sistematis (grid `alpha` tiga nilai dan alpha terbaik ada di tepi grid, `l1_ratio` tetap, *boosting* belum dicari *hyperparameter*-nya). Lima *fold* sedikit. Skor model terpilih dari enam konfigurasi dengan validasi yang sama sedikit optimistis, sehingga bukan kinerja akhir. Dugaan bahwa *boosting* lebih lemah karena data latih *fold* awal sedikit belum diuji.
-- **Berikutnya:** (1) putuskan model yang di-*tuning*, lalu cari *hyperparameter* pada *fold* yang sama tanpa data uji, (2) setujui aturan pemilihan di `Protokol Evaluasi Data Uji.md`, (3) bekukan dan *commit* konfigurasi final, lalu tahap 6.
-
-**Catatan 22 Nov 2026 (keputusan penulis):** *notebook* Tahap 5 sekarang hanya memuat dua model lanjutan linear, Ridge sebagai model utama dan Elastic Net sebagai pembanding, keduanya dengan fitur F1. Bagian eksplorasi lama (perbandingan awal enam konfigurasi, 05.5 eksperimen lanjutan, 05.7 dalam bentuk lama) dikeluarkan dari *notebook*. Angka dan berkas CSV-nya tetap tersimpan sebagai arsip, dan kodenya ada di riwayat Git (*commit* `95c32ad`).
-
-Hasil dua model di *notebook* (*tuning* 20 konfigurasi, 5 *fold*, RMSE rata-rata ± sd): utama Ridge `alpha=1000` 72,83 ± 19,38 (MAE 54,51 ± 13,00), pembanding Elastic Net `alpha=1`, `l1_ratio=0,9` 72,26 ± 19,23 (MAE 54,43 ± 13,31), *naive* 86,82 ± 24,70. Keduanya lebih baik dari *naive* di 5 dari 5 *fold*. Pembanding lebih baik dari utama hanya di 3 dari 5 *fold* (selisih rata-rata −0,57), jadi keduanya setara. Berkas: `Hasil/Tabel/t5_tabel_dua_model.csv` dan `t5_tabel_dua_model_per_fold.csv`. Data uji belum dibuka.
-
-### Eksperimen lanjutan (arsip, dulu bagian 05.5, 22 Nov 2026)
-
-Pertanyaannya: adakah cara menurunkan RMSE validasi dari sekitar 72,5 ke bawah 70 tanpa melanggar aturan validasi? Semua eksperimen memakai *fold*, baris validasi, dan praproses per *fold* yang sama dengan 05.1 (`assert` membandingkan galat *naive*). **Data uji tidak dibuka.** Yang dicoba: ablasi fitur (cuaca dinamis, statistik PM2.5 dan polutan, fitur lintas stasiun), *gradient boosting*, Ridge lalu *boosting* pada residual, *random forest*, *Extra Trees*, *tuning* acak, rata-rata sederhana (bobot sama), dan transformasi target (akar kuadrat dan `log1p`). Jumlahnya sekitar 85 konfigurasi di luar enam konfigurasi 05.1. Langkah 1 dan 2 dirancang sebelum dijalankan, langkah 3 sampai 6 ditentukan setelah melihat hasil langkah sebelumnya (dicatat terbuka di *notebook*).
-
-| Konfigurasi (validasi silang 5 *fold*) | RMSE rata-rata ± sd | Selisih vs Ridge F1 (sd selisih) | *Fold* lebih baik dari Ridge F1 |
-|---|---|---|---|
-| Ridge, 29 fitur awal (F1), dari 05.1 | 72,94 ± 19,39 | 0 | n/a |
-| Ridge, F3 (dengan fitur lintas stasiun) | 72,28 ± 19,31 | −0,66 (0,34) | 5 dari 5 |
-| *Gradient boosting* tuning terbaik, F3 | 72,08 ± 19,30 | −0,87 (1,36) | 4 dari 5 |
-| *Random forest* tuning terbaik, F3 | 71,77 ± 19,53 | −1,17 (1,16) | 4 dari 5 |
-| Elastic Net + HGB + *random forest*, F2 (terbaik tanpa lintas stasiun) | 71,61 ± 19,30 | −1,33 (0,85) | 5 dari 5 |
-| Ridge + *random forest* (putaran 1), F3 | 71,12 ± 19,32 | −1,82 (0,57) | 5 dari 5 |
-| **Ridge + *random forest* (putaran 2), F3 (terendah dari semua)** | **71,09 ± 19,40** | **−1,85 (0,59)** | **5 dari 5** |
-
-F2 adalah F1 ditambah 11 fitur cuaca dinamis dan 6 fitur statistik. F3 adalah F2 ditambah 4 fitur lintas stasiun (rata-rata PM2.5 dan angin dari stasiun latih **lain** pada jam yang sama, hanya sampai jam *t*). Tabel lengkap 53 eksperimen ada di `Hasil/Tabel/t5_tabel_eksperimen_ringkas.csv`.
-
-- **Tidak ada konfigurasi di bawah 70.** RMSE validasi terendah 71,09, sekitar 18,1% di bawah *naive* (86,82) dan 1,85 di bawah Ridge F1. Menembus 70 tidak tercapai dengan eksperimen ini.
-- **Yang berdiri di data:** (1) fitur cuaca dan statistik tambahan hampir tidak membantu model linear (Ridge F2 72,87 vs F1 72,94). (2) Fitur lintas stasiun membantu sekitar 0,6 untuk Ridge (72,28), konsisten di 5 dari 5 *fold* (sd selisih 0,34). (3) *Random forest* yang diregularisasi kuat (`min_samples_leaf` 100 sampai 300, `max_features` 0,2 sampai 0,3, `max_samples` 0,25) dan rata-ratanya dengan Ridge memberi 71,1 sampai 71,6. (4) *Gradient boosting* bawaan (77,10) membaik ke 72,08 setelah *tuning*, tetapi tidak melewati *random forest*.
-- **Yang tidak membantu:** *boosting* pada residual Ridge (74,59 sampai 76,71), transformasi `log1p` (77,5 sampai 80,1, tanpa koreksi bias) dan akar kuadrat (73,00 sampai 74,44), dan rata-rata Ridge dengan *boosting* bawaan pada F1 (72,97).
-- **Perbaikan sudah mendatar.** Perluasan grid putaran 2 hanya menurunkan 71,12 menjadi 71,09. Konfigurasi terbaik tiap model masih di tepi grid, tetapi selisih antar konfigurasi di tepi itu jauh di bawah sd selisih berpasangan, jadi memperluas lebih jauh kemungkinan tidak mengubah kesimpulan (belum diuji).
-- **Dua aturan pemilihan memberi jawaban berbeda.** Aturan protokol butir 2 (selisih harus melebihi satu simpangan baku antar *fold*, sekitar 19) menyatakan semua konfigurasi tidak terbedakan dari Ridge F1, jadi Ridge tetap kandidat. Perbandingan berpasangan per *fold* (sd selisih 0,57 sampai 0,59) menunjukkan ensambel Ridge + *random forest* lebih baik di 5 dari 5 *fold* dengan selisih rata-rata 1,8. Ambang berpasangan yang dipakai di *notebook* (minimal 4 dari 5 *fold*, selisih lebih dari 3 kali sd selisih dan lebih dari 1% RMSE) adalah usulan yang ditetapkan setelah melihat sebagian hasil: **[Usulan], belum disetujui, belum dipakai untuk memilih.**
-- **Keterbatasan.** Skor terbaik dari puluhan konfigurasi pada lima *fold* yang sama bersifat optimistis, jadi 71,09 bukan perkiraan kinerja akhir. Perbedaan antar tujuh konfigurasi teratas (71,09 sampai 71,28) tidak bermakna. Selisih 1,85 terhadap Ridge kecil dibanding beda antar *fold* (RMSE per *fold* berkisar sekitar 48 sampai 91). Fitur lintas stasiun mengubah aturan di bagian 01 ("tanpa mencampur deret antar stasiun") dan membuat uji pada stasiun uji tidak lagi sepenuhnya terpisah dari 9 stasiun latih (pada data uji, rata-rata dihitung dari 9 stasiun latih pada jam uji yang sama, sah secara waktu). Mengapa fitur lintas stasiun dan *random forest* membantu belum diuji (dugaan: kondisi regional dan penyaringan *noise*). Hasil HGB bergeser sekitar 0,4 antar lingkungan.
-- **Keputusan yang dibutuhkan dari penulis:** (1) boleh atau tidaknya F3, (2) aturan pemilihan mana yang berlaku (butir 2 protokol atau berpasangan), (3) bila F3 ditolak, kandidat terbaik adalah Elastic Net + HGB + *random forest* pada F2 (71,61), dengan catatan selisih 1,33 terhadap Ridge F1 juga bergantung pada aturan (2).
-
-Keluaran: `Hasil/Tabel/t5_tabel_eksperimen_per_fold.csv`, `t5_tabel_eksperimen_ringkas.csv`, `t5_tabel_tuning.csv`, `t5_tabel_tuning_putaran2.csv`, dan grafik `Hasil/Gambar/t5_02_eksperimen_lanjutan.png`. Mengulang semua eksperimen memakan sekitar 45 menit (`CARI_ULANG=1`), sedangkan bawaan membaca hasil tersimpan.
-
-### Tuning sistematis model linear (bagian 05.1 di *notebook* sekarang, 22 Nov 2026)
-
-Dua kandidat utama (Ridge dan Elastic Net) di-*tuning* dengan grid yang **ditetapkan sebelum dijalankan**: Ridge `alpha` 0,1; 1; 10; 100; 1000 (5 konfigurasi) dan Elastic Net `alpha` 0,01; 0,1; 1; 3; 10 dengan `l1_ratio` 0,1; 0,5; 0,9 (15 konfigurasi). Fitur F1, praproses, *fold*, dan baris validasi sama dengan 05.1 (`assert` galat *naive*). **Data uji tidak dibuka.** Tidak ada peringatan konvergensi.
-
-| Konfigurasi | RMSE ± sd | MAE ± sd | Selisih vs Ridge `alpha=1` (sd selisih) | *Fold* lebih baik dari Ridge |
-|---|---|---|---|---|
-| Ridge `alpha=1` (05.1) | 72,94 ± 19,39 | 54,58 ± 12,97 | 0 | n/a |
-| **Ridge `alpha=1000` (terpilih aturan)** | **72,83 ± 19,38** | **54,51 ± 13,00** | −0,11 (0,09) | 5 dari 5 |
-| Elastic Net `alpha=1`, `l1_ratio=0,9` (RMSE terendah) | 72,26 ± 19,23 | 54,43 ± 13,31 | −0,68 (0,84) | 3 dari 5 |
-| Elastic Net `alpha=0,1`, `l1_ratio=0,1` | 72,51 ± 19,34 | 54,30 ± 13,08 | −0,43 (0,37) | 5 dari 5 |
-| Elastic Net `alpha=1`, `l1_ratio=0,5` (05.1) | 72,53 ± 19,37 | 54,79 ± 13,38 | −0,41 (1,06) | 3 dari 5 |
-| Elastic Net `alpha=10`, `l1_ratio=0,1` (terburuk) | 76,09 ± 19,41 | 58,34 ± 12,68 | +3,15 (1,84) | 0 dari 5 |
-
-- **Semua 20 konfigurasi tidak terbedakan** menurut aturan protokol butir 2: selisih terhadap yang terbaik (72,26) lebih kecil dari satu sd antar *fold* (sekitar 19). Aturan yang ditulis sebelum hasil memilih keluarga **Ridge** (lebih sederhana), lalu `alpha` dengan RMSE terendah di keluarga itu: **`alpha=1000`**, 72,83 ± 19,38.
-- **Kurva Ridge praktis datar:** RMSE 72,94 pada `alpha` 0,1 sampai 10, 72,93 pada 100, 72,83 pada 1000. Dengan 246.798 baris latih dan 29 fitur terstandarisasi, regularisasi hampir tidak berpengaruh. Selisih 0,11 antara `alpha=1` dan `alpha=1000` tidak bermakna dan terbaca sebagai *noise*.
-- **`alpha=1000` ada di tepi grid.** Sesuai aturan, grid tidak diperluas. Karena kurvanya datar, kesimpulan tidak diperkirakan berubah (belum diuji).
-- **Elastic Net** terbaik (`alpha=1`, `l1_ratio=0,9`, 72,26) lebih baik dari Ridge `alpha=1` hanya di 3 dari 5 *fold* dengan sd selisih 0,84, jadi tidak diklaim nyata. `alpha=3` dan `alpha=10` lebih buruk (73,45 sampai 76,09), `alpha=10` lebih buruk di semua *fold*. Penalti yang terlalu kuat membuang informasi.
-- **Keterbatasan:** terpilih dari 20 konfigurasi pada validasi yang sama (sedikit optimistis), lima *fold*, dan model linear dengan F1 saja. Ini kandidat, bukan model final. Konfigurasi belum dibekukan dan data uji belum dibuka.
-
-Keluaran: `Hasil/Tabel/t5_tabel_tuning_linear.csv`, `t5_tabel_tuning_linear_per_fold.csv`, dan grafik `Hasil/Gambar/t5_03_tuning_linear.png`. Tabel semua percobaan Tahap 5 (25 konfigurasi tingkat kesulitan 1 Mudah dengan RMSE, MSE, MAE, sd, dan nilai tiap *fold*, urut dari terbaik) ada di `Laporan/Tabel Hasil Percobaan Tahap 5.md`.
+Keluaran: `Hasil/Tabel/t5_tabel_dua_model.csv`, `t5_tabel_dua_model_per_fold.csv`, `t5_tabel_tuning_linear.csv`, `t5_tabel_tuning_linear_per_fold.csv`, `t5_tabel_semua_eksperimen.csv`, dan grafik `Hasil/Gambar/t5_03_tuning_linear.png`. Tabel hasil percobaan (25 konfigurasi) ada di `Laporan/Tabel Hasil Percobaan Tahap 5.md`.

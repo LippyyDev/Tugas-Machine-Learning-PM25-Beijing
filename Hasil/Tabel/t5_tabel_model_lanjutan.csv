@@ -1,8 +1,0 @@
-Model,RMSE rata-rata,RMSE sd,MAE rata-rata,MAE sd,Perbaikan RMSE vs naive (%),Fold lebih baik dari naive
-Naive forecast,86.82,24.7,59.39,16.53,0.0,n/a
-Ridge (alpha=1),72.94,19.39,54.58,12.97,15.98,5 dari 5
-Elastic Net (alpha=1),72.53,19.37,54.79,13.38,16.46,5 dari 5
-"Elastic Net (alpha=0,1)",72.6,19.33,54.35,13.04,16.38,5 dari 5
-"Elastic Net (alpha=0,01)",72.88,19.38,54.54,12.97,16.05,5 dari 5
-Gradient boosting,77.1,22.1,56.11,14.5,11.19,5 dari 5
-Gradient boosting (early stopping bawaan),76.97,21.75,56.04,14.07,11.35,5 dari 5

@@ -1,6 +1,0 @@
-Model,"Selisih RMSE vs Ridge, rata-rata",sd selisih antar fold,Fold lebih baik dari Ridge
-Elastic Net (alpha=1),-0.41,1.06,3 dari 5
-"Elastic Net (alpha=0,1)",-0.34,0.26,5 dari 5
-"Elastic Net (alpha=0,01)",-0.06,0.03,5 dari 5
-Gradient boosting,4.16,5.84,1 dari 5
-Gradient boosting (early stopping bawaan),4.03,4.79,1 dari 5
