@@ -196,7 +196,32 @@ Angka ini hasil pada data latih (9 stasiun), bukan data uji.
 
 ### Tahap 5. Model lanjutan dan *tuning*
 
-Minimal satu model yang lebih kuat (misalnya *gradient boosting*), model kedua opsional (perubahan dosen 21 Nov 2026 menurut penulis, panduan tertulis menyebut dua), disetel dengan validasi silang pada data latih. Data uji tetap tidak disentuh.
+Dua model lanjutan, keputusan penulis (22 Nov 2026). Keduanya linear, memakai **29 fitur yang sama**, dan dilatih pada 9 stasiun latih:
+
+| Peran | Model | Cara kerja singkat |
+|---|---|---|
+| Utama | **Ridge** | Memberi bobot pada tiap fitur dan menjaga bobot agar tidak terlalu besar (*alpha* adalah kekuatan "rem" itu) |
+| Pembanding | **Elastic Net** | Seperti Ridge, dan bisa membuat bobot fitur yang tidak berguna menjadi nol |
+
+Mengapa model linear? Bobot tiap fitur bisa dibaca, jadi mudah dijelaskan dan dipertanggungjawabkan.
+
+**Cara menguji.** Sama seperti *naive*: lima *fold* berurutan waktu dengan *gap* 24 jam, baris yang dinilai sama persis, dan praproses yang belajar hanya dari data latih tiap *fold*. Data uji tidak dibuka. Satu perbedaan perlu diakui: kedua model dilatih dan pengaturannya (*alpha*) dipilih pada *fold* yang sama, sehingga skornya sedikit optimistis.
+
+**Memilih pengaturan.** Ada 20 pengaturan yang dicoba (Ridge 5, Elastic Net 15). Daftarnya ditetapkan sebelum dijalankan dan tidak diubah setelah melihat hasil. Hasilnya hampir datar: RMSE Ridge hanya bergeser dari 72,94 ke 72,83 ketika *alpha* diubah dari 0,1 ke 1000, jadi hasil tidak bergantung pada angka *alpha*.
+
+![RMSE validasi silang Ridge dan Elastic Net untuk berbagai nilai alpha, hampir datar dan jauh di bawah naive](../Hasil/Gambar/t5_03_tuning_linear.png)
+
+**Hasil.**
+
+| Model | RMSE (rata-rata ± sd antar *fold*) | MAE | Perbaikan vs *naive* | *Fold* lebih baik dari *naive* |
+|---|---|---|---|---|
+| *Naive forecast* | 86,82 ± 24,70 | 59,39 ± 16,53 | n/a | n/a |
+| Ridge, `alpha=1000` (utama) | 72,83 ± 19,38 | 54,51 ± 13,00 | 16,1% | 5 dari 5 |
+| Elastic Net, `alpha=1`, `l1_ratio=0,9` (pembanding) | 72,26 ± 19,23 | 54,43 ± 13,31 | 16,8% | 5 dari 5 |
+
+![RMSE tiap fold untuk naive, Ridge, dan Elastic Net: kedua model lebih rendah dari naive di kelima fold](../Hasil/Gambar/t5_01_dua_model_per_fold.png)
+
+*Cara membaca:* di setiap *fold*, kedua model lebih rendah dari *naive*. Selisih kedua model hanya 0,57, jauh di bawah simpangan baku antar *fold* (sekitar 19), dan Elastic Net lebih baik hanya di 3 dari 5 *fold*. Jadi keduanya **setara**, dan Ridge dipilih sebagai model utama karena lebih sederhana. Angka ini nilai validasi, bukan kinerja akhir. Model dibekukan dulu, lalu data uji dibuka satu kali di Tahap 6.
 
 ### Tahap 6. Evaluasi dan diagnosis
 

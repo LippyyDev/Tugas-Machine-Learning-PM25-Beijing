@@ -140,13 +140,14 @@ h1 .w{display:inline-block;opacity:0}
   <div class="rule"></div>
 
   <div class="main">
-    <div class="eyebrow">Presentasi progres · Tahap 1 sampai 4</div>
+    <div class="eyebrow">Presentasi progres · Tahap 1 sampai 5</div>
     <h1 id="title">Peramalan PM2.5 Beijing<br>24 Jam ke Depan</h1>
     <div class="chips">
       <span class="chip" style="--j:0">Rumusan masalah</span><span class="plus" style="--j:1">→</span>
       <span class="chip" style="--j:2">Eksplorasi dan praproses</span><span class="plus" style="--j:3">→</span>
       <span class="chip" style="--j:4">Skema validasi</span><span class="plus" style="--j:5">→</span>
-      <span class="chip" style="--j:6"><em>Baseline</em></span>
+      <span class="chip" style="--j:6"><em>Baseline</em></span><span class="plus" style="--j:7">→</span>
+      <span class="chip" style="--j:8">Model lanjutan</span>
     </div>
     <div class="who">
       <b>Muhammad Alif Qadri</b>
@@ -241,7 +242,7 @@ function frame(){
 frame();
 
 /* ═════════ Progres, animasi masuk, kontrol ═════════ */
-const GROUPS=[["Pembuka", 1], ["Tahap 1", 1], ["Tahap 2", 1], ["Tahap 3", 1], ["Tahap 4", 1], ["Ringkasan", 1]];
+const GROUPS=[["Pembuka", 1], ["Tahap 1", 1], ["Tahap 2", 1], ["Tahap 3", 1], ["Tahap 4", 1], ["Tahap 5", 1]];
 (function(){ const p=$('#prog'); GROUPS.forEach(([n,c])=>{const s=document.createElement('div');s.className='seg';s.style.flex=c;s.innerHTML='<div class="bar"><i></i></div><span>'+n+'</span>';p.appendChild(s);}); })();
 function progress(frac){
   let start=0;

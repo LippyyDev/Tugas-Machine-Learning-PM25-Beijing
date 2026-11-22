@@ -95,4 +95,8 @@ Aturan evaluasi sama dengan Tahap 4: `TimeSeriesSplit(n_splits=5, gap=24)` pada 
 - **Kurva Ridge praktis datar:** RMSE 72,94 pada `alpha` 0,1 sampai 10, 72,93 pada 100, 72,83 pada 1000. Dengan 246.798 baris latih dan 29 fitur terstandarisasi, regularisasi hampir tidak berpengaruh. `alpha=1000` ada di tepi *grid*, dan sesuai aturan *grid* tidak diperluas.
 - **Keterbatasan:** skor terpilih dari 20 konfigurasi pada validasi yang sama (sedikit optimistis, terutama pembanding yang dipilih dari 15), lima *fold*, dan model linear dengan F1 saja. Ini kandidat, bukan model final. Konfigurasi belum dibekukan dan data uji belum dibuka.
 
-Keluaran: `Hasil/Tabel/t5_tabel_dua_model.csv`, `t5_tabel_dua_model_per_fold.csv`, `t5_tabel_tuning_linear.csv`, `t5_tabel_tuning_linear_per_fold.csv`, `t5_tabel_semua_eksperimen.csv`, dan grafik `Hasil/Gambar/t5_03_tuning_linear.png`. Tabel hasil percobaan (25 konfigurasi) ada di `Laporan/Tabel Hasil Percobaan Tahap 5.md`.
+![RMSE tiap fold untuk naive, Ridge, dan Elastic Net](../Hasil/Gambar/t5_01_dua_model_per_fold.png)
+
+![RMSE validasi silang Ridge dan Elastic Net untuk berbagai nilai alpha](../Hasil/Gambar/t5_03_tuning_linear.png)
+
+Keluaran: `Hasil/Tabel/t5_tabel_dua_model.csv`, `t5_tabel_dua_model_per_fold.csv`, `t5_tabel_tuning_linear.csv`, `t5_tabel_tuning_linear_per_fold.csv`, `t5_tabel_semua_eksperimen.csv`, dan grafik `Hasil/Gambar/t5_01_dua_model_per_fold.png` serta `t5_03_tuning_linear.png`. Tabel hasil percobaan (25 konfigurasi) ada di `Laporan/Tabel Hasil Percobaan Tahap 5.md`.

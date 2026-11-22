@@ -537,7 +537,7 @@ function RESET_HOOK(){ tIdx=106; leak=false; mode=1; $$('#lk button').forEach((b
 /* ═════════ Progres bawah ═════════ */
 const LAST = STEPS.length-1;
 let step = 0;
-const GROUPS=[["Pembuka", 1], ["Tahap 1", 1], ["Tahap 2", 1], ["Tahap 3", 1], ["Tahap 4", 1], ["Ringkasan", 1]];
+const GROUPS=[["Pembuka", 1], ["Tahap 1", 1], ["Tahap 2", 1], ["Tahap 3", 1], ["Tahap 4", 1], ["Tahap 5", 1]];
 (function(){ const p=$('#prog'); GROUPS.forEach(([n,c])=>{const s=document.createElement('div');s.className='seg';s.style.flex=c;s.innerHTML='<div class="bar"><i></i></div><span>'+n+'</span>';p.appendChild(s);}); })();
 function progress(){
   let start=0;
