@@ -87,6 +87,24 @@ for kunci, r in rec.items():
                   **{f"RMSE fold {i+1}": x[i] for i in range(5)}})
 df = pd.DataFrame(baris).sort_values(["RMSE rata-rata", "RMSE sd"]).reset_index(drop=True)
 df.insert(0, "Peringkat", df.index + 1)
+
+# Tingkat kesulitan (rubrik [Usulan], hanya dari struktur konfigurasi, tidak memakai hasil RMSE)
+def skor_kesulitan(nama, fitur):
+    if nama.startswith("*Naive"):
+        return 0, {"model": 0, "komposisi": 0, "fitur": 0, "tuning": 0, "target": 0}
+    pohon = any(k in nama for k in ["Random forest", "Extra Trees", "HGB", "Gradient boosting", "boosting"])
+    n_model = nama.count(" + ") + 1 if " + " in nama else (2 if ("Rata-rata" in nama or "lalu" in nama) else 1)
+    bagian = {"model": 3 if pohon else 1,
+              "komposisi": 0 if n_model == 1 else (1 if n_model == 2 else 2),
+              "fitur": {"F1": 0, "F2": 1, "F3": 2}[fitur[:2]],
+              "tuning": 2 if any(k in nama for k in ["terpilih", "terbaik", "{"]) else 0,
+              "target": 1 if "target " in nama else 0}
+    return sum(bagian.values()), bagian
+def tingkat(sk):
+    return "1 Mudah" if sk <= 1 else ("2 Sedang" if sk <= 3 else ("3 Sulit" if sk <= 6 else "4 Sangat sulit"))
+sk = [skor_kesulitan(n, f) for n, f in zip(df["Konfigurasi"], df["Fitur"])]
+df["Skor kesulitan"] = [a for a, _ in sk]
+df["Tingkat kesulitan"] = [tingkat(a) for a, _ in sk]
 df.round(4).to_csv(os.path.join(T, "t5_tabel_semua_eksperimen.csv"), index=False)
 
 def c(x, n=2):
@@ -97,15 +115,22 @@ def tabel_md(kolom, baris_fn, judul_kolom):
         out.append("| " + " | ".join(baris_fn(r)) + " |")
     return "\n".join(out)
 
-A = tabel_md(None, lambda r: [str(r["Peringkat"]), r["Konfigurasi"], r["Fitur"], c(r["RMSE rata-rata"]), c(r["RMSE sd"]),
+A = tabel_md(None, lambda r: [str(r["Peringkat"]), r["Konfigurasi"], r["Fitur"], f'{r["Tingkat kesulitan"]} ({r["Skor kesulitan"]})', c(r["RMSE rata-rata"]), c(r["RMSE sd"]),
                               c(r["MSE rata-rata"], 0), c(r["MAE rata-rata"]), c(r["MAE sd"]),
                               c(r["Perbaikan vs naive (%)"], 1), f'{r["Fold lebih baik dari naive"]} dari 5',
                               f'{c(r["Selisih vs Ridge alpha=1"])} ({c(r["sd selisih vs Ridge"])})',
                               f'{r["Fold lebih baik dari Ridge alpha=1"]} dari 5', r["Sumber"]],
-             ["No", "Konfigurasi", "Fitur", "RMSE", "sd RMSE", "MSE", "MAE", "sd MAE", "Perbaikan vs *naive* (%)",
+             ["No", "Konfigurasi", "Fitur", "Kesulitan (skor)", "RMSE", "sd RMSE", "MSE", "MAE", "sd MAE", "Perbaikan vs *naive* (%)",
               "*Fold* lebih baik dari *naive*", "Selisih RMSE vs Ridge `alpha=1` (sd selisih)", "*Fold* lebih baik dari Ridge", "Sumber"])
 B = tabel_md(None, lambda r: [str(r["Peringkat"]), r["Konfigurasi"]] + [c(r[f"RMSE fold {i}"], 1) for i in range(1, 6)],
              ["No", "Konfigurasi", "*Fold* 1", "*Fold* 2", "*Fold* 3", "*Fold* 4", "*Fold* 5"])
+
+
+rt = df[df["Konfigurasi"] != "*Naive forecast*"].groupby("Tingkat kesulitan").agg(n=("Konfigurasi", "size"), terbaik=("RMSE rata-rata", "min"), median=("RMSE rata-rata", "median"), terburuk=("RMSE rata-rata", "max"))
+RT = "| Tingkat | Jumlah konfigurasi | RMSE terbaik | RMSE median | RMSE terburuk |\n|---|---|---|---|---|\n" + "\n".join(
+    f"| {i} | {int(r['n'])} | {c(r['terbaik'])} | {c(r['median'])} | {c(r['terburuk'])} |" for i, r in rt.iterrows())
+mudah = df[(df["Tingkat kesulitan"] == "1 Mudah") & (df["Konfigurasi"] != "*Naive forecast*")]["RMSE rata-rata"].min()
+sulit = df[df["Tingkat kesulitan"] == "4 Sangat sulit"]["RMSE rata-rata"].min()
 
 md = f"""# Tabel Hasil Percobaan Tahap 5
 
@@ -127,6 +152,28 @@ Semua percobaan model lanjutan pada validasi silang `TimeSeriesSplit(n_splits=5,
 2. Skor terbaik dipilih dari puluhan konfigurasi pada lima *fold* yang sama, sehingga optimistis dan bukan kinerja akhir. Kinerja akhir hanya dari data uji, satu kali.
 3. Langkah 3 sampai 6 di bagian 05.5 ditentukan setelah melihat hasil langkah sebelumnya. Grid 05.7 ditetapkan sebelum dijalankan.
 4. Baris yang sama di beberapa bagian (misalnya Ridge `alpha=1`) digabung, kolom Sumber menunjukkan asalnya. Nilai per *fold* di bagian 05.1 dibulatkan dua desimal di berkasnya.
+
+## Tingkat kesulitan
+
+Kolom "Kesulitan (skor)" di Tabel 1 menilai seberapa sulit konfigurasi itu **diimplementasikan, dijalankan, dan dipertanggungjawabkan**. Rubrik ini **[Usulan]**, dibuat dari struktur konfigurasi saja dan **tidak memakai hasil RMSE**, jadi tidak ada pengaruh dari peringkat. Skor adalah jumlah lima komponen:
+
+| Komponen | Skor | Alasan kesulitan |
+|---|---|---|
+| Jenis model | *Naive* 0, linear (Ridge, Elastic Net) 1, pohon atau *boosting* (*gradient boosting*, HGB, *random forest*, *Extra Trees*) 3 | Linear tinggal satu pemanggilan dan koefisiennya bisa dibaca. Model pohon memiliki banyak hiperparameter, hubungannya nonlinear sehingga sulit dijelaskan per fitur, lebih lambat dilatih, dan hasilnya peka pada seed. |
+| Komposisi | Tunggal 0, dua model (rata-rata atau dua tahap) 1, tiga model atau lebih 2 | Setiap model tambahan perlu dilatih per *fold*, prediksinya disimpan dan digabung, dan satu kesalahan di satu model memengaruhi semuanya. |
+| Fitur | F1 0, F2 1, F3 2 | F2 memerlukan fitur turunan baru (angin u dan v, hujan kumulatif, statistik mingguan) beserta uji kebocoran. F3 memerlukan penggabungan deret antar stasiun (rata-rata stasiun lain, tanpa stasiun itu sendiri), mengubah aturan bagian 01, dan di data uji harus diisi dari 9 stasiun latih. |
+| *Tuning* | Tanpa pencarian 0, hasil pencarian acak 2 | Perlu pencarian beberapa hiperparameter, pemilihan jumlah iterasi dari kurva rata-rata 5 *fold*, dan waktu komputasi besar (mengulang seluruh eksperimen sekitar 45 menit pada 2 inti CPU). Skor terpilihnya juga lebih optimistis. |
+| Transformasi target | Tidak ada 0, akar kuadrat atau `log1p` 1 | Prediksi harus dikembalikan ke skala asli, dan koreksi bias bisa diperlukan (di sini tidak dikoreksi). |
+
+Tingkat dari skor: **1 Mudah** (0 sampai 1), **2 Sedang** (2 sampai 3), **3 Sulit** (4 sampai 6), **4 Sangat sulit** (7 atau lebih). Contoh: Ridge dengan F1 skor 1 (Mudah), Ridge dengan F3 skor 3 (Sedang), *random forest* bawaan dengan F3 skor 5 (Sulit), Ridge + *random forest* hasil *tuning* dengan F3 skor 8 (Sangat sulit).
+
+Hubungan kesulitan dan hasil (dari tabel ini, tanpa *naive forecast*):
+
+{RT}
+
+Model tingkat 1 terbaik (selain *naive*) mendapat RMSE {c(mudah)}, sedangkan tingkat 4 terbaik {c(sulit)}. Naiknya kesulitan implementasi dari tingkat 1 ke tingkat 4 hanya menurunkan RMSE sekitar {c(mudah - sulit)} (sekitar {c(100 * (mudah - sulit) / mudah, 1)}%), jauh di bawah simpangan baku antar *fold* (sekitar 19), dan sebagian dari selisih itu masih optimisme pemilihan dari banyak konfigurasi. Ini alasan memilih model yang mudah dijelaskan dan dipertanggungjawabkan: ongkos implementasi, risiko kebocoran, dan beban penjelasannya jauh lebih besar daripada perbaikan yang didapat.
+
+Keterbatasan rubrik: bobot skor adalah usulan dan bukan standar baku, dan skor tidak mengukur waktu latih tiap model (waktu per model tidak diukur terpisah).
 
 ## Tabel 1. Ringkasan, urut dari terbaik ke terburuk ({len(df)} konfigurasi)
 
