@@ -183,8 +183,8 @@ svg .fade{transition:opacity .45s ease}
 
   <div class="copy">
     <div class="blk" id="b1"><span class="lbl">01 · Ridge dan Elastic Net</span>
-      <p><b>Ridge</b> adalah model linear: ramalan dihitung dari 29 fitur yang masing-masing dikali sebuah <b>bobot</b>. Ridge <b>mengecilkan semua bobot</b> supaya tidak terlalu besar, tetapi tidak ada yang jadi nol, jadi semua fitur tetap dipakai.</p>
-      <p style="margin-top:14px"><b>Elastic Net</b> sama, tetapi bisa <b>membuat bobot fitur yang tidak berguna menjadi nol</b>, sehingga fitur itu dibuang.</p></div>
+      <p><b>Ridge</b> adalah model linear yang <b>mengecilkan semua bobot</b> fitur, tetapi tidak ada yang jadi nol.</p>
+      <p style="margin-top:12px"><b>Elastic Net</b> sama, tetapi bisa <b>membuat bobot fitur yang tidak berguna menjadi nol</b>.</p></div>
     <div class="blk" id="b2"><span class="lbl">02 · Diuji Sama Seperti <em>Naive</em></span>
       <p>Lima <em>fold</em>, baris yang dinilai, dan praproses sama dengan <em>naive forecast</em>, jadi angkanya bisa dibandingkan langsung. <b>Data uji tidak dibuka.</b> Bedanya, kedua model dilatih dan pengaturannya dipilih di <em>fold</em> yang sama, sehingga skornya sedikit optimistis.</p></div>
     <div class="blk" id="b3"><span class="lbl">03 · Apa yang Disetel (<em>Tuning</em>)</span>
