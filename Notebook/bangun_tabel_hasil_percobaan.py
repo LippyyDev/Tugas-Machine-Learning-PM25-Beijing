@@ -76,6 +76,7 @@ baris = []
 for kunci, r in rec.items():
     x = r["rmse"]; d = x - acuan
     mae_m, mae_s = (r["mae"].mean(), r["mae"].std(ddof=1)) if r["mae"] is not None else r["mae_ms"]
+    assert len(x) == 5, r["nama"]          # kriteria masuk: ada nilai di kelima fold
     baris.append({"Konfigurasi": r["nama"], "Fitur": r["fitur"], "Sumber": ", ".join(dict.fromkeys(r["sumber"])),
                   "RMSE rata-rata": x.mean(), "RMSE sd": x.std(ddof=1), "MSE rata-rata": (x ** 2).mean(),
                   "MAE rata-rata": mae_m, "MAE sd": mae_s,
@@ -106,26 +107,11 @@ A = tabel_md(None, lambda r: [str(r["Peringkat"]), r["Konfigurasi"], r["Fitur"],
 B = tabel_md(None, lambda r: [str(r["Peringkat"]), r["Konfigurasi"]] + [c(r[f"RMSE fold {i}"], 1) for i in range(1, 6)],
              ["No", "Konfigurasi", "*Fold* 1", "*Fold* 2", "*Fold* 3", "*Fold* 4", "*Fold* 5"])
 
-# Lampiran: konfigurasi tuning acak (hanya rata-rata dan sd yang tersimpan)
-t3 = pd.read_csv(os.path.join(T, "t5_tabel_tuning.csv"))
-t6 = pd.read_csv(os.path.join(T, "t5_tabel_tuning_putaran2.csv"))
-hp = ["min_samples_leaf", "max_leaf_nodes", "max_features", "max_depth", "learning_rate", "l2_regularization", "iterasi_terbaik", "max_samples"]
-lamp = []
-for _, r in t3.iterrows():
-    lamp.append((r["model"], r["himpunan"][:2], "3 tuning", r, r["RMSE rata-rata"], r["RMSE sd"]))
-for _, r in t6.iterrows():
-    lamp.append(("Random forest" if r["model"] == "RF" else "Extra Trees", "F3", "6 putaran 2", r, r["RMSE rata-rata"], r["RMSE sd"]))
-lamp.sort(key=lambda z: (z[4], z[5]))
-def hps(r):
-    return ", ".join(f"{k}={('%g' % r[k])}" for k in hp if k in r.index and pd.notna(r[k]))
-L = ["| No | Model | Fitur | Hiperparameter | RMSE | sd RMSE | Langkah |", "|---|---|---|---|---|---|---|"]
-for i, (m, f, s, r, a, b) in enumerate(lamp, 1):
-    L.append(f"| {i} | {'HGB' if m == 'HGB' else ('Random forest' if m == 'RF' else m)} | {f} | `{hps(r)}` | {c(a)} | {c(b)} | 05.5 ({s}) |")
-LAMP = "\n".join(L)
-
 md = f"""# Tabel Hasil Percobaan Tahap 5
 
-Semua percobaan model lanjutan pada validasi silang `TimeSeriesSplit(n_splits=5, gap=24)` di data latih 9 stasiun, diurutkan dari RMSE rata-rata terendah (terbaik) ke tertinggi (terburuk). **Data uji tidak dibuka.** Angka berasal dari eksekusi `Notebook/Tahap 2 EDA dan Praproses.ipynb` (bagian 05.1, 05.5, dan 05.7) dan digabung oleh `Notebook/bangun_tabel_hasil_percobaan.py` dari CSV di `Hasil/Tabel/`. Berkas CSV gabungan: `Hasil/Tabel/t5_tabel_semua_eksperimen.csv`.
+Semua percobaan model lanjutan pada validasi silang `TimeSeriesSplit(n_splits=5, gap=24)` di data latih 9 stasiun, diurutkan dari RMSE rata-rata terendah (terbaik) ke tertinggi (terburuk).
+
+**Kriteria masuk tabel:** model dijalankan dan dilatih langsung pada data latih 9 stasiun yang digabung, dengan *fold*, baris validasi, dan praproses per *fold* yang sama dengan *naive forecast*, sehingga punya nilai RMSE di kelima *fold*. Konfigurasi *tuning* acak yang hanya tercatat rata-rata dan simpangan baku (tanpa nilai tiap *fold*) tidak dimasukkan. Catatannya tetap ada di `Hasil/Tabel/t5_tabel_tuning.csv` dan `t5_tabel_tuning_putaran2.csv`. **Data uji tidak dibuka.** Angka berasal dari eksekusi `Notebook/Tahap 2 EDA dan Praproses.ipynb` (bagian 05.1, 05.5, dan 05.7) dan digabung oleh `Notebook/bangun_tabel_hasil_percobaan.py` dari CSV di `Hasil/Tabel/`. Berkas CSV gabungan: `Hasil/Tabel/t5_tabel_semua_eksperimen.csv`.
 
 ## Cara membaca
 
@@ -149,14 +135,8 @@ Semua percobaan model lanjutan pada validasi silang `TimeSeriesSplit(n_splits=5,
 ## Tabel 2. RMSE tiap *fold*, urutan sama dengan Tabel 1
 
 {B}
-
-## Lampiran. Konfigurasi *tuning* acak ({len(lamp)} konfigurasi, urut dari terbaik ke terburuk)
-
-Hanya rata-rata dan simpangan baku RMSE yang tersimpan (nilai per *fold* hanya ada untuk konfigurasi terbaik tiap kelompok, yang sudah masuk Tabel 1 dan 2), jadi MSE dan MAE tidak tersedia untuk lampiran ini. Seluruhnya F2 atau F3, bukan F1.
-
-{LAMP}
 """
 open(os.path.join(AKAR, "Laporan", "Tabel Hasil Percobaan Tahap 5.md"), "w", encoding="utf-8").write(md)
-print("baris tabel utama:", len(df), "| lampiran:", len(lamp))
+print("baris tabel:", len(df))
 print(df[["Peringkat", "Konfigurasi", "Fitur", "RMSE rata-rata", "RMSE sd", "MSE rata-rata", "MAE rata-rata"]].head(5).round(2).to_string())
 print(df[["Peringkat", "Konfigurasi", "RMSE rata-rata"]].tail(4).round(2).to_string())

@@ -1,6 +1,8 @@
 # Tabel Hasil Percobaan Tahap 5
 
-Semua percobaan model lanjutan pada validasi silang `TimeSeriesSplit(n_splits=5, gap=24)` di data latih 9 stasiun, diurutkan dari RMSE rata-rata terendah (terbaik) ke tertinggi (terburuk). **Data uji tidak dibuka.** Angka berasal dari eksekusi `Notebook/Tahap 2 EDA dan Praproses.ipynb` (bagian 05.1, 05.5, dan 05.7) dan digabung oleh `Notebook/bangun_tabel_hasil_percobaan.py` dari CSV di `Hasil/Tabel/`. Berkas CSV gabungan: `Hasil/Tabel/t5_tabel_semua_eksperimen.csv`.
+Semua percobaan model lanjutan pada validasi silang `TimeSeriesSplit(n_splits=5, gap=24)` di data latih 9 stasiun, diurutkan dari RMSE rata-rata terendah (terbaik) ke tertinggi (terburuk).
+
+**Kriteria masuk tabel:** model dijalankan dan dilatih langsung pada data latih 9 stasiun yang digabung, dengan *fold*, baris validasi, dan praproses per *fold* yang sama dengan *naive forecast*, sehingga punya nilai RMSE di kelima *fold*. Konfigurasi *tuning* acak yang hanya tercatat rata-rata dan simpangan baku (tanpa nilai tiap *fold*) tidak dimasukkan. Catatannya tetap ada di `Hasil/Tabel/t5_tabel_tuning.csv` dan `t5_tabel_tuning_putaran2.csv`. **Data uji tidak dibuka.** Angka berasal dari eksekusi `Notebook/Tahap 2 EDA dan Praproses.ipynb` (bagian 05.1, 05.5, dan 05.7) dan digabung oleh `Notebook/bangun_tabel_hasil_percobaan.py` dari CSV di `Hasil/Tabel/`. Berkas CSV gabungan: `Hasil/Tabel/t5_tabel_semua_eksperimen.csv`.
 
 ## Cara membaca
 
@@ -172,55 +174,3 @@ Semua percobaan model lanjutan pada validasi silang `TimeSeriesSplit(n_splits=5,
 | 71 | Ridge, target log1p | 94,9 | 57,2 | 90,2 | 49,8 | 105,8 |
 | 72 | Ridge, target log1p | 95,2 | 57,4 | 91,1 | 49,8 | 107,0 |
 | 73 | *Naive forecast* | 101,7 | 62,2 | 103,6 | 57,7 | 108,8 |
-
-## Lampiran. Konfigurasi *tuning* acak (45 konfigurasi, urut dari terbaik ke terburuk)
-
-Hanya rata-rata dan simpangan baku RMSE yang tersimpan (nilai per *fold* hanya ada untuk konfigurasi terbaik tiap kelompok, yang sudah masuk Tabel 1 dan 2), jadi MSE dan MAE tidak tersedia untuk lampiran ini. Seluruhnya F2 atau F3, bukan F1.
-
-| No | Model | Fitur | Hiperparameter | RMSE | sd RMSE | Langkah |
-|---|---|---|---|---|---|---|
-| 1 | Random forest | F3 | `min_samples_leaf=100, max_features=0.2, max_samples=0.25` | 71,53 | 19,58 | 05.5 (6 putaran 2) |
-| 2 | Random forest | F3 | `min_samples_leaf=300, max_features=0.2, max_samples=0.25` | 71,54 | 19,45 | 05.5 (6 putaran 2) |
-| 3 | Random forest | F3 | `min_samples_leaf=300, max_features=0.3, max_samples=0.25` | 71,61 | 19,25 | 05.5 (6 putaran 2) |
-| 4 | Random forest | F3 | `min_samples_leaf=100, max_features=0.3, max_samples=0.25` | 71,77 | 19,52 | 05.5 (3 tuning) |
-| 5 | Random forest | F3 | `min_samples_leaf=300, max_features=0.3, max_samples=0.1` | 71,79 | 19,44 | 05.5 (6 putaran 2) |
-| 6 | Extra Trees | F3 | `min_samples_leaf=50, max_features=0.3` | 71,80 | 19,50 | 05.5 (6 putaran 2) |
-| 7 | Extra Trees | F3 | `min_samples_leaf=100, max_features=0.3` | 71,88 | 19,43 | 05.5 (6 putaran 2) |
-| 8 | HGB | F3 | `min_samples_leaf=1000, max_leaf_nodes=31, max_features=0.8, max_depth=3, learning_rate=0.05, l2_regularization=100, iterasi_terbaik=80` | 72,08 | 19,30 | 05.5 (3 tuning) |
-| 9 | Random forest | F3 | `min_samples_leaf=100, max_features=0.3, max_samples=0.5` | 72,15 | 19,78 | 05.5 (3 tuning) |
-| 10 | HGB | F3 | `min_samples_leaf=1000, max_leaf_nodes=15, max_features=0.8, max_depth=6, learning_rate=0.05, l2_regularization=10, iterasi_terbaik=60` | 72,18 | 19,24 | 05.5 (3 tuning) |
-| 11 | HGB | F3 | `min_samples_leaf=20, max_leaf_nodes=15, max_features=0.5, max_depth=4, learning_rate=0.05, l2_regularization=10, iterasi_terbaik=60` | 72,21 | 19,40 | 05.5 (3 tuning) |
-| 12 | HGB | F3 | `min_samples_leaf=300, max_leaf_nodes=15, max_features=0.8, max_depth=8, learning_rate=0.05, l2_regularization=10, iterasi_terbaik=60` | 72,23 | 19,58 | 05.5 (3 tuning) |
-| 13 | HGB | F3 | `min_samples_leaf=300, max_leaf_nodes=63, max_features=1, max_depth=3, learning_rate=0.03, l2_regularization=1, iterasi_terbaik=100` | 72,24 | 19,16 | 05.5 (3 tuning) |
-| 14 | Random forest | F2 | `min_samples_leaf=100, max_features=0.3, max_samples=0.25` | 72,27 | 19,63 | 05.5 (3 tuning) |
-| 15 | Random forest | F3 | `min_samples_leaf=1000, max_features=0.3, max_samples=0.25` | 72,29 | 19,53 | 05.5 (6 putaran 2) |
-| 16 | Extra Trees | F3 | `min_samples_leaf=300, max_features=0.3` | 72,33 | 19,49 | 05.5 (6 putaran 2) |
-| 17 | HGB | F3 | `min_samples_leaf=100, max_leaf_nodes=15, max_features=0.8, max_depth=8, learning_rate=0.03, l2_regularization=0, iterasi_terbaik=100` | 72,35 | 19,54 | 05.5 (3 tuning) |
-| 18 | HGB | F2 | `min_samples_leaf=20, max_leaf_nodes=15, max_features=0.5, max_depth=4, learning_rate=0.05, l2_regularization=10, iterasi_terbaik=60` | 72,35 | 19,16 | 05.5 (3 tuning) |
-| 19 | HGB | F2 | `min_samples_leaf=1000, max_leaf_nodes=31, max_features=0.8, max_depth=3, learning_rate=0.05, l2_regularization=100, iterasi_terbaik=80` | 72,45 | 19,05 | 05.5 (3 tuning) |
-| 20 | Random forest | F3 | `min_samples_leaf=100, max_features=0.5, max_samples=0.25` | 72,52 | 19,74 | 05.5 (3 tuning) |
-| 21 | HGB | F3 | `min_samples_leaf=300, max_leaf_nodes=15, max_features=0.8, max_depth=6, learning_rate=0.1, l2_regularization=10, iterasi_terbaik=20` | 72,65 | 19,49 | 05.5 (3 tuning) |
-| 22 | HGB | F2 | `min_samples_leaf=300, max_leaf_nodes=63, max_features=1, max_depth=3, learning_rate=0.03, l2_regularization=1, iterasi_terbaik=100` | 72,66 | 19,19 | 05.5 (3 tuning) |
-| 23 | HGB | F3 | `min_samples_leaf=300, max_leaf_nodes=31, max_features=0.8, max_depth=4, learning_rate=0.1, l2_regularization=100, iterasi_terbaik=40` | 72,67 | 19,89 | 05.5 (3 tuning) |
-| 24 | Random forest | F2 | `min_samples_leaf=100, max_features=0.3, max_samples=0.5` | 72,70 | 19,95 | 05.5 (3 tuning) |
-| 25 | Random forest | F3 | `min_samples_leaf=10, max_features=0.3, max_samples=0.25` | 72,71 | 20,05 | 05.5 (3 tuning) |
-| 26 | HGB | F2 | `min_samples_leaf=1000, max_leaf_nodes=15, max_features=0.8, max_depth=6, learning_rate=0.05, l2_regularization=10, iterasi_terbaik=60` | 72,73 | 19,46 | 05.5 (3 tuning) |
-| 27 | HGB | F3 | `min_samples_leaf=300, max_leaf_nodes=63, max_features=0.5, max_depth=8, learning_rate=0.05, l2_regularization=10, iterasi_terbaik=60` | 72,81 | 20,51 | 05.5 (3 tuning) |
-| 28 | HGB | F2 | `min_samples_leaf=300, max_leaf_nodes=15, max_features=0.8, max_depth=8, learning_rate=0.05, l2_regularization=10, iterasi_terbaik=60` | 72,83 | 19,44 | 05.5 (3 tuning) |
-| 29 | HGB | F2 | `min_samples_leaf=100, max_leaf_nodes=15, max_features=0.8, max_depth=8, learning_rate=0.03, l2_regularization=0, iterasi_terbaik=100` | 72,86 | 19,54 | 05.5 (3 tuning) |
-| 30 | Random forest | F2 | `min_samples_leaf=100, max_features=0.5, max_samples=0.25` | 72,88 | 19,55 | 05.5 (3 tuning) |
-| 31 | HGB | F2 | `min_samples_leaf=300, max_leaf_nodes=31, max_features=0.8, max_depth=4, learning_rate=0.1, l2_regularization=100, iterasi_terbaik=40` | 72,92 | 19,41 | 05.5 (3 tuning) |
-| 32 | Random forest | F3 | `min_samples_leaf=1000, max_features=0.2, max_samples=0.1` | 73,05 | 19,83 | 05.5 (6 putaran 2) |
-| 33 | HGB | F2 | `min_samples_leaf=300, max_leaf_nodes=15, max_features=0.8, max_depth=6, learning_rate=0.1, l2_regularization=10, iterasi_terbaik=20` | 73,10 | 19,24 | 05.5 (3 tuning) |
-| 34 | HGB | F2 | `min_samples_leaf=300, max_leaf_nodes=63, max_features=0.5, max_depth=8, learning_rate=0.05, l2_regularization=10, iterasi_terbaik=40` | 73,24 | 19,92 | 05.5 (3 tuning) |
-| 35 | Random forest | F2 | `min_samples_leaf=10, max_features=0.3, max_samples=0.25` | 73,26 | 19,82 | 05.5 (3 tuning) |
-| 36 | HGB | F3 | `min_samples_leaf=300, max_leaf_nodes=63, max_features=1, max_depth=8, learning_rate=0.1, l2_regularization=10, iterasi_terbaik=20` | 73,29 | 20,00 | 05.5 (3 tuning) |
-| 37 | HGB | F3 | `min_samples_leaf=20, max_leaf_nodes=63, max_features=1, max_depth=8, learning_rate=0.1, l2_regularization=100, iterasi_terbaik=40` | 73,34 | 20,66 | 05.5 (3 tuning) |
-| 38 | Random forest | F3 | `min_samples_leaf=30, max_features=0.5, max_samples=0.5` | 73,51 | 20,14 | 05.5 (3 tuning) |
-| 39 | HGB | F3 | `min_samples_leaf=20, max_leaf_nodes=63, max_features=1, max_depth=8, learning_rate=0.1, l2_regularization=1, iterasi_terbaik=20` | 73,52 | 20,37 | 05.5 (3 tuning) |
-| 40 | HGB | F2 | `min_samples_leaf=20, max_leaf_nodes=63, max_features=1, max_depth=8, learning_rate=0.1, l2_regularization=100, iterasi_terbaik=40` | 73,57 | 20,27 | 05.5 (3 tuning) |
-| 41 | Random forest | F3 | `min_samples_leaf=10, max_features=0.5, max_samples=0.5` | 73,62 | 20,02 | 05.5 (3 tuning) |
-| 42 | HGB | F2 | `min_samples_leaf=20, max_leaf_nodes=63, max_features=1, max_depth=8, learning_rate=0.1, l2_regularization=1, iterasi_terbaik=20` | 73,95 | 19,93 | 05.5 (3 tuning) |
-| 43 | Random forest | F2 | `min_samples_leaf=30, max_features=0.5, max_samples=0.5` | 73,95 | 19,97 | 05.5 (3 tuning) |
-| 44 | HGB | F2 | `min_samples_leaf=300, max_leaf_nodes=63, max_features=1, max_depth=8, learning_rate=0.1, l2_regularization=10, iterasi_terbaik=20` | 74,01 | 20,02 | 05.5 (3 tuning) |
-| 45 | Random forest | F2 | `min_samples_leaf=10, max_features=0.5, max_samples=0.5` | 74,08 | 19,75 | 05.5 (3 tuning) |
