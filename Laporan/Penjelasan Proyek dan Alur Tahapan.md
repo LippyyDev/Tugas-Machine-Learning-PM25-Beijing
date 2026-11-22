@@ -221,7 +221,9 @@ Mengapa model linear? Bobot tiap fitur bisa dibaca, jadi mudah dijelaskan dan di
 
 ![RMSE tiap fold untuk naive, Ridge, dan Elastic Net: kedua model lebih rendah dari naive di kelima fold](../Hasil/Gambar/t5_01_dua_model_per_fold.png)
 
-*Cara membaca:* di setiap *fold*, kedua model lebih rendah dari *naive*. Selisih kedua model hanya 0,57, jauh di bawah simpangan baku antar *fold* (sekitar 19), dan Elastic Net lebih baik hanya di 3 dari 5 *fold*. Jadi keduanya **setara**, dan Ridge dipilih sebagai model utama karena lebih sederhana. Angka ini nilai validasi, bukan kinerja akhir. Model dibekukan dulu, lalu data uji dibuka satu kali di Tahap 6.
+*Cara membaca:* di setiap *fold*, kedua model lebih rendah dari *naive*. Selisih kedua model hanya 0,57, jauh di bawah simpangan baku antar *fold* (sekitar 19), dan Elastic Net lebih baik hanya di 3 dari 5 *fold*. Jadi keduanya **setara**, dan skor validasi tidak bisa menentukan pemenang. Angka ini nilai validasi, bukan kinerja akhir.
+
+**Mengapa Ridge utama dan Elastic Net pembanding, padahal hampir sama?** Karena skor tidak bisa memilih, dipakai aturan yang ditetapkan sebelum hasil keluar: bila selisih RMSE kurang dari satu simpangan baku antar *fold* (sekitar 19), diambil keluarga model yang lebih sederhana. Ridge lebih sederhana (satu pengaturan, 5 nilai dicoba) daripada Elastic Net (dua pengaturan, 15 nilai dicoba), dan skor terbaik dari lebih banyak pilihan cenderung lebih optimistis. Elastic Net tetap dibawa sebagai pembanding untuk menjawab satu pertanyaan: apakah membuang fitur membantu? Di validasi ini belum terbukti membantu. Label utama dan pembanding adalah aturan kerja, bukan klaim bahwa Ridge lebih akurat; menukar perannya sama bisa dipertanggungjawabkan. Model dibekukan dulu, lalu data uji dibuka satu kali di Tahap 6.
 
 ### Tahap 6. Evaluasi dan diagnosis
 

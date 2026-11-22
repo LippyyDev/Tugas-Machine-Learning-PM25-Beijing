@@ -182,16 +182,22 @@ svg .fade{transition:opacity .45s ease}
   <div class="kicker"><h1><em>Model lanjutan</em></h1></div>
 
   <div class="copy">
-    <div class="blk" id="b1"><span class="lbl">01 · Dua Model, Keduanya Linear</span>
-      <p>Model utama <b>Ridge</b>, pembanding <b>Elastic Net</b>. Keduanya memberi <b>bobot</b> pada 29 fitur yang sama, jadi mudah dijelaskan: tiap fitur punya bobot yang bisa dibaca. Elastic Net juga bisa menjadikan bobot fitur yang tidak berguna menjadi nol.</p></div>
+    <div class="blk" id="b1"><span class="lbl">01 · Apa Itu Ridge dan Elastic Net</span>
+      <p>Keduanya model <b>linear</b>: ramalan dihitung dari jumlah 29 fitur yang masing-masing dikali sebuah <b>bobot</b>. <b>Ridge</b> menjaga bobot agar tidak terlalu besar. <b>Elastic Net</b> sama, dan bisa membuat bobot fitur yang tidak berguna menjadi nol. Bobot yang bisa dibaca membuat keduanya mudah dijelaskan.</p></div>
     <div class="blk" id="b2"><span class="lbl">02 · Diuji Sama Seperti <em>Naive</em></span>
       <p>Lima <em>fold</em>, baris yang dinilai, dan praproses sama dengan <em>naive forecast</em>, jadi angkanya bisa dibandingkan langsung. <b>Data uji tidak dibuka.</b> Bedanya, kedua model dilatih dan pengaturannya dipilih di <em>fold</em> yang sama, sehingga skornya sedikit optimistis.</p></div>
-    <div class="blk" id="b3"><span class="lbl">03 · Memilih Pengaturan (<em>alpha</em>)</span>
-      <p><em>alpha</em> adalah kekuatan &ldquo;rem&rdquo; pada bobot. Ada 20 pengaturan yang dicoba, daftarnya ditetapkan sebelum dijalankan. Kurvanya <b>hampir datar</b>: RMSE Ridge hanya bergeser 72,83 sampai 72,94, jadi hasil tidak bergantung pada angka <em>alpha</em>.</p></div>
-    <div class="blk" id="b4"><span class="lbl">04 · Hasil: Lebih Baik dari <em>Naive</em></span>
-      <p>RMSE Ridge <b>72,83 ± 19,38</b> dan Elastic Net <b>72,26 ± 19,23</b>, sedangkan <em>naive</em> 86,82 ± 24,70. Keduanya sekitar <b>16% lebih rendah</b> dan menang di <b>kelima <em>fold</em></b>.</p></div>
-    <div class="blk" id="b5"><span class="lbl">05 · Keduanya Setara</span>
-      <p>Selisih kedua model hanya <b>0,57</b>, jauh di bawah sebaran antar <em>fold</em> (sekitar 19), dan Elastic Net lebih baik di 3 dari 5 <em>fold</em> saja. Jadi keduanya <b>setara</b>. Ini nilai validasi, bukan hasil akhir: model dibekukan dulu, lalu <b>data uji dibuka satu kali di Tahap 6</b>.</p></div>
+    <div class="blk" id="b3"><span class="lbl">03 · Apa yang Disetel (<em>Tuning</em>)</span>
+      <p>Pengaturan model disebut <b>hiperparameter</b>. Ridge punya satu, <em>alpha</em> (kekerasan &ldquo;rem&rdquo; pada bobot). Elastic Net punya dua, <em>alpha</em> dan <em>l1_ratio</em> (seberapa kuat ia membuang fitur). Daftar nilainya ditetapkan sebelum dijalankan: <b>5 + 15 = 20 pengaturan</b>. Dipilih yang RMSE rata-rata 5 <em>fold</em>-nya paling rendah.</p></div>
+    <div class="blk" id="b4"><span class="lbl">04 · Hasil <em>Tuning</em></span>
+      <p>Kurvanya <b>hampir datar</b>: RMSE Ridge hanya bergeser 72,83 sampai 72,94 untuk <em>alpha</em> 0,1 sampai 1000, jadi hasil tidak bergantung pada angka <em>alpha</em>. Terpilih Ridge <em>alpha</em> 1000 (utama) dan Elastic Net <em>alpha</em> 1, <em>l1_ratio</em> 0,9 (pembanding).</p></div>
+    <div class="blk" id="b5"><span class="lbl">05 · RMSE di Lima <em>Fold</em></span>
+      <p>Di <b>setiap <em>fold</em></b>, Ridge dan Elastic Net lebih rendah dari <em>naive</em>. Rata-rata lima <em>fold</em>: <em>naive</em> <b>86,82</b>, Ridge <b>72,83</b>, Elastic Net <b>72,26</b>.</p></div>
+    <div class="blk" id="b6"><span class="lbl">06 · Total RMSE, MAE, dan Selisihnya</span>
+      <p>Dibanding <em>naive</em>, RMSE turun <b>13,99</b> (Ridge) dan <b>14,56</b> (Elastic Net), yaitu sekitar <b>16%</b>. MAE turun <b>4,88</b> dan <b>4,96</b>, sekitar <b>8%</b>. Persentasenya berbeda karena RMSE lebih peka pada galat besar daripada MAE.</p></div>
+    <div class="blk" id="b7"><span class="lbl">07 · Kedua Model Setara</span>
+      <p>Selisih kedua model hanya <b>0,57</b>, jauh di bawah sebaran antar <em>fold</em> (sekitar 19), dan Elastic Net lebih baik di 3 dari 5 <em>fold</em> saja. Jadi keduanya <b>setara</b>, dan skor validasi tidak bisa menentukan pemenang.</p></div>
+    <div class="blk" id="b8"><span class="lbl">08 · Kenapa Ridge Utama</span>
+      <p>Karena skor tidak bisa memilih, dipakai aturan yang <b>ditetapkan sebelum hasil keluar</b>: bila selisih kurang dari satu sebaran <em>fold</em>, ambil model yang lebih sederhana, yaitu <b>Ridge</b>. Elastic Net tetap jadi pembanding untuk menguji apakah membuang fitur membantu. Ini aturan kerja, <b>bukan klaim</b> Ridge lebih akurat.</p></div>
   </div>
 
   <div class="panel">
@@ -203,9 +209,12 @@ svg .fade{transition:opacity .45s ease}
     <div class="vwrap">
       <div class="view" id="v-model"><svg class="vz" id="svg-model" viewBox="0 0 942 526"></svg></div>
       <div class="view" id="v-aturan"><svg class="vz" id="svg-aturan" viewBox="0 0 942 526"></svg></div>
+      <div class="view" id="v-grid"><svg class="vz" id="svg-grid" viewBox="0 0 942 526"></svg></div>
       <div class="view" id="v-tuning"><svg class="vz" id="svg-tuning" viewBox="0 0 942 526"></svg></div>
       <div class="view" id="v-hasil"><svg class="vz" id="svg-hasil" viewBox="0 0 942 526"></svg></div>
+      <div class="view" id="v-total"><svg class="vz" id="svg-total" viewBox="0 0 942 526"></svg></div>
       <div class="view" id="v-setara"><svg class="vz" id="svg-setara" viewBox="0 0 942 526"></svg></div>
+      <div class="view" id="v-alasan"><svg class="vz" id="svg-alasan" viewBox="0 0 942 526"></svg></div>
     </div>
     <div class="tt" id="tt"></div>
     <div class="pfoot"><div class="pf" id="pf-cap"><div class="cap" id="cap"></div></div></div>
@@ -264,50 +273,39 @@ const NAIVE_M=86.82, RIDGE_M=72.83, EN_M=72.26;
 const play=(items,gap=150)=>{ items.forEach((g,k)=>{ g.style.opacity=0; }); items.forEach((g,k)=>later(()=>{g.style.opacity=1;},120+k*gap)); };
 const fade=(parent)=>mk('g',{class:'fade'},parent);
 
-/* ═════════ V0: dua model ═════════ */
+
+/* ═════════ V0: apa itu Ridge dan Elastic Net ═════════ */
 const s0=$('#svg-model'); const G0=[];
+const gF=fade(s0); G0.push(gF);
+mk('rect',{x:24,y:18,width:894,height:62,fill:'#07080b',stroke:'rgba(255,255,255,.14)'},gF);
+tx(gF,'MODEL LINEAR',[44,40],12,GREY,{'letter-spacing':'.14em'});
+tx(gF,'ramalan = (bobot × fitur 1) + (bobot × fitur 2) + … + (bobot × fitur 29)',[44,66],21,'#f1f2f6',{'font-family':SANS,'font-weight':500});
 const CARD=[
-  {x:24,  lbl:'PEMBANDING DASAR', nm:'Naive forecast', col:GREY,  desc:['Menyalin kadar PM2.5 saat','ini sebagai ramalan 24 jam','lagi. Tanpa pelatihan.']},
-  {x:331, lbl:'MODEL UTAMA',      nm:'Ridge',          col:BLUE,  desc:['Memberi bobot pada 29 fitur','dan menjaga bobot agar','tidak terlalu besar.']},
-  {x:638, lbl:'PEMBANDING',       nm:'Elastic Net',    col:LIGHT, desc:['Seperti Ridge, dan bisa','membuat bobot fitur yang','tidak berguna menjadi nol.']}
+  {x:24,  lbl:'MODEL UTAMA', nm:'Ridge', col:BLUE, desc:['Menjaga semua bobot agar tidak terlalu besar,','sehingga model tidak berlebihan mengikuti','data latih.'], set:'pengaturan: alpha'},
+  {x:488, lbl:'PEMBANDING', nm:'Elastic Net', col:LIGHT, desc:['Seperti Ridge, dan bisa membuat bobot fitur','yang tidak berguna menjadi nol, sehingga','fitur itu tidak dipakai.'], set:'pengaturan: alpha dan l1_ratio'}
 ];
 const W0=[34,-22,48,12,-40,28,-8,20,-30,16], WR=W0.map(v=>v*0.62), WE=[30,-18,44,0,-36,24,0,16,-26,0];
 CARD.forEach((c,ci)=>{
   const g=fade(s0); G0.push(g);
-  mk('rect',{x:c.x,y:34,width:280,height:388,fill:'#07080b',stroke:ci===1?'rgba(125,180,255,.55)':'rgba(255,255,255,.14)','stroke-width':ci===1?2:1},g);
-  tx(g,c.lbl,[c.x+20,66],13,c.col,{'letter-spacing':'.14em'});
-  tx(g,c.nm,[c.x+20,102],28,'#f1f2f6',{'font-family':SANS,'font-weight':600});
-  const cy=206;
-  if(ci===0){
-    mk('line',{x1:c.x+56,x2:c.x+224,y1:cy-16,y2:cy-16,stroke:GREY,'stroke-width':2.4,'stroke-dasharray':'7 6'},g);
-    mk('circle',{cx:c.x+56,cy:cy-16,r:9,fill:'#0a0b10',stroke:'#f1f2f6','stroke-width':2.6},g);
-    mk('circle',{cx:c.x+224,cy:cy-16,r:9,fill:'#0a0b10',stroke:GREY,'stroke-width':2.6},g);
-    tx(g,'jam t',[c.x+56,cy+30],15,'#c4c7d4',{'text-anchor':'middle'});
-    tx(g,'jam t+24',[c.x+224,cy+30],15,'#c4c7d4',{'text-anchor':'middle'});
-    tx(g,'sama persis',[c.x+140,cy-34],15,GREY,{'text-anchor':'middle'});
-  } else {
-    const base=cy, sc=1.5, bw=18, gx=c.x+28;
-    mk('line',{x1:c.x+16,x2:c.x+264,y1:base,y2:base,stroke:'rgba(255,255,255,.3)'},g);
-    const W=ci===1?WR:WE;
-    W0.forEach((w0,k)=>{
-      const x=gx+k*23.5;
-      const h0=w0*sc, h=W[k]*sc;
-      mk('rect',{x:x,y:h0>=0?base-h0:base,width:bw,height:Math.abs(h0),fill:'none',stroke:'rgba(255,255,255,.28)','stroke-dasharray':'3 3'},g);
-      if(Math.abs(h)>0.1) mk('rect',{x:x,y:h>=0?base-h:base,width:bw,height:Math.abs(h),fill:c.col,'fill-opacity':.85},g);
-      else tx(g,'×',[x+bw/2,base-6],18,AMB,{'text-anchor':'middle','font-weight':600});
-    });
-    tx(g,'bobot 10 fitur (contoh ilustrasi)',[c.x+140,cy+80],12,AMB,{'text-anchor':'middle','letter-spacing':'.06em'});
-  }
-  c.desc.forEach((t,k)=>tx(g,t,[c.x+20,336+k*26],17,'#c4c7d4',{'font-family':SANS}));
-  const hr=mk('rect',{x:c.x,y:34,width:280,height:388,fill:'transparent',class:'hov'},g);
-  const tips=['<small>Naive forecast</small>Tidak dilatih. RMSE 86,82 ± 24,70.<br><span class="hs">Ramalan jam t+24 = nilai jam t.</span>',
-              '<small>Ridge · model utama</small>Satu pengaturan: alpha.<br><span class="hs">Garis putus = bobot tanpa rem,<br>batang biru = setelah dikecilkan.</span>',
+  mk('rect',{x:c.x,y:100,width:430,height:394,fill:'#07080b',stroke:ci===0?'rgba(125,180,255,.55)':'rgba(255,255,255,.14)','stroke-width':ci===0?2:1},g);
+  tx(g,c.lbl,[c.x+22,128],13,c.col,{'letter-spacing':'.14em'});
+  tx(g,c.nm,[c.x+22,166],30,'#f1f2f6',{'font-family':SANS,'font-weight':600});
+  const base=262, sc=1.75, bw=24, gx=c.x+46;
+  mk('line',{x1:c.x+22,x2:c.x+408,y1:base,y2:base,stroke:'rgba(255,255,255,.3)'},g);
+  const W=ci===0?WR:WE;
+  W0.forEach((w0,k)=>{ const x=gx+k*35, h0=w0*sc, h=W[k]*sc;
+    mk('rect',{x:x,y:h0>=0?base-h0:base,width:bw,height:Math.abs(h0),fill:'none',stroke:'rgba(255,255,255,.28)','stroke-dasharray':'3 3'},g);
+    if(Math.abs(h)>0.1) mk('rect',{x:x,y:h>=0?base-h:base,width:bw,height:Math.abs(h),fill:c.col,'fill-opacity':.85},g);
+    else tx(g,'×',[x+bw/2,base-6],20,AMB,{'text-anchor':'middle','font-weight':600}); });
+  tx(g,'ilustrasi 10 bobot · garis putus = tanpa rem',[c.x+215,base+94],12,AMB,{'text-anchor':'middle','letter-spacing':'.02em'});
+  c.desc.forEach((t,k)=>tx(g,t,[c.x+22,392+k*25],18,'#c4c7d4',{'font-family':SANS}));
+  mk('line',{x1:c.x+22,x2:c.x+408,y1:458,y2:458,stroke:'rgba(255,255,255,.1)'},g);
+  tx(g,c.set,[c.x+22,484],15,c.col,{'letter-spacing':'.06em'});
+  const hr=mk('rect',{x:c.x,y:100,width:430,height:394,fill:'transparent',class:'hov'},g);
+  const tipt=['<small>Ridge · model utama</small>Satu pengaturan: alpha.<br><span class="hs">Garis putus = bobot tanpa rem,<br>batang biru = setelah dikecilkan.</span>',
               '<small>Elastic Net · pembanding</small>Dua pengaturan: alpha dan l1_ratio.<br><span class="hs">Tanda × = bobot yang dibuat nol,<br>fitur itu tidak dipakai.</span>'];
-  hr.addEventListener('mousemove',ev=>tip(tips[ci],ev)); hr.addEventListener('mouseleave',tipOff);
+  hr.addEventListener('mousemove',ev=>tip(tipt[ci],ev)); hr.addEventListener('mouseleave',tipOff);
 });
-const g0b=fade(s0); G0.push(g0b);
-[[BLUE,'29 fitur awal yang sama (lag PM2.5, rata-rata bergulir, cuaca, kalender)'],[GREY,'dilatih pada data latih 9 stasiun']].forEach(([c,t],i)=>{
-  mk('circle',{cx:44,cy:462+i*30,r:6,fill:c},g0b); tx(g0b,t,[62,467+i*30],16,'#c4c7d4',{'font-family':SANS}); });
 
 /* ═════════ V1: aturan sama dengan naive ═════════ */
 const s1=$('#svg-aturan'); const G1=[];
@@ -327,19 +325,44 @@ ROWS.forEach((r,i)=>{
   else mk('path',{d:'M54 '+(y+32)+'l7 8 14 -16',fill:'none',stroke:col,'stroke-width':3.4,'stroke-linecap':'round','stroke-linejoin':'round'},g);
   tx(g,r[0],[102,y+27],23,'#f1f2f6',{'font-family':SANS,'font-weight':600});
   tx(g,r[1],[102,y+52],16,warn?'#e8d3ad':'#a9adbf',{'font-family':SANS});
-  const hr=mk('rect',{x:24,y:y,width:894,height:64,fill:'transparent',class:'hov'},g);
-  hr.addEventListener('mouseenter',()=>{ });
 });
 
-/* ═════════ V2: tuning alpha ═════════ */
-const s2=$('#svg-tuning'); const G2=[];
+/* ═════════ V2: apa yang disetel ═════════ */
+const sg=$('#svg-grid'); const G2=[];
+const chip=(g,x,y,t,sel,w=86)=>{ mk('rect',{x:x,y:y,width:w,height:36,fill:sel?'rgba(255,194,102,.12)':'#0b0c11',stroke:sel?AMB:'rgba(255,255,255,.22)','stroke-width':sel?2:1},g); tx(g,t,[x+w/2,y+24],17,sel?'#f1f2f6':'#c4c7d4',{'text-anchor':'middle'}); };
+const gh=fade(sg); G2.push(gh); tx(gh,'NILAI YANG DICOBA (DITETAPKAN SEBELUM DIJALANKAN)',[24,24],13,GREY,{'letter-spacing':'.12em'});
+const gR=fade(sg); G2.push(gR);
+mk('rect',{x:24,y:40,width:894,height:88,fill:'#07080b',stroke:'rgba(125,180,255,.45)'},gR);
+tx(gR,'Ridge',[44,82],26,'#f1f2f6',{'font-family':SANS,'font-weight':600}); tx(gR,'5 pengaturan',[44,108],14,BLUE,{});
+tx(gR,'alpha',[204,89],15,GREY,{});
+['0,1','1','10','100','1000'].forEach((t,i)=>chip(gR,270+i*98,70,t,t==='1000'));
+const gE=fade(sg); G2.push(gE);
+mk('rect',{x:24,y:142,width:894,height:150,fill:'#07080b',stroke:'rgba(255,255,255,.18)'},gE);
+tx(gE,'Elastic Net',[44,190],26,'#f1f2f6',{'font-family':SANS,'font-weight':600}); tx(gE,'5 × 3 = 15 pengaturan',[44,216],14,LIGHT,{});
+tx(gE,'alpha',[204,185],15,GREY,{}); tx(gE,'l1_ratio',[196,243],15,GREY,{});
+['0,01','0,1','1','3','10'].forEach((t,i)=>chip(gE,270+i*98,160,t,t==='1'));
+['0,1','0,5','0,9'].forEach((t,i)=>chip(gE,270+i*98,218,t,t==='0,9'));
+const gC=fade(sg); G2.push(gC);
+[['20','pengaturan'],['5','fold'],['100','kali dilatih']].forEach((p,i)=>{
+  const x=24+i*250; mk('rect',{x:x,y:312,width:186,height:62,fill:'#0b0c11',stroke:'rgba(255,255,255,.2)'},gC);
+  tx(gC,p[0],[x+22,352],34,'#f1f2f6',{'font-weight':500}); tx(gC,p[1],[x+22+p[0].length*20+12,351],16,'#c4c7d4',{'font-family':SANS});
+  if(i<2) tx(gC,i===0?'×':'=',[x+212,353],30,GREY,{'text-anchor':'middle'}); });
+tx(gC,'Tiap pengaturan diuji di 5 fold, lalu dirata-rata.',[24,404],16,'#c4c7d4',{'font-family':SANS});
+const gP=fade(sg); G2.push(gP);
+tx(gP,'YANG DIPILIH (RMSE RATA-RATA TERENDAH)',[24,436],13,GREY,{'letter-spacing':'.12em'});
+[['Ridge, alpha 1000','model utama · RMSE 72,83',BLUE],['Elastic Net, alpha 1, l1_ratio 0,9','pembanding · RMSE 72,26',LIGHT]].forEach((p,i)=>{
+  const x=24+i*456; mk('rect',{x:x,y:446,width:438,height:62,fill:'rgba(255,194,102,.06)',stroke:AMB},gP);
+  tx(gP,p[0],[x+18,472],20,'#f1f2f6',{'font-family':SANS,'font-weight':600}); tx(gP,p[1],[x+18,496],14,p[2],{}); });
+
+/* ═════════ V3: kurva tuning ═════════ */
+const s2=$('#svg-tuning'); const G3=[];
 const TX0=96, TX1=872, TY0=52, TY1=372, YLO=60, YHI=90;
 const lgx=a=>TX0+(Math.log10(a)+2)/5*(TX1-TX0), ty=v=>TY1-(v-YLO)/(YHI-YLO)*(TY1-TY0);
-const gAxes=fade(s2); G2.push(gAxes);
+const gAxes=fade(s2); G3.push(gAxes);
 [60,70,80,90].forEach(v=>{ mk('line',{x1:TX0,x2:TX1,y1:ty(v),y2:ty(v),stroke:v===60?'rgba(255,255,255,.28)':'rgba(255,255,255,.07)'},gAxes); tx(gAxes,v,[TX0-12,ty(v)+1],14,GREY,{'text-anchor':'end','dominant-baseline':'central'}); });
 tx(gAxes,'RMSE (µg/m³)',[TX0-12,TY0-24],13,GREY,{'text-anchor':'start','letter-spacing':'.1em'});
 [0.01,0.1,1,10,100,1000].forEach(a=>{ mk('line',{x1:lgx(a),x2:lgx(a),y1:TY1,y2:TY1+6,stroke:'rgba(255,255,255,.3)'},gAxes); tx(gAxes,String(a).replace('.',','),[lgx(a),TY1+26],14,'#c4c7d4',{'text-anchor':'middle'}); });
-tx(gAxes,'rem lemah',[TX0,TY1+54],14,GREY,{}); tx(gAxes,'alpha (kekuatan rem pada bobot, skala log)',[(TX0+TX1)/2,TY1+54],14,'#c4c7d4',{'text-anchor':'middle'}); tx(gAxes,'rem kuat',[TX1,TY1+54],14,GREY,{'text-anchor':'end'});
+tx(gAxes,'rem lemah',[TX0,TY1+54],14,GREY,{}); tx(gAxes,'alpha (kekerasan rem pada bobot, skala log)',[(TX0+TX1)/2,TY1+54],14,'#c4c7d4',{'text-anchor':'middle'}); tx(gAxes,'rem kuat',[TX1,TY1+54],14,GREY,{'text-anchor':'end'});
 mk('line',{x1:TX0,x2:TX1,y1:ty(NAIVE_M),y2:ty(NAIVE_M),stroke:'#f1f2f6','stroke-width':1.6,'stroke-dasharray':'6 5'},gAxes);
 tx(gAxes,'RATA-RATA NAIVE 86,82',[TX1,ty(NAIVE_M)-10],13,'#f1f2f6',{'text-anchor':'end','letter-spacing':'.08em'});
 tx(gAxes,'sumbu vertikal dimulai dari 60',[TX1,TY0-24],12,AMB,{'text-anchor':'end','letter-spacing':'.04em'});
@@ -350,7 +373,7 @@ const SER=[
  {nm:'Elastic Net, l1_ratio 0,1',col:'#626a86',w:2.4,pts:[[0.01,72.85],[0.1,72.51],[1,72.75],[3,73.81],[10,76.09]]}
 ];
 SER.forEach((S,si)=>{
-  const g=fade(s2); G2.push(g);
+  const g=fade(s2); G3.push(g);
   mk('path',{d:S.pts.map((p,i)=>(i?'L':'M')+lgx(p[0]).toFixed(1)+' '+ty(p[1]).toFixed(1)).join(''),fill:'none',stroke:S.col,'stroke-width':S.w,'stroke-linejoin':'round'},g);
   S.pts.forEach(p=>{
     const sel=(si===0&&p[0]===1000)||(si===1&&p[0]===1);
@@ -361,37 +384,61 @@ SER.forEach((S,si)=>{
     hr.addEventListener('mouseleave',tipOff);
   });
 });
-const gLeg=fade(s2); G2.push(gLeg);
+const gLeg=fade(s2); G3.push(gLeg);
 SER.forEach((S,i)=>{ const x=96+(i%2)*400, y=448+Math.floor(i/2)*28; mk('line',{x1:x,x2:x+30,y1:y,y2:y,stroke:S.col,'stroke-width':S.w},gLeg); tx(gLeg,S.nm,[x+40,y+5],15,'#c4c7d4',{'font-family':SANS}); });
 mk('circle',{cx:112,cy:507,r:9,fill:'none',stroke:AMB,'stroke-width':2.2},gLeg); tx(gLeg,'dipilih',[128,512],14,'#c4c7d4',{'font-family':SANS});
 tx(gLeg,'20 pengaturan, rata-rata 5 fold',[872,512],13,GREY,{'text-anchor':'end'});
 
-/* ═════════ V3: RMSE per fold ═════════ */
-const s3=$('#svg-hasil'); const G3=[];
-const HX0=74, HX1=872, HY0=70, HY1=376, HYM=120, hy=v=>HY1-v/HYM*(HY1-HY0), HSLOT=(HX1-HX0)/5, HBW=40;
-const gH=fade(s3); G3.push(gH);
+/* ═════════ V4: RMSE per fold dan rata-rata ═════════ */
+const s3=$('#svg-hasil'); const G4=[];
+const HX0=74, HX1=872, HY0=70, HY1=376, HYM=120, hy=v=>HY1-v/HYM*(HY1-HY0), HSLOT=(HX1-HX0)/6, HBW=38;
+const gH=fade(s3); G4.push(gH);
 [0,40,80,120].forEach(v=>{ mk('line',{x1:HX0,x2:HX1,y1:hy(v),y2:hy(v),stroke:v===0?'rgba(255,255,255,.28)':'rgba(255,255,255,.07)'},gH); tx(gH,v,[HX0-12,hy(v)+1],14,GREY,{'text-anchor':'end','dominant-baseline':'central'}); });
 tx(gH,'RMSE (µg/m³)',[HX1,HY0-26],13,GREY,{'text-anchor':'end','letter-spacing':'.1em'});
-const SERH=[['Naive',NAIVE_F,GREY],['Ridge',RIDGE_F,BLUE],['Elastic Net',EN_F,LIGHT]];
-for(let i=0;i<5;i++){
-  const g=fade(s3); G3.push(g); const gx=HX0+i*HSLOT+(HSLOT-(3*HBW+12))/2;
-  SERH.forEach(([nm,arr,col],k)=>{ const v=arr[i], x=gx+k*(HBW+6);
+const SERH=[['Naive',NAIVE_F,GREY,NAIVE_M],['Ridge',RIDGE_F,BLUE,RIDGE_M],['Elastic Net',EN_F,LIGHT,EN_M]];
+for(let i=0;i<6;i++){
+  const g=fade(s3); G4.push(g); const mean=(i===5), gx=HX0+i*HSLOT+(HSLOT-(3*HBW+8))/2;
+  if(mean){ mk('rect',{x:HX0+i*HSLOT+2,y:HY0-16,width:HSLOT-2,height:HY1-HY0+16,fill:'rgba(125,180,255,.06)',stroke:'rgba(125,180,255,.35)'},g); }
+  SERH.forEach(([nm,arr,col,mu],k)=>{ const v=mean?mu:arr[i], x=gx+k*(HBW+4);
     mk('rect',{x:x,y:hy(v),width:HBW,height:HY1-hy(v),fill:col,'fill-opacity':k===0?.55:.85},g);
-    tx(g,fd1(v),[x+HBW/2,hy(v)-8],14,'#f1f2f6',{'text-anchor':'middle'}); });
-  tx(g,'Fold '+(i+1),[HX0+i*HSLOT+HSLOT/2,HY1+26],15,'#c4c7d4',{'text-anchor':'middle'});
-  const hr=mk('rect',{x:HX0+i*HSLOT,y:HY0-10,width:HSLOT,height:HY1-HY0+10,fill:'transparent',class:'hov'},g);
-  hr.addEventListener('mousemove',ev=>tip('<small>Fold '+(i+1)+'</small>Naive '+fd1(NAIVE_F[i])+'<br>Ridge '+fd1(RIDGE_F[i])+'<br>Elastic Net '+fd1(EN_F[i])+'<br><span class="hs">Kedua model lebih rendah dari naive</span>',ev));
+    tx(g,mean?fd2(v):fd1(v),[x+HBW/2,hy(v)-8],mean?13:14,'#f1f2f6',{'text-anchor':'middle','font-weight':mean?600:400}); });
+  tx(g,mean?'Rata-rata':'Fold '+(i+1),[HX0+i*HSLOT+HSLOT/2,HY1+26],mean?16:15,mean?'#c4dcff':'#c4c7d4',{'text-anchor':'middle','font-weight':mean?600:400});
+  const hr=mk('rect',{x:HX0+i*HSLOT,y:HY0-16,width:HSLOT,height:HY1-HY0+16,fill:'transparent',class:'hov'},g);
+  hr.addEventListener('mousemove',ev=>tip(mean?'<small>Rata-rata 5 fold</small>Naive '+fd2(NAIVE_M)+'<br>Ridge '+fd2(RIDGE_M)+'<br>Elastic Net '+fd2(EN_M):'<small>Fold '+(i+1)+'</small>Naive '+fd1(NAIVE_F[i])+'<br>Ridge '+fd1(RIDGE_F[i])+'<br>Elastic Net '+fd1(EN_F[i])+'<br><span class="hs">Kedua model lebih rendah dari naive</span>',ev));
   hr.addEventListener('mouseleave',tipOff);
 }
-const gHL=fade(s3); G3.push(gHL);
-SERH.forEach(([nm,arr,col],k)=>{ const x=74+k*220; mk('rect',{x:x,y:430,width:16,height:16,fill:col,'fill-opacity':k===0?.55:.85},gHL); tx(gHL,nm+'  rata-rata '+fd2(k===0?NAIVE_M:(k===1?RIDGE_M:EN_M)),[x+26,443],15,'#c4c7d4',{'font-family':SANS}); });
-tx(gHL,'Angka naive sama dengan slide 5. Ini hasil validasi, bukan data uji.',[74,486],13,GREY);
+const gHL=fade(s3); G4.push(gHL);
+SERH.forEach(([nm,arr,col],k)=>{ const x=74+k*190; mk('rect',{x:x,y:430,width:16,height:16,fill:col,'fill-opacity':k===0?.55:.85},gHL); tx(gHL,nm,[x+26,443],15,'#c4c7d4',{'font-family':SANS}); });
+tx(gHL,'Naive sama dengan slide 5. Hasil validasi, bukan data uji.',[74,486],13,GREY);
 
-/* ═════════ V4: selisih kedua model ═════════ */
-const s4=$('#svg-setara'); const G4=[];
+/* ═════════ V5: total RMSE, MAE, dan selisih dengan naive ═════════ */
+const s5v=$('#svg-total'); const G5=[];
+const TOT=[
+ {nm:'RMSE',y:34,rows:[['Naive forecast',86.82,GREY,null,null],['Ridge',72.83,BLUE,13.99,16.1],['Elastic Net',72.26,LIGHT,14.56,16.8]]},
+ {nm:'MAE',y:276,rows:[['Naive forecast',59.39,GREY,null,null],['Ridge',54.51,BLUE,4.88,8.2],['Elastic Net',54.43,LIGHT,4.96,8.4]]}
+];
+const BX=206, BSC=520/90;
+TOT.forEach((T,ti)=>{
+  const g=fade(s5v); G5.push(g);
+  mk('rect',{x:24,y:T.y,width:894,height:214,fill:'#07080b',stroke:'rgba(255,255,255,.12)'},g);
+  tx(g,T.nm,[44,T.y+34],26,'#f1f2f6',{'font-family':SANS,'font-weight':700});
+  tx(g,'µg/m³, rata-rata 5 fold',[T.nm==='RMSE'?130:114,T.y+33],12,GREY,{});
+  T.rows.forEach((r,i)=>{ const y=T.y+50+i*52, w=r[1]*BSC;
+    tx(g,r[0],[BX-12,y+26],17,'#c4c7d4',{'text-anchor':'end','font-family':SANS});
+    mk('rect',{x:BX,y:y,width:w,height:34,fill:r[2],'fill-opacity':i===0?.55:.88},g);
+    tx(g,fd2(r[1]),[BX+w+12,y+26],20,'#f1f2f6',{'font-weight':500});
+    if(r[3]!==null){ tx(g,'−'+fd2(r[3])+'  ('+'−'+fd1(r[4])+'%)',[BX+w+92,y+26],18,AMB,{'font-weight':500});
+      const hr=mk('rect',{x:BX,y:y-4,width:700,height:44,fill:'transparent',class:'hov'},g);
+      hr.addEventListener('mousemove',ev=>tip('<small>'+r[0]+' · '+T.nm+'</small>Naive '+fd2(T.rows[0][1])+' → '+fd2(r[1])+'<br><span class="hs">Turun '+fd2(r[3])+' µg/m³ ('+fd1(r[4])+'%) dari naive</span>',ev)); hr.addEventListener('mouseleave',tipOff); } });
+});
+const gN=fade(s5v); G5.push(gN);
+tx(gN,'Selisih dan persen dihitung dari angka yang tampil. Kuning = penurunan dari naive.',[24,516],13,GREY,{});
+
+/* ═════════ V6: selisih kedua model ═════════ */
+const s4=$('#svg-setara'); const G6=[];
 const CX=480, SC=17.2, ex=v=>CX+v*SC;
 const DIFF=EN_F.map((v,i)=>v-RIDGE_F[i]);
-const gS=fade(s4); G4.push(gS);
+const gS=fade(s4); G6.push(gS);
 tx(gS,'SEBERAPA BESAR SELISIH ELASTIC NET − RIDGE DIBANDING SEBARAN ANTAR FOLD',[24,30],13,GREY,{'letter-spacing':'.08em'});
 const BR_Y=88;
 mk('rect',{x:ex(-19),y:BR_Y,width:ex(19)-ex(-19),height:26,fill:AMB,'fill-opacity':.22,stroke:AMB},gS);
@@ -401,7 +448,7 @@ tx(gS,'sebaran RMSE antar fold: sekitar ± 19',[CX,BR_Y+19],17,'#f1f2f6',{'text-
 tx(gS,'← Elastic Net lebih baik',[ex(-20),446],14,LIGHT,{}); tx(gS,'Ridge lebih baik →',[ex(20),446],14,BLUE,{'text-anchor':'end'});
 tx(gS,'selisih RMSE (µg/m³)',[CX,472],13,GREY,{'text-anchor':'middle','letter-spacing':'.1em'});
 DIFF.forEach((d,i)=>{
-  const g=fade(s4); G4.push(g); const y=168+i*46;
+  const g=fade(s4); G6.push(g); const y=168+i*46;
   tx(g,'Fold '+(i+1),[60,y+22],16,'#c4c7d4',{'font-family':SANS});
   const x0=Math.min(ex(0),ex(d)), w=Math.abs(ex(d)-ex(0));
   mk('rect',{x:x0,y:y,width:Math.max(w,2),height:30,fill:d<0?LIGHT:BLUE,'fill-opacity':.9},g);
@@ -410,20 +457,45 @@ DIFF.forEach((d,i)=>{
   hr.addEventListener('mousemove',ev=>tip('<small>Fold '+(i+1)+'</small>Ridge '+fd2(RIDGE_F[i])+'<br>Elastic Net '+fd2(EN_F[i])+'<br><span class="hs">Selisih '+(d>0?'+':'−')+fd2(Math.abs(d))+' ('+(d<0?'Elastic Net lebih baik':'Ridge lebih baik')+')</span>',ev));
   hr.addEventListener('mouseleave',tipOff);
 });
-const gSum=fade(s4); G4.push(gSum);
+const gSum=fade(s4); G6.push(gSum);
 tx(gSum,'Rata-rata selisih −0,57 · Elastic Net lebih baik di 3 dari 5 fold',[CX,506],16,'#f1f2f6',{'text-anchor':'middle','font-family':SANS,'font-weight':500});
 
+
+/* ═════════ V7: kenapa Ridge utama ═════════ */
+const s7=$('#svg-alasan'); const G7=[];
+const ALS=[
+ ['Selisihnya terlalu kecil untuk jadi dasar','Selisih rata-rata 0,57 µg/m³, sedangkan sebaran antar fold sekitar 19. Skor validasi tidak bisa membedakan keduanya.',GREY],
+ ['Maka dipakai aturan yang ditetapkan sebelum hasil keluar','Bila selisih kurang dari satu sebaran fold, pilih model yang lebih sederhana, yaitu Ridge.',AMB],
+ ['Ridge lebih sederhana','1 pengaturan (5 nilai dicoba), sedangkan Elastic Net 2 pengaturan (15 nilai dicoba). Makin banyak pilihan, makin optimistis skor terbaiknya.',BLUE],
+ ['Elastic Net tetap dibawa sebagai pembanding','Untuk menjawab satu pertanyaan: apakah membuang fitur membantu? Di validasi ini belum terbukti membantu.',LIGHT]
+];
+ALS.forEach((r,i)=>{
+  const g=fade(s7); G7.push(g); const y=22+i*112;
+  mk('rect',{x:24,y:y,width:894,height:98,fill:'#07080b',stroke:i===1?'rgba(255,194,102,.5)':'rgba(255,255,255,.12)'},g);
+  mk('circle',{cx:70,cy:y+49,r:22,fill:'none',stroke:r[2],'stroke-width':2.4},g);
+  tx(g,String(i+1),[70,y+50],24,r[2],{'text-anchor':'middle','dominant-baseline':'central','font-weight':600});
+  tx(g,r[0],[118,y+38],23,'#f1f2f6',{'font-family':SANS,'font-weight':600});
+  const words=r[1].split(' '); let line='',ln=0;
+  words.forEach(w=>{ if((line+' '+w).length>88){ tx(g,line,[118,y+64+ln*22],16,'#a9adbf',{'font-family':SANS}); line=w; ln++; } else line=(line?line+' ':'')+w; });
+  tx(g,line,[118,y+64+ln*22],16,'#a9adbf',{'font-family':SANS});
+});
+const gAN=fade(s7); G7.push(gAN);
+tx(gAN,'Label utama dan pembanding adalah aturan kerja, bukan klaim bahwa Ridge lebih akurat.',[471,500],16,AMB,{'text-anchor':'middle','font-family':SANS,'font-weight':500});
+
 /* ═════════ Langkah ═════════ */
-const FIG=['Gambar 22 · Dua model lanjutan','Gambar 23 · Aturan uji sama dengan naive','Gambar 24 · Memilih alpha','Gambar 25 · RMSE tiap fold','Gambar 26 · Selisih kedua model'];
-const VIEWS=['v-model','v-aturan','v-tuning','v-hasil','v-setara'];
-const GRP=[G0,G1,G2,G3,G4];
-function setView(i){ $$('.view').forEach(v=>v.classList.toggle('on',v.id===VIEWS[i])); $('#fig').innerHTML=FIG[i].replace(/^(Gambar \d+)/,'<b>$1</b>'); tipOff(); play(GRP[i], i===1?170:(i===3?90:160)); }
+const FIG=['Gambar 22 · Ridge dan Elastic Net','Gambar 23 · Aturan uji sama dengan naive','Gambar 24 · Yang disetel dan cara memilih','Gambar 25 · Hasil tuning','Gambar 26 · RMSE tiap fold dan rata-rata','Gambar 27 · Total RMSE, MAE, dan selisih','Gambar 28 · Selisih kedua model','Gambar 29 · Alasan memilih Ridge sebagai model utama'];
+const VIEWS=['v-model','v-aturan','v-grid','v-tuning','v-hasil','v-total','v-setara','v-alasan'];
+const GRP=[G0,G1,G2,G3,G4,G5,G6,G7];
+function setView(i){ $$('.view').forEach(v=>v.classList.toggle('on',v.id===VIEWS[i])); $('#fig').innerHTML=FIG[i].replace(/^(Gambar \d+)/,'<b>$1</b>'); tipOff(); play(GRP[i], [150,170,170,160,90,260,160,230][i]); }
 const STEPS=[
-  ()=>{ blocks(0); setView(0); readoutNow('Model lanjutan','2 <span class="u">linear</span>'); caption('Dua model linear dengan <b>29 fitur yang sama</b>. Arahkan kursor ke kartu. Batang di kartu hanya ilustrasi cara kerja, bukan bobot sebenarnya.'); },
+  ()=>{ blocks(0); setView(0); readoutNow('Model lanjutan','2 <span class="u">linear</span>'); caption('Dua model linear dengan <b>29 fitur yang sama</b>. Batang bobot hanya ilustrasi cara kerja, bukan bobot sebenarnya. Arahkan kursor ke kartu.'); },
   ()=>{ blocks(1); setView(1); readoutNow('Aturan uji','sama <span class="u">dgn naive</span>'); caption('Syarat perbandingan yang adil. Satu perbedaan perlu diakui: pengaturan dipilih di <em>fold</em> yang sama dengan yang dilaporkan.'); },
-  ()=>{ blocks(2); setView(2); readoutNow('RMSE terbaik','72,26 <span class="u">µg/m³</span>'); caption('Semua titik jauh di bawah garis <em>naive</em> dan hampir datar. <em>alpha</em> yang terlalu besar baru merugikan Elastic Net (di kanan).'); },
-  ()=>{ blocks(3); setView(3); readoutNow('Perbaikan vs naive','16,1% <span class="u">dan</span> 16,8%'); caption('Di <b>setiap</b> <em>fold</em>, Ridge dan Elastic Net lebih rendah dari <em>naive</em>. Arahkan kursor ke <em>fold</em> untuk melihat angkanya.'); },
-  ()=>{ blocks(4); setView(4); readoutNow('Selisih rata-rata','0,57 <span class="u">µg/m³</span>'); caption('Selisihnya sangat kecil dibanding sebaran antar <em>fold</em>, jadi dua model ini <b>setara</b>. Yang dipakai sebagai model utama: Ridge, karena lebih sederhana.'); }
+  ()=>{ blocks(2); setView(2); readoutNow('Pengaturan','20 <span class="u">diuji</span>'); caption('Nilai yang dicoba ditetapkan <b>sebelum</b> dijalankan. Kuning = yang akhirnya terpilih karena RMSE rata-rata 5 <em>fold</em>-nya paling rendah.'); },
+  ()=>{ blocks(3); setView(3); readoutNow('RMSE terbaik','72,26 <span class="u">µg/m³</span>'); caption('Semua titik jauh di bawah garis <em>naive</em> dan hampir datar. <em>alpha</em> yang terlalu besar baru merugikan Elastic Net (di kanan).'); },
+  ()=>{ blocks(4); setView(4); readoutNow('Rata-rata 5 fold','86,82 · 72,83 · 72,26'); caption('Di <b>setiap</b> <em>fold</em>, kedua model lebih rendah dari <em>naive</em>. Kolom terakhir adalah rata-rata lima <em>fold</em>.'); },
+  ()=>{ blocks(5); setView(5); readoutNow('RMSE turun','13,99 · 14,56'); caption('Panjang batang = nilai rata-rata. Angka kuning = berapa turun dari <em>naive</em>. Perbaikan RMSE sekitar <b>16%</b>, MAE sekitar <b>8%</b>.'); },
+  ()=>{ blocks(6); setView(6); readoutNow('Selisih rata-rata','0,57 <span class="u">µg/m³</span>'); caption('Selisihnya sangat kecil dibanding sebaran antar <em>fold</em>, jadi dua model ini <b>setara</b>. Skor validasi tidak bisa menentukan pemenangnya.'); },
+  ()=>{ blocks(7); setView(7); readoutNow('Model utama','Ridge'); caption('Pemilihan memakai <b>aturan yang dibuat sebelum melihat hasil</b>, bukan memilih angka yang kebetulan lebih bagus.'); }
 ];
 function RESET_HOOK(){ $$('.copy .blk').forEach(b=>b.classList.remove('show','active','seen','old')); $$('.view').forEach(v=>v.classList.remove('on')); }
 
