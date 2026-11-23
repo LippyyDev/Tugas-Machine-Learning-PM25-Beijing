@@ -196,34 +196,26 @@ Angka ini hasil pada data latih (9 stasiun), bukan data uji.
 
 ### Tahap 5. Model lanjutan dan *tuning*
 
-Dua model lanjutan, keputusan penulis (22 Nov 2026). Keduanya linear, memakai **29 fitur yang sama**, dan dilatih pada 9 stasiun latih:
-
-| Peran | Model | Cara kerja singkat |
-|---|---|---|
-| Utama | **Ridge** | Memberi bobot pada tiap fitur dan menjaga bobot agar tidak terlalu besar (*alpha* adalah kekuatan "rem" itu) |
-| Pembanding | **Elastic Net** | Seperti Ridge, dan bisa membuat bobot fitur yang tidak berguna menjadi nol |
+Model lanjutan, keputusan penulis (22 Nov 2026): **Ridge**, model linear dengan **29 fitur** yang dilatih pada 9 stasiun latih. Ridge memberi bobot pada tiap fitur dan menjaga semua bobot agar tidak terlalu besar (*alpha* adalah kekuatan "rem" itu), tetapi tidak ada bobot yang menjadi nol. Model pembanding belum ditetapkan.
 
 Mengapa model linear? Bobot tiap fitur bisa dibaca, jadi mudah dijelaskan dan dipertanggungjawabkan.
 
-**Cara menguji.** Sama seperti *naive*: lima *fold* berurutan waktu dengan *gap* 24 jam, baris yang dinilai sama persis, dan praproses yang belajar hanya dari data latih tiap *fold*. Data uji tidak dibuka. Satu perbedaan perlu diakui: kedua model dilatih dan pengaturannya (*alpha*) dipilih pada *fold* yang sama, sehingga skornya sedikit optimistis.
+**Cara menguji.** Sama seperti *naive*: lima *fold* berurutan waktu dengan *gap* 24 jam, baris yang dinilai sama persis, dan praproses yang belajar hanya dari data latih tiap *fold*. Data uji tidak dibuka. Satu perbedaan perlu diakui: model dilatih dan pengaturannya (*alpha*) dipilih pada *fold* yang sama, sehingga skornya sedikit optimistis.
 
-**Memilih pengaturan.** Ada 20 pengaturan yang dicoba (Ridge 5, Elastic Net 15). Daftarnya ditetapkan sebelum dijalankan dan tidak diubah setelah melihat hasil. Hasilnya hampir datar: RMSE Ridge hanya bergeser dari 72,94 ke 72,83 ketika *alpha* diubah dari 0,1 ke 1000, jadi hasil tidak bergantung pada angka *alpha*.
+**Memilih pengaturan.** *Tuning* adalah mencoba beberapa nilai pengaturan (hiperparameter) lalu memilih yang RMSE-nya paling rendah. Ridge hanya punya satu pengaturan, *alpha*, dengan 5 nilai yang dicoba (0,1; 1; 10; 100; 1000). Daftarnya ditetapkan sebelum dijalankan dan tidak diubah setelah melihat hasil. Hasilnya hampir datar: RMSE Ridge hanya bergeser dari 72,94 ke 72,83 ketika *alpha* diubah dari 0,1 ke 1000, jadi hasil tidak bergantung pada angka *alpha*. Nilai 1000 dipilih karena RMSE-nya paling rendah, dan ia berada di tepi daftar (keterbatasan, daftar tidak diperluas).
 
-![RMSE validasi silang Ridge dan Elastic Net untuk berbagai nilai alpha, hampir datar dan jauh di bawah naive](../Hasil/Gambar/t5_03_tuning_linear.png)
+![RMSE validasi silang Ridge untuk berbagai nilai alpha, hampir datar dan jauh di bawah naive](../Hasil/Gambar/t5_03_tuning_ridge.png)
 
 **Hasil.**
 
-| Model | RMSE (rata-rata ± sd antar *fold*) | MAE | Perbaikan vs *naive* | *Fold* lebih baik dari *naive* |
+| Model | RMSE (rata-rata ± sd antar *fold*) | MAE | Perbaikan RMSE vs *naive* | *Fold* lebih baik dari *naive* |
 |---|---|---|---|---|
 | *Naive forecast* | 86,82 ± 24,70 | 59,39 ± 16,53 | n/a | n/a |
-| Ridge, `alpha=1000` (utama) | 72,83 ± 19,38 | 54,51 ± 13,00 | 16,1% | 5 dari 5 |
-| Elastic Net, `alpha=1`, `l1_ratio=0,9` (pembanding) | 72,26 ± 19,23 | 54,43 ± 13,31 | 16,8% | 5 dari 5 |
+| Ridge, `alpha=1000` | 72,83 ± 19,38 | 54,51 ± 13,00 | 16,1% | 5 dari 5 |
 
-![RMSE tiap fold untuk naive, Ridge, dan Elastic Net: kedua model lebih rendah dari naive di kelima fold](../Hasil/Gambar/t5_01_dua_model_per_fold.png)
+![RMSE tiap fold untuk naive dan Ridge: Ridge lebih rendah dari naive di kelima fold](../Hasil/Gambar/t5_01_ridge_per_fold.png)
 
-*Cara membaca:* di setiap *fold*, kedua model lebih rendah dari *naive*. Selisih kedua model hanya 0,57, jauh di bawah simpangan baku antar *fold* (sekitar 19), dan Elastic Net lebih baik hanya di 3 dari 5 *fold*. Jadi keduanya **setara**, dan skor validasi tidak bisa menentukan pemenang. Angka ini nilai validasi, bukan kinerja akhir.
-
-**Mengapa Ridge utama dan Elastic Net pembanding, padahal hampir sama?** Karena skor tidak bisa memilih, dipakai aturan yang ditetapkan sebelum hasil keluar: bila selisih RMSE kurang dari satu simpangan baku antar *fold* (sekitar 19), diambil keluarga model yang lebih sederhana. Ridge lebih sederhana (satu pengaturan, 5 nilai dicoba) daripada Elastic Net (dua pengaturan, 15 nilai dicoba), dan skor terbaik dari lebih banyak pilihan cenderung lebih optimistis. Elastic Net tetap dibawa sebagai pembanding untuk menjawab satu pertanyaan: apakah membuang fitur membantu? Di validasi ini belum terbukti membantu. Label utama dan pembanding adalah aturan kerja, bukan klaim bahwa Ridge lebih akurat; menukar perannya sama bisa dipertanggungjawabkan. Model dibekukan dulu, lalu data uji dibuka satu kali di Tahap 6.
+*Cara membaca:* di setiap *fold*, Ridge lebih rendah dari *naive*. Dibanding *naive*, RMSE turun 13,99 (sekitar 16%) dan MAE turun 4,88 (sekitar 8%). Angka ini nilai validasi, bukan kinerja akhir. Model dibekukan dulu, lalu data uji dibuka satu kali di Tahap 6.
 
 ### Tahap 6. Evaluasi dan diagnosis
 

@@ -8,7 +8,7 @@ Berisi inti hasil tiap tahap, diperbarui setiap satu tahap selesai. Rincian leng
 | 2. EDA dan praproses | Selesai, dijalankan penuh 21 Nov 2026 pada desain 9/3 (lokal dan Colab, angka sama). Angka di bawah memakai data latih 9 stasiun |
 | 3. Skema validasi | Desain 9/3 sudah diimplementasikan dan dijalankan 21 Nov 2026 (skema, pengecekan otomatis, alasan, dan keterbatasan ada di *notebook* bagian 03). Penjaga pembukaan data uji ada di bagian 03.3 dan protokol [Usulan, menunggu persetujuan] di `Protokol Evaluasi Data Uji.md`. Penjaga hanya mencegah pembukaan ganda yang tidak disengaja, dan baru teruji saat data uji dibuka. Literatur pendukung: lihat `Proposal/Catatan Verifikasi Referensi.md` (aturan `gap` sama dengan horizon belum punya sumber *peer review* yang terbaca) |
 | 4. *Baseline* | Selesai, hasil validasi 9 stasiun latih (dijalankan 21 Nov 2026) |
-| 5. Model lanjutan dan *tuning* | Selesai sebagian: dua model lanjutan, Ridge `alpha=1000` (utama, RMSE 72,83) dan Elastic Net `alpha=1`, `l1_ratio=0,9` (pembanding, 72,26), fitur F1, keputusan penulis 22 Nov 2026. Belum: persetujuan aturan pemilihan, pembekuan konfigurasi. Data uji belum dibuka |
+| 5. Model lanjutan dan *tuning* | Selesai sebagian: model lanjutan Ridge `alpha=1000` (RMSE 72,83 ± 19,38 lawan *naive* 86,82), fitur F1, keputusan penulis 22 Nov 2026. Belum: penetapan model pembanding, pembekuan konfigurasi. Data uji belum dibuka |
 | 6. Evaluasi dan diagnosis | Belum dikerjakan |
 | 7. Analisis kesalahan dan etika | Belum dikerjakan |
 
@@ -80,23 +80,21 @@ Validasi 5 *fold* pada data latih 9 stasiun, tanpa menyentuh data uji. Baris val
 
 ## Tahap 5. Model lanjutan dan *tuning* (22 Nov 2026)
 
-Aturan evaluasi sama dengan Tahap 4: `TimeSeriesSplit(n_splits=5, gap=24)` pada jam unik data latih 9 stasiun, baris validasi yang sama dengan *naive*, imputer median dan *scaler* hanya belajar dari data latih tiap *fold*. **Data uji tidak dibuka.** Dua model lanjutan, keputusan penulis: **Ridge sebagai model utama dan Elastic Net sebagai pembanding**, keduanya dengan 29 fitur awal (F1).
+Aturan evaluasi sama dengan Tahap 4: `TimeSeriesSplit(n_splits=5, gap=24)` pada jam unik data latih 9 stasiun, baris validasi yang sama dengan *naive*, imputer median dan *scaler* hanya belajar dari data latih tiap *fold*. **Data uji tidak dibuka.** Model lanjutan, keputusan penulis: **Ridge** dengan 29 fitur awal (F1). Model pembanding belum ditetapkan.
 
-*Tuning* memakai *grid* yang ditetapkan sebelum dijalankan: Ridge `alpha` 0,1; 1; 10; 100; 1000 (5 konfigurasi), Elastic Net `alpha` 0,01; 0,1; 1; 3; 10 dan `l1_ratio` 0,1; 0,5; 0,9 (15 konfigurasi). Aturan pemilihan ditulis sebelum hasil dilihat: keluarga model dipilih dengan protokol butir 2 (bila selisih RMSE kurang dari satu sd antar *fold*, yang lebih sederhana dipilih), lalu `alpha` dengan RMSE terendah di keluarga itu.
+*Tuning* memakai *grid* yang ditetapkan sebelum dijalankan: Ridge `alpha` 0,1; 1; 10; 100; 1000 (5 konfigurasi). Aturan pemilihan ditulis sebelum hasil dilihat: ambil `alpha` dengan RMSE terendah.
 
 | Model | RMSE rata-rata ± sd | MAE rata-rata ± sd | Perbaikan RMSE vs *naive* | *Fold* lebih baik dari *naive* |
 |---|---|---|---|---|
 | *Naive forecast* | 86,82 ± 24,70 | 59,39 ± 16,53 | n/a | n/a |
-| Ridge `alpha=1000` (utama, terpilih aturan) | 72,83 ± 19,38 | 54,51 ± 13,00 | 16,1% | 5 dari 5 |
-| Elastic Net `alpha=1`, `l1_ratio=0,9` (pembanding, RMSE terendah) | 72,26 ± 19,23 | 54,43 ± 13,31 | 16,8% | 5 dari 5 |
+| Ridge `alpha=1000` | 72,83 ± 19,38 | 54,51 ± 13,00 | 16,1% | 5 dari 5 |
 
-- **Yang berdiri di data:** kedua model lebih baik dari *naive* di kelima *fold*, sekitar 16% di bawah RMSE *naive*.
-- **Yang tidak berdiri di data:** selisih kedua model (0,57) jauh di bawah sd antar *fold* (sekitar 19), dan pembanding lebih baik dari utama hanya di 3 dari 5 *fold*. Keduanya setara dan tidak diklaim berbeda.
+- **Yang berdiri di data:** Ridge lebih baik dari *naive* di kelima *fold*. RMSE turun 13,99 (sekitar 16%) dan MAE turun 4,88 (sekitar 8%).
 - **Kurva Ridge praktis datar:** RMSE 72,94 pada `alpha` 0,1 sampai 10, 72,93 pada 100, 72,83 pada 1000. Dengan 246.798 baris latih dan 29 fitur terstandarisasi, regularisasi hampir tidak berpengaruh. `alpha=1000` ada di tepi *grid*, dan sesuai aturan *grid* tidak diperluas.
-- **Keterbatasan:** skor terpilih dari 20 konfigurasi pada validasi yang sama (sedikit optimistis, terutama pembanding yang dipilih dari 15), lima *fold*, dan model linear dengan F1 saja. Ini kandidat, bukan model final. Konfigurasi belum dibekukan dan data uji belum dibuka.
+- **Keterbatasan:** `alpha` dipilih dari 5 nilai pada validasi yang sama (sedikit optimistis), lima *fold*, dan model linear dengan F1 saja. Ini kandidat, bukan model final. Konfigurasi belum dibekukan dan data uji belum dibuka.
 
-![RMSE tiap fold untuk naive, Ridge, dan Elastic Net](../Hasil/Gambar/t5_01_dua_model_per_fold.png)
+![RMSE tiap fold untuk naive dan Ridge](../Hasil/Gambar/t5_01_ridge_per_fold.png)
 
-![RMSE validasi silang Ridge dan Elastic Net untuk berbagai nilai alpha](../Hasil/Gambar/t5_03_tuning_linear.png)
+![RMSE validasi silang Ridge untuk berbagai nilai alpha](../Hasil/Gambar/t5_03_tuning_ridge.png)
 
-Keluaran: `Hasil/Tabel/t5_tabel_dua_model.csv`, `t5_tabel_dua_model_per_fold.csv`, `t5_tabel_tuning_linear.csv`, `t5_tabel_tuning_linear_per_fold.csv`, `t5_tabel_semua_eksperimen.csv`, dan grafik `Hasil/Gambar/t5_01_dua_model_per_fold.png` serta `t5_03_tuning_linear.png`. Tabel hasil percobaan (25 konfigurasi) ada di `Laporan/Tabel Hasil Percobaan Tahap 5.md`.
+Keluaran: `Hasil/Tabel/t5_tabel_ridge.csv`, `t5_tabel_ridge_per_fold.csv`, `t5_tabel_tuning_ridge.csv`, `t5_tabel_tuning_ridge_per_fold.csv`, `t5_tabel_semua_eksperimen.csv`, dan grafik `Hasil/Gambar/t5_01_ridge_per_fold.png` serta `t5_03_tuning_ridge.png`. Tabel hasil percobaan (8 konfigurasi) ada di `Laporan/Tabel Hasil Percobaan Tahap 5.md`.

@@ -15,5 +15,5 @@ Dua belas grafik dari *notebook* (`Notebook/Tahap 2 EDA dan Praproses.ipynb`), s
 | `t3_01_fold_validasi.png` | Skema validasi | Lima *fold* `TimeSeriesSplit` dan posisi data uji |
 | `t4_01_baseline_rmse_per_fold.png` | *Baseline* | RMSE *naive forecast* di tiap *fold* |
 | `t4_02_pemeriksaan_desain.png` | Uji kebocoran | Ringkasan enam pemeriksaan desain 9/3 |
-| `t5_01_dua_model_per_fold.png` | Model lanjutan | RMSE tiap *fold* untuk *naive*, Ridge (utama), dan Elastic Net (pembanding) |
-| `t5_03_tuning_linear.png` | *Tuning* model linear | Rata-rata RMSE validasi silang Ridge dan Elastic Net terhadap `alpha` (skala log) untuk tiga nilai `l1_ratio`, dengan garis *naive* |
+| `t5_01_ridge_per_fold.png` | Model lanjutan | RMSE tiap *fold* untuk *naive* dan Ridge |
+| `t5_03_tuning_ridge.png` | *Tuning* Ridge | Rata-rata RMSE validasi silang Ridge terhadap `alpha` (skala log), dengan garis *naive* |

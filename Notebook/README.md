@@ -2,7 +2,7 @@
 
 | Berkas | Isi |
 |---|---|
-| `Tahap 2 EDA dan Praproses.ipynb` | Muat 12 stasiun, pisahkan 9 stasiun latih dan 3 stasiun uji, EDA, pembagian kronologis dengan satu batas waktu, validasi dari jam unik, fitur per stasiun, *baseline*, pemeriksaan kesesuaian desain (bagian 00 sampai 04), dan dua model lanjutan dengan *cross-validation* (bagian 05: Ridge utama dan Elastic Net pembanding, fitur F1, *tuning* 20 konfigurasi, data uji tidak dibuka). Akan diperluas menjadi *notebook* akhir (bagian 06 sampai 09) |
+| `Tahap 2 EDA dan Praproses.ipynb` | Muat 12 stasiun, pisahkan 9 stasiun latih dan 3 stasiun uji, EDA, pembagian kronologis dengan satu batas waktu, validasi dari jam unik, fitur per stasiun, *baseline*, pemeriksaan kesesuaian desain (bagian 00 sampai 04), dan model lanjutan Ridge dengan *cross-validation* (bagian 05: fitur F1, *tuning* 5 nilai `alpha`, data uji tidak dibuka). Akan diperluas menjadi *notebook* akhir (bagian 06 sampai 09) |
 
 Cara menjalankan ada di `README.md` utama. *Notebook* mencari data di folder Google Drive, lalu `Data/Data Mentah` (dari akar repo atau dari folder ini), dan bila keduanya tidak ada mengunduh repo ini.
 

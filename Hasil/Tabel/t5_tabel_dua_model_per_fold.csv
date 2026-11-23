@@ -1,6 +1,0 @@
-,Naive forecast,Ridge (alpha=1000),"Elastic Net (alpha=1, l1_ratio=0.9)"
-Fold 1,101.71,84.31,84.08
-Fold 2,62.22,53.96,52.7
-Fold 3,103.6,82.44,82.58
-Fold 4,57.72,50.28,50.4
-Fold 5,108.84,93.17,91.55

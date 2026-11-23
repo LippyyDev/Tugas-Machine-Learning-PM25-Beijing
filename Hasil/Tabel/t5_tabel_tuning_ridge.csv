@@ -1,0 +1,6 @@
+Model,alpha,RMSE rata-rata,RMSE sd,MAE rata-rata,MAE sd,Selisih vs Ridge alpha=1,sd selisih,Fold lebih baik dari Ridge alpha=1
+Ridge (alpha=0.1),0.1,72.941,19.392,54.579,12.969,0.0,0.0,0 dari 5
+Ridge (alpha=1),1.0,72.941,19.392,54.579,12.969,0.0,0.0,0 dari 5
+Ridge (alpha=10),10.0,72.94,19.391,54.578,12.969,-0.001,0.001,5 dari 5
+Ridge (alpha=100),100.0,72.928,19.389,54.571,12.971,-0.014,0.012,5 dari 5
+Ridge (alpha=1000),1000.0,72.834,19.382,54.515,12.996,-0.108,0.086,5 dari 5
