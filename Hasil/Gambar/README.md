@@ -13,6 +13,7 @@ Dua belas grafik dari *notebook* (`Notebook/Tahap 2 EDA dan Praproses.ipynb`), s
 | `t2_05_nilai_hilang_per_kolom.png` | Praproses nilai hilang | Persen jam kosong per kolom |
 | `t2_06_lama_nilai_hilang.png` | Praproses nilai hilang | Lama data PM2.5 kosong berturut-turut |
 | `t2_07_alur_praproses.png` | Tahap 2 | Diagram alur praproses: sisihkan data uji, EDA, fitur dan target, buang baris yang targetnya masuk periode uji, nilai hilang, tabel latih |
+| `t2_08_contoh_satu_baris.png` | Tahap 2 | Diagram contoh satu baris: fitur pada jam t dan target pada jam t+24 |
 | `t3_01_fold_validasi.png` | Skema validasi | Lima *fold* `TimeSeriesSplit` dan posisi data uji |
 | `t4_01_baseline_rmse_per_fold.png` | *Baseline* | RMSE *naive forecast* di tiap *fold* |
 | `t4_02_pemeriksaan_desain.png` | Uji kebocoran | Ringkasan enam pemeriksaan desain 9/3 |

@@ -27,14 +27,7 @@ Tahap 1 dikerjakan sebelum membuka data. Panduan meminta tiga pertanyaan dijawab
 
 Model belajar dari banyak baris seperti ini: dari fitur pada jam t, tebak target 24 jam kemudian.
 
-```
- Senin 10.00 (jam t)                                  Selasa 10.00 (jam t+24)
-        │                                                      │
-        ▼                                                      ▼
- FITUR: yang sudah terukur                            TARGET: PM2.5 yang
- (PM2.5 sekarang, PM10, suhu,    ── 24 jam ke depan ─▶ ingin ditebak
-  angin, PM2.5 kemarin, dst.)                          (belum terjadi)
-```
+![Contoh satu baris: fitur pada jam t dipakai untuk menebak target pada jam t+24](../Hasil/Gambar/t2_08_contoh_satu_baris.png)
 
 **Aturan terpenting: fitur tidak boleh memakai data sesudah jam t.** Saat prediksi dibuat di dunia nyata, data sesudah jam t memang belum ada. Jika sebuah fitur memakainya, skor model terlihat bagus tetapi model itu tidak bisa dipakai sungguhan. Hal ini disebut *kebocoran data*.
 
