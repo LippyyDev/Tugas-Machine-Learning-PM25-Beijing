@@ -78,25 +78,50 @@ Validasi 5 *fold* pada data latih 9 stasiun, tanpa menyentuh data uji. Baris val
 - RMSE per *fold* (101,7 / 62,2 / 103,6 / 57,7 / 108,8) naik turun mengikuti periode (*fold* 1, 3, dan 5 lebih tinggi), jadi simpangan baku yang besar kemungkinan berasal dari beda periode antar *fold* (belum diuji penyebabnya).
 - Ini hasil validasi data latih, bukan data uji. Skor uji dibuka satu kali di akhir.
 
-## Tahap 5. Model lanjutan dan *tuning* (22 Nov 2026)
+## Tahap 5. Model lanjutan, pembanding, dan *tuning* (22 sampai 24 Nov 2026)
 
-Aturan evaluasi sama dengan Tahap 4: `TimeSeriesSplit(n_splits=5, gap=24)` pada jam unik data latih 9 stasiun, baris validasi yang sama dengan *naive*, imputer median dan *scaler* hanya belajar dari data latih tiap *fold*. **Data uji tidak dibuka.** Model lanjutan, keputusan penulis: **Ridge** dengan 29 fitur awal (F1). Model pembanding (keputusan penulis, 23 Nov 2026): *random forest*, dibahas di akhir bagian ini.
+### Dua model yang dipakai
 
-*Tuning* memakai *grid* yang ditetapkan sebelum dijalankan: Ridge `alpha` 0,1; 1; 10; 100; 1000 (5 konfigurasi). Aturan pemilihan ditulis sebelum hasil dilihat: ambil `alpha` dengan RMSE terendah.
+**Ridge** adalah regresi linear dengan penalti pada besar koefisien (regularisasi L2). Parameter `alpha` mengatur kekuatan penalti: makin besar, koefisien makin ditekan sehingga model lebih stabil terhadap fitur yang saling berkorelasi, seperti *lag* PM2.5 yang berdekatan. Prediksinya berupa jumlah berbobot dari 29 fitur, jadi mudah dijelaskan dan cepat dilatih.
+
+***Random forest* (RF)** adalah kumpulan banyak pohon keputusan, masing-masing dilatih pada contoh dan fitur yang diacak, lalu prediksinya dirata-ratakan. RF dapat menangkap hubungan nonlinear dan interaksi antar fitur tanpa diminta, tetapi prediksinya tidak bisa melampaui rentang nilai target yang pernah dilihat saat pelatihan.
+
+### Mengapa keduanya, dan apa yang dibandingkan
+
+* **Ridge sebagai model lanjutan** (keputusan penulis): model linear berregularisasi yang sederhana, cepat, dan transparan, dengan *lag* dan rata-rata bergulir PM2.5 sebagai fitur utama. Ia menjadi patokan model terlatih yang masuk akal di atas *naive forecast*.
+* ***Random forest* sebagai pembanding** (keputusan penulis, 23 Nov 2026): mewakili keluarga model nonlinear berbasis pohon. Pertanyaannya, apakah hubungan nonlinear memberi keuntungan dibanding model linear pada horizon 24 jam. RF tidak harus lebih baik, dan hasil seri atau kalah tetap menjadi bahan evaluasi.
+* **Perlakuan dibuat sama:** fitur F1 (29 fitur awal), objek *fold* yang sama (`TimeSeriesSplit(n_splits=5, gap=24)` pada jam unik data latih 9 stasiun), baris validasi sama dengan *naive*, imputer median dan *scaler* hanya belajar dari data latih tiap *fold*. **Data uji tidak dibuka.**
+
+### *Tuning*
+
+*Grid* dan aturan pemilihan ditulis sebelum hasil dilihat, dan *grid* tidak diperluas setelahnya. Pemilihan memakai RMSE rata-rata 5 *fold* terendah.
+
+| Model | Hiperparameter yang disetel | Nilai yang dicoba | Konfigurasi |
+|---|---|---|---|
+| Ridge | `alpha` | 0,1; 1; 10; 100; 1000 | 5 |
+| *Random forest* | `min_samples_leaf` dan `max_features` | 10; 50; 200 dan 0,33; 0,6 | 6 |
+
+Parameter RF yang dikunci: `n_estimators=100`, `max_depth=None`, `max_samples=0,5`, `bootstrap=True`, `random_state=42`. Terpilih Ridge `alpha=1000` dan RF `min_samples_leaf=200`, `max_features=0,33`.
+
+### Hasil
 
 | Model | RMSE rata-rata ± sd | MAE rata-rata ± sd | Perbaikan RMSE vs *naive* | *Fold* lebih baik dari *naive* |
 |---|---|---|---|---|
 | *Naive forecast* | 86,82 ± 24,70 | 59,39 ± 16,53 | n/a | n/a |
 | Ridge `alpha=1000` | 72,83 ± 19,38 | 54,51 ± 13,00 | 16,1% | 5 dari 5 |
+| *Random forest* (`min_samples_leaf=200`, `max_features=0,33`) | 72,91 ± 19,40 | 54,38 ± 13,32 | 16,0% | 5 dari 5 |
 
-- **Yang berdiri di data:** Ridge lebih baik dari *naive* di kelima *fold*. RMSE turun 13,99 (sekitar 16%) dan MAE turun 4,88 (sekitar 8%).
-- **Kurva Ridge praktis datar:** RMSE 72,94 pada `alpha` 0,1 sampai 10, 72,93 pada 100, 72,83 pada 1000. Dengan 246.798 baris latih dan 29 fitur terstandarisasi, regularisasi hampir tidak berpengaruh. `alpha=1000` ada di tepi *grid*, dan sesuai aturan *grid* tidak diperluas.
-- **Keterbatasan:** `alpha` dipilih dari 5 nilai pada validasi yang sama (sedikit optimistis), lima *fold*, dan model linear dengan F1 saja. Ini kandidat, bukan model final. Konfigurasi belum dibekukan dan data uji belum dibuka.
+* **Keduanya mengalahkan *naive* di kelima *fold*.** RMSE turun sekitar 14 (sekitar 16%) dan MAE turun sekitar 5 (sekitar 8%).
+* **Ridge dan RF tidak terbedakan.** Selisih RMSE berpasangan (RF dikurangi Ridge) rata-rata 0,08 dengan sd 1,15, dan RF lebih baik di 3 dari 5 *fold*. Rentang RMSE antar *seed* RF (42 sampai 45) hanya 0,09. Tidak ada klaim bahwa salah satunya lebih baik.
+* **Kurva *tuning* datar.** Ridge: RMSE 72,94 pada `alpha` 0,1 sampai 10, 72,93 pada 100, 72,83 pada 1000. RF: 72,91 sampai 75,79 antar konfigurasi, turun saat `min_samples_leaf` membesar dan `max_features` mengecil.
+* **Keterbatasan.** Optimum Ridge (`alpha=1000`) dan RF (`min_samples_leaf=200`, `max_features=0,33`) berada di tepi *grid*, sehingga belum tentu yang terbaik. Konfigurasi dipilih pada lima *fold* yang sama, sehingga skornya optimistis. Eksperimen lama 22 Nov yang memuat RF pernah dilihat, jadi *tuning* RF tidak sepenuhnya buta. Konfigurasi belum dibekukan dan data uji belum dibuka.
 
 ![RMSE tiap fold untuk naive dan Ridge](../Hasil/Gambar/t5_01_ridge_per_fold.png)
 
 ![RMSE validasi silang Ridge untuk berbagai nilai alpha](../Hasil/Gambar/t5_03_tuning_ridge.png)
 
-Keluaran: `Hasil/Tabel/t5_tabel_ridge.csv`, `t5_tabel_ridge_per_fold.csv`, `t5_tabel_tuning_ridge.csv`, `t5_tabel_tuning_ridge_per_fold.csv`, `t5_tabel_semua_eksperimen.csv`, dan grafik `Hasil/Gambar/t5_01_ridge_per_fold.png` serta `t5_03_tuning_ridge.png`. Tabel hasil percobaan (8 konfigurasi) ada di `Laporan/Tabel Hasil Percobaan Tahap 5.md`.
+![RMSE validasi silang RF untuk berbagai min_samples_leaf](../Hasil/Gambar/t5_04_tuning_rf.png)
 
-**Pembanding *random forest* (23 Nov 2026).** Diperlakukan sama dengan Ridge (fitur F1, *fold* dan baris validasi yang sama, *grid* 6 konfigurasi ditetapkan sebelum dijalankan: `min_samples_leaf` 10; 50; 200 dan `max_features` 0,33; 0,6). Terpilih `min_samples_leaf=200`, `max_features=0,33`: RMSE 72,91 ± 19,39, MAE 54,38, dibanding Ridge 72,83 ± 19,38. Selisih berpasangan 0,08 (sd 1,15), RF lebih baik di 3 dari 5 *fold*, jadi keduanya tidak terbedakan. Optimum RF ada di tepi *grid*, dan eksperimen lama 22 Nov yang memuat RF pernah dilihat, sehingga skor optimistis. Data uji tidak dibuka. Rincian: `Laporan/Tabel Hasil Percobaan Tahap 5.md`.
+![RMSE tiap fold untuk naive, Ridge, dan random forest](../Hasil/Gambar/t5_05_ridge_vs_rf_per_fold.png)
+
+Rincian lengkap: `Laporan/Tabel Hasil Percobaan Tahap 5.md` (tabel 14 konfigurasi) dan berkas CSV di `Hasil/Tabel/` (`t5_tabel_*`).
