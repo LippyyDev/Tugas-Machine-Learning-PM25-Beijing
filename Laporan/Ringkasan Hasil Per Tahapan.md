@@ -82,9 +82,9 @@ Validasi 5 *fold* pada data latih 9 stasiun, tanpa menyentuh data uji. Baris val
 
 ### Dua model yang dipakai
 
-**Ridge** adalah regresi linear dengan penalti pada besar koefisien (regularisasi L2). Parameter `alpha` mengatur kekuatan penalti: makin besar, koefisien makin ditekan sehingga model lebih stabil terhadap fitur yang saling berkorelasi, seperti *lag* PM2.5 yang berdekatan. Prediksinya berupa jumlah berbobot dari 29 fitur, jadi mudah dijelaskan dan cepat dilatih.
+**Ridge** adalah model linear: ia memberi bobot pada tiap fitur lalu menjumlahkannya menjadi prediksi, sambil menahan agar nilai bobot tidak membengkak terlalu besar. Kekuatan penahan itu diatur oleh parameter `alpha`, sebagai "rem"-nya.
 
-***Random forest* (RF)** adalah kumpulan banyak pohon keputusan, masing-masing dilatih pada contoh dan fitur yang diacak, lalu prediksinya dirata-ratakan. RF dapat menangkap hubungan nonlinear dan interaksi antar fitur tanpa diminta, tetapi prediksinya tidak bisa melampaui rentang nilai target yang pernah dilihat saat pelatihan.
+***Random forest* (RF)** adalah kumpulan pohon keputusan (100 pohon di proyek ini) yang masing-masing dilatih pada sampel data dan subset fitur yang diacak, lalu hasil prediksinya dirata-ratakan. Pohon keputusan mampu menangkap pola nonlinear yang rumit, tetapi prediksinya tidak bisa melampaui rentang nilai target yang pernah dilihat selama pelatihan.
 
 ### Mengapa keduanya, dan apa yang dibandingkan
 
