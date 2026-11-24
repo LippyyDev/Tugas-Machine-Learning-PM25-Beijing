@@ -2,81 +2,41 @@
 
 Ringkasan versi mudah dibaca. Angka diambil dari hasil eksekusi *notebook* pada data latih. Data uji belum pernah dibuka.
 
-## 1. Topik dan studi kasus
+## 1. Topik dan tujuan
 
-**Memprediksi konsentrasi PM2.5 di Beijing, 24 jam ke depan.**
+**Memprediksi konsentrasi PM2.5 di Beijing 24 jam ke depan** (regresi deret waktu). PM2.5 adalah partikel debu sangat halus (diameter 2,5 mikrometer atau kurang) yang masuk ke paru-paru, dan makin tinggi konsentrasinya makin berbahaya.
 
-PM2.5 adalah partikel debu sangat halus (diameter 2,5 mikrometer atau kurang) yang bisa masuk ke paru-paru. Semakin tinggi konsentrasinya, semakin berbahaya bagi kesehatan.
+*Skenario:* seorang warga pada pukul 10.00 perlu tahu apakah besok pukul 10.00 aman untuk beraktivitas di luar ruangan, supaya sempat menyiapkan masker atau mengubah rencana. Model karenanya menebak PM2.5 pada jam t+24 dari kondisi udara dan cuaca sampai jam t.
 
-Jenis tugasnya adalah **regresi deret waktu**: model menebak sebuah angka (PM2.5) dari data yang urut menurut waktu.
+Tujuan proyek:
 
-### Studi kasus (skenario ilustrasi)
-
-Misalkan seorang warga Beijing pada pukul 10.00 yang ingin tahu apakah besok pukul 10.00 aman untuk berolahraga di luar ruangan atau mengantar anak ke sekolah dengan berjalan kaki. Ia tidak butuh tahu PM2.5 sekarang, karena itu bisa dilihat di aplikasi. Ia butuh perkiraan untuk besok, supaya punya waktu menyiapkan masker atau mengubah rencana.
-
-Dari skenario ini kita tahu apa yang harus dibuat: sebuah model yang pada pukul 10.00 hari ini menebak PM2.5 pada pukul 10.00 besok, yaitu 24 jam ke depan.
-
-Agar model bisa belajar menebak, ia butuh contoh dari masa lalu. Setiap contoh berisi kondisi udara dan cuaca pada satu jam, beserta PM2.5 yang terukur 24 jam sesudahnya. Semakin banyak dan semakin beragam contohnya, semakin baik model belajar pola, misalnya kapan polusi cenderung naik. Contoh seperti itu tersedia di dataset berikut.
-
-## 2. Dataset
-
-**Beijing Multi-Site Air Quality** dari UCI (https://archive.ics.uci.edu/dataset/501).
-
-12 berkas CSV, satu per stasiun pemantau udara di Beijing. Satu baris adalah satu jam pengukuran, dari 1 Maret 2013 sampai 28 Februari 2017. Total 420.768 baris (12 stasiun × 35.064 jam), dengan 18 kolom yang sama di tiap berkas.
-
-| Kelompok | Kolom | Arti |
-|---|---|---|
-| Waktu dan tempat | `No`, `year`, `month`, `day`, `hour`, `station` | Nomor baris, tahun, bulan, tanggal, jam, dan nama stasiun |
-| Polutan | `PM2.5`, `PM10`, `SO2`, `NO2`, `CO`, `O3` | Konsentrasi partikel dan gas di udara. `PM2.5` adalah yang diprediksi |
-| Cuaca | `TEMP`, `PRES`, `DEWP`, `RAIN`, `WSPM`, `wd` | Suhu, tekanan, titik embun, hujan, kecepatan angin, dan arah angin (16 kategori teks) |
-
-Nilai kosong ditandai `NA`. `PM2.5` kosong pada 2,08% baris, dan kolom lain 0,08% sampai 4,92%. Satuan mengikuti dokumentasi UCI (belum dicek ulang di halaman UCI).
-
-**Peran kolom di proyek:** target adalah `PM2.5` pada jam t+24 (nilai `PM2.5` yang digeser 24 jam). Fitur berasal dari polutan dan cuaca pada jam t, riwayat `PM2.5`, dan kalender dari bulan, hari, dan jam. Kolom `No` tidak dipakai.
-
-### Stasiun latih dan stasiun uji
-
-![Pembagian data: 9 stasiun latih, 3 stasiun uji, uji 20% periode terakhir](../Hasil/Gambar/t2_02_pembagian_data.png)
-
-Data mencakup 2013-03-01 sampai 2017-02-28. Gambar dan tabel berikut membagi 9 stasiun latih dan 3 stasiun uji menurut waktu: 80% awal adalah sebelum 2016-05-12 19:00, 20% akhir mulai 2016-05-12 19:00, dengan batas waktu yang sama untuk semua stasiun.
-
-| Kotak | Isi | Porsi baris | Peran |
-|---|---|---|---|
-| 9 stasiun latih, 80% awal | LATIH | 60% | Melatih model, memilih model, dan *tuning* (`TimeSeriesSplit`, 5 *fold*, *gap* 24 jam) |
-| 9 stasiun latih, 20% akhir | UJI | 15% | Menguji masa depan di stasiun yang ikut dilatih |
-| 3 stasiun uji, 80% awal | TIDAK DIPAKAI | 20% | Sengaja dibuang supaya model belum pernah melihat 3 stasiun ini sebelum diuji |
-| 3 stasiun uji, 20% akhir | UJI | 5% | Menguji stasiun yang tidak ikut dilatih, sekaligus masa depan |
-
-Dari 12 stasiun, **9 dipakai untuk melatih model** dan **3 stasiun uji**: model tidak pernah melihat data 3 stasiun itu. Data waktu dibagi sama untuk semua stasiun: 80% awal untuk latih dan 20% akhir untuk uji. Ini ditetapkan pada 16 Nov 2026 dan belum dikonfirmasi dosen. Aturan dosen hanya menetapkan uji = 20% periode terakhir dan adanya uji di stasiun lain.
-
-Uji akhir dilakukan pada 20% periode terakhir dari semua 12 stasiun, dilaporkan terpisah: (1) 9 stasiun latih, untuk melihat apakah model bagus memprediksi masa depan, dan (2) 3 stasiun uji, untuk melihat apakah model masih bagus di stasiun yang belum pernah dilihat. Selisih galat keduanya menunjukkan pergeseran distribusi. Tiga stasiun uji dipilih dengan aturan: satu yang jauh, satu sedang, dan satu dekat dari stasiun lain berdasarkan data periode latih saja. Hasilnya Dingling, Wanliu, dan Shunyi, yang sudah ditetapkan penulis (16 Nov 2026). Tiantan dan Dingling dipakai pada tahap awal sebagai percobaan (pilot), dan hasilnya dihitung ulang untuk desain ini.
-
-Pembagian murni per stasiun pada seluruh periode tidak dipakai karena jam yang sama muncul di data latih dan uji. PM2.5 antar stasiun saling berkaitan pada jam yang sama (korelasi median 0,88), sehingga jawaban data uji ikut terlihat oleh model.
-
-## 3. Rumusan masalah
-
-> Model ini membantu warga dan otoritas kesehatan lingkungan memutuskan pembatasan paparan, dengan memprediksi PM2.5 24 jam ke depan dari riwayat PM2.5, polutan lain, dan cuaca sampai jam prediksi. Kesalahan yang paling merugikan adalah galat besar, terutama prediksi yang terlalu rendah saat polusi tinggi, sehingga metrik utama adalah RMSE.
-
-**RMSE** adalah ukuran rata-rata seberapa jauh tebakan dari kenyataan, dengan kesalahan besar dihukum lebih berat. Cocok di sini karena meleset jauh saat polusi tinggi paling merugikan. MAE dipakai sebagai pendamping.
-
-Tiga tantangan wajib dari dosen:
-
-1. **Nilai hilang pada sensor.** Data yang kosong tidak boleh diisi dengan nilai dari jam sesudahnya.
-2. **Validasi berurutan waktu.** Data tidak boleh diacak, karena model hanya boleh belajar dari masa lalu untuk menebak masa depan.
-3. **Uji di stasiun lain.** Model dari satu stasiun dicoba di stasiun berbeda untuk melihat apakah kinerjanya turun (pergeseran distribusi).
-
-## 4. Tujuan
-
-1. Membangun model prediksi PM2.5 24 jam ke depan yang dievaluasi dengan **benar dan bebas kebocoran data**.
-2. Mengukur seberapa jauh model lebih baik dari tebakan paling sederhana, yaitu menganggap PM2.5 besok sama dengan PM2.5 sekarang (*baseline*).
-3. Menguji apakah model tetap andal di stasiun lain.
-4. Menganalisis kapan dan mengapa model salah, termasuk siapa yang dirugikan.
+1. Membangun model prediksi yang dievaluasi dengan **benar dan bebas kebocoran data**. *Kebocoran data* berarti informasi dari data uji ikut terlihat oleh model saat belajar, sehingga skor tampak lebih bagus daripada kenyataannya.
+2. Mengukur seberapa jauh model lebih baik dari tebakan paling sederhana (*baseline*: PM2.5 besok dianggap sama dengan sekarang).
+3. Menguji apakah model tetap andal di stasiun lain, dan menganalisis kapan, mengapa, serta bagi siapa model salah.
 
 Yang dinilai dosen bukan skor tertinggi. Model sederhana yang dievaluasi dengan benar lebih berharga daripada model rumit yang skornya bagus karena bocor.
 
-*Kebocoran data* berarti informasi dari data uji ikut terlihat oleh model saat belajar, sehingga skor tampak lebih bagus daripada kenyataannya. Seluruh rancangan tahap 1 sampai 4 dibuat untuk mencegah hal ini.
+## 2. Dataset dan pembagian data
 
-## 5. Alur dari tahap ke tahap
+**Beijing Multi-Site Air Quality** dari UCI (https://archive.ics.uci.edu/dataset/501): 12 stasiun pemantau, satu baris per jam, 1 Maret 2013 sampai 28 Februari 2017, total 420.768 baris dan 18 kolom. Kolomnya berupa waktu dan stasiun, polutan (`PM2.5`, `PM10`, `SO2`, `NO2`, `CO`, `O3`), dan cuaca (`TEMP`, `PRES`, `DEWP`, `RAIN`, `WSPM`, `wd`). Nilai kosong ditandai `NA` (`PM2.5` kosong pada 2,08% baris). Target adalah `PM2.5` pada jam t+24. Fitur berasal dari polutan dan cuaca pada jam t, riwayat `PM2.5`, dan kalender.
+
+![Pembagian data: 9 stasiun latih, 3 stasiun uji, uji 20% periode terakhir](../Hasil/Gambar/t2_02_pembagian_data.png)
+
+* **9 stasiun latih, 3 stasiun uji** (Dingling, Wanliu, Shunyi). Model tidak pernah melihat 3 stasiun uji. Ketiganya dipilih dengan aturan jauh, sedang, dan dekat dari stasiun lain berdasarkan data periode latih saja.
+* **Waktu:** 80% awal (sebelum 2016-05-12 19:00) untuk latih, 20% akhir untuk uji, dengan batas yang sama di semua stasiun. Data awal 3 stasiun uji tidak dipakai.
+* **Uji akhir** dilaporkan terpisah untuk 9 stasiun latih (masa depan di stasiun yang dikenal) dan 3 stasiun uji (stasiun baru). Selisih galat keduanya menunjukkan pergeseran distribusi.
+* Pembagian murni per stasiun pada seluruh periode tidak dipakai karena PM2.5 antar stasiun berkorelasi pada jam yang sama (median 0,88), sehingga jawaban data uji ikut terlihat.
+* Desain ini ditetapkan pada 16 Nov 2026 dan belum dikonfirmasi dosen. Aturan dosen hanya menetapkan uji = 20% periode terakhir dan adanya uji di stasiun lain.
+
+## 3. Rumusan masalah dan tantangan
+
+> Model ini membantu warga dan otoritas kesehatan lingkungan memutuskan pembatasan paparan, dengan memprediksi PM2.5 24 jam ke depan dari riwayat PM2.5, polutan lain, dan cuaca sampai jam prediksi. Kesalahan yang paling merugikan adalah galat besar, terutama prediksi yang terlalu rendah saat polusi tinggi, sehingga metrik utama adalah RMSE.
+
+**RMSE** mengukur rata-rata seberapa jauh tebakan dari kenyataan dengan menghukum galat besar lebih berat, cocok karena meleset jauh saat polusi tinggi paling merugikan. MAE dipakai sebagai pendamping.
+
+Tiga tantangan wajib dari dosen: (1) **nilai hilang pada sensor**, yang tidak boleh diisi dengan nilai dari jam sesudahnya, (2) **validasi berurutan waktu**, karena model hanya boleh belajar dari masa lalu, dan (3) **uji di stasiun lain** untuk melihat penurunan kinerja akibat pergeseran distribusi.
+
+## 4. Alur dari tahap ke tahap
 
 ```
 Tahap 1          Tahap 2           Tahap 3            Tahap 4
