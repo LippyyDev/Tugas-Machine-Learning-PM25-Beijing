@@ -52,7 +52,12 @@ Fitur yang sama dibuat untuk tiap stasiun (9 stasiun latih dan 3 stasiun uji, li
 
 ### Langkah yang dikerjakan
 
-1. **Mengenali data (EDA).** Temuan pada data latih 9 stasiun:
+![Alur praproses Tahap 2: dari data mentah sampai tabel latih](../Hasil/Gambar/t2_07_alur_praproses.png)
+
+*Cara membaca:* tiap kotak adalah satu langkah, dikerjakan dari atas ke bawah. Langkah 1 dikerjakan lebih dulu agar data uji tidak ikut memengaruhi eksplorasi dan pembuatan fitur. Rincian tiap langkah ada di bawah.
+
+1. **Menyisihkan data uji sejak awal.** Data mulai 12 Mei 2016 dipisahkan sebelum eksplorasi dan tidak dibuka.
+2. **Mengenali data (EDA).** Temuan pada data latih 9 stasiun:
    - PM2.5 miring ke kanan: kebanyakan jam bernilai rendah (median 57), tetapi ada jam bernilai sangat tinggi yang menarik rata-rata ke 81. Jam sangat tinggi ini menghasilkan galat besar sehingga akan mendominasi RMSE.
    - Rata-rata tertinggi terjadi di bulan Desember (terendah Agustus) dan pada pukul 21.00 (terendah pukul 16.00).
    - PM2.5 kosong pada 2,16% jam. Nilai ekstrem 999 dipertahankan.
@@ -61,7 +66,6 @@ Fitur yang sama dibuat untuk tiap stasiun (9 stasiun latih dan 3 stasiun uji, li
 
 *Cara membaca:* tinggi batang adalah jumlah jam. Sebagian besar jam ada di sisi kiri (udara relatif bersih), dan sedikit jam di sisi kanan (polusi parah) menarik rata-rata ke kanan.
 
-2. **Menyisihkan data uji sejak awal.** Data mulai 12 Mei 2016 dipisahkan sebelum eksplorasi dan tidak dibuka.
 3. **Membuat fitur dan target** seperti tabel di atas.
 4. **Membuang baris latih yang targetnya masuk periode uji.** Contoh: baris pukul 20.00 tanggal 11 Mei 2016 punya target pukul 20.00 tanggal 12 Mei, padahal batas uji adalah 12 Mei pukul 19.00. Baris seperti ini (24 jam terakhir sebelum batas) dibuang supaya data latih tidak memuat informasi dari periode uji.
 5. **Menangani nilai hilang.**
