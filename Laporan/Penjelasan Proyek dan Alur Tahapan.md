@@ -47,7 +47,7 @@ Fitur yang sama dibuat untuk tiap stasiun (9 stasiun latih dan 3 stasiun uji, li
 
 ![Alur praproses Tahap 2: dari data mentah sampai tabel latih](../Hasil/Gambar/t2_07_alur_praproses.png)
 
-*Cara membaca:* tiap kotak adalah satu langkah, dikerjakan dari kiri ke kanan. Langkah 1 dikerjakan lebih dulu agar data uji tidak ikut memengaruhi eksplorasi dan pembuatan fitur. Rincian tiap langkah ada di bawah.
+*Cara membaca:* tiap kotak adalah satu langkah, dikerjakan dari kiri ke kanan, lalu lanjut ke baris berikutnya. Langkah 1 dikerjakan lebih dulu agar data uji tidak ikut memengaruhi eksplorasi dan pembuatan fitur. Rincian tiap langkah ada di bawah.
 
 1. **Menyisihkan data uji sejak awal.** Data mulai 12 Mei 2016 dipisahkan sebelum eksplorasi dan tidak dibuka.
 2. **Mengenali data (EDA).** Temuan pada data latih 9 stasiun:
