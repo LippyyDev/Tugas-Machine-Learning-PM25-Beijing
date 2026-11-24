@@ -194,17 +194,26 @@ Angka ini hasil pada data latih (9 stasiun), bukan data uji.
 
 *Cara membaca:* makin pendek batang, makin kecil galatnya. *Fold* 1, 3, dan 5 (validasi mencakup musim dingin) galatnya sekitar 100, sedangkan *fold* 2 dan 4 (musim hangat) sekitar 60. Simpangan baku yang besar kemungkinan terutama mencerminkan beda musim, bukan model yang tidak stabil.
 
-### Tahap 5. Model lanjutan dan *tuning*
+### Tahap 5. Model lanjutan, pembanding, dan *tuning*
 
-Model lanjutan, keputusan penulis (22 Nov 2026): **Ridge**, model linear dengan **29 fitur** yang dilatih pada 9 stasiun latih. Ridge memberi bobot pada tiap fitur dan menjaga semua bobot agar tidak terlalu besar (*alpha* adalah kekuatan "rem" itu), tetapi tidak ada bobot yang menjadi nol. Model pembanding (keputusan penulis, 23 Nov 2026): *random forest*, yang hasilnya tidak terbedakan dari Ridge pada validasi silang (rincian di `Laporan/Tabel Hasil Percobaan Tahap 5.md`).
+**Dua model yang dipakai.** **Ridge** adalah model linear: ia memberi bobot pada tiap fitur lalu menjumlahkannya menjadi prediksi, dan menjaga semua bobot agar tidak terlalu besar (*alpha* adalah kekuatan "rem" itu), tetapi tidak ada bobot yang menjadi nol. ***Random forest*** adalah ratusan pohon keputusan yang masing-masing dilatih pada contoh dan fitur yang diacak, lalu hasilnya dirata-ratakan. Pohon bisa menangkap hubungan yang bukan garis lurus, tetapi prediksinya tidak bisa melewati rentang nilai yang pernah dilihat saat pelatihan.
 
-Mengapa model linear? Bobot tiap fitur bisa dibaca, jadi mudah dijelaskan dan dipertanggungjawabkan.
+**Mengapa keduanya.** Ridge dipilih sebagai model lanjutan (keputusan penulis, 22 Nov 2026) karena bobot tiap fitur bisa dibaca, jadi mudah dijelaskan dan dipertanggungjawabkan. *Random forest* dipilih sebagai pembanding (keputusan penulis, 23 Nov 2026) untuk menjawab satu pertanyaan: apakah model yang bisa menangkap hubungan bukan garis lurus memberi keuntungan dibanding model linear pada ramalan 24 jam. Hasilnya tidak harus lebih baik. Seri atau kalah pun menjadi bahan evaluasi.
 
-**Cara menguji.** Sama seperti *naive*: lima *fold* berurutan waktu dengan *gap* 24 jam, baris yang dinilai sama persis, dan praproses yang belajar hanya dari data latih tiap *fold*. Data uji tidak dibuka. Satu perbedaan perlu diakui: model dilatih dan pengaturannya (*alpha*) dipilih pada *fold* yang sama, sehingga skornya sedikit optimistis.
+**Cara membandingkan.** Keduanya diperlakukan sama, dan sama dengan *naive*: 29 fitur yang sama, lima *fold* berurutan waktu dengan *gap* 24 jam, baris yang dinilai sama persis, dan praproses yang belajar hanya dari data latih tiap *fold*. Data uji tidak dibuka. Satu hal perlu diakui: model dilatih dan pengaturannya dipilih pada *fold* yang sama, sehingga skornya sedikit optimistis.
 
-**Memilih pengaturan.** *Tuning* adalah mencoba beberapa nilai pengaturan (hiperparameter) lalu memilih yang RMSE-nya paling rendah. Ridge hanya punya satu pengaturan, *alpha*, dengan 5 nilai yang dicoba (0,1; 1; 10; 100; 1000). Daftarnya ditetapkan sebelum dijalankan dan tidak diubah setelah melihat hasil. Hasilnya hampir datar: RMSE Ridge hanya bergeser dari 72,94 ke 72,83 ketika *alpha* diubah dari 0,1 ke 1000, jadi hasil tidak bergantung pada angka *alpha*. Nilai 1000 dipilih karena RMSE-nya paling rendah, dan ia berada di tepi daftar (keterbatasan, daftar tidak diperluas).
+**Memilih pengaturan.** *Tuning* adalah mencoba beberapa nilai pengaturan (hiperparameter) lalu memilih yang RMSE-nya paling rendah. Daftar nilai ditetapkan sebelum dijalankan dan tidak diubah setelah melihat hasil.
+
+| Model | Pengaturan yang disetel | Nilai yang dicoba | Konfigurasi |
+|---|---|---|---|
+| Ridge | *alpha* | 0,1; 1; 10; 100; 1000 | 5 |
+| *Random forest* | `min_samples_leaf` (minimal contoh per daun) dan `max_features` (porsi fitur per pemecahan) | 10; 50; 200 dan 0,33; 0,6 | 6 |
+
+Pengaturan RF lain dikunci: 100 pohon, kedalaman tidak dibatasi, tiap pohon memakai separuh data (`max_samples=0,5`). Terpilih Ridge `alpha=1000` dan RF `min_samples_leaf=200`, `max_features=0,33`. Kurva Ridge hampir datar (RMSE 72,94 pada *alpha* 0,1 dan 72,83 pada 1000), jadi hasilnya tidak bergantung pada angka *alpha*. RF membaik ketika daunnya diperbesar dan fiturnya dikurangi. Kedua pilihan berada di tepi daftar (keterbatasan, daftar tidak diperluas).
 
 ![RMSE validasi silang Ridge untuk berbagai nilai alpha, hampir datar dan jauh di bawah naive](../Hasil/Gambar/t5_03_tuning_ridge.png)
+
+![RMSE validasi silang RF untuk berbagai min_samples_leaf](../Hasil/Gambar/t5_04_tuning_rf.png)
 
 **Hasil.**
 
@@ -212,10 +221,13 @@ Mengapa model linear? Bobot tiap fitur bisa dibaca, jadi mudah dijelaskan dan di
 |---|---|---|---|---|
 | *Naive forecast* | 86,82 ± 24,70 | 59,39 ± 16,53 | n/a | n/a |
 | Ridge, `alpha=1000` | 72,83 ± 19,38 | 54,51 ± 13,00 | 16,1% | 5 dari 5 |
+| *Random forest* (`min_samples_leaf=200`, `max_features=0,33`) | 72,91 ± 19,40 | 54,38 ± 13,32 | 16,0% | 5 dari 5 |
 
 ![RMSE tiap fold untuk naive dan Ridge: Ridge lebih rendah dari naive di kelima fold](../Hasil/Gambar/t5_01_ridge_per_fold.png)
 
-*Cara membaca:* di setiap *fold*, Ridge lebih rendah dari *naive*. Dibanding *naive*, RMSE turun 13,99 (sekitar 16%) dan MAE turun 4,88 (sekitar 8%). Angka ini nilai validasi, bukan kinerja akhir. Model dibekukan dulu, lalu data uji dibuka satu kali di Tahap 6.
+![RMSE tiap fold untuk naive, Ridge, dan random forest](../Hasil/Gambar/t5_05_ridge_vs_rf_per_fold.png)
+
+*Cara membaca:* di setiap *fold*, Ridge dan RF sama-sama lebih rendah dari *naive*. RMSE turun sekitar 14 (sekitar 16%) dan MAE turun sekitar 5 (sekitar 8%). **Ridge dan RF tidak terbedakan:** selisih RMSE berpasangan (RF dikurangi Ridge) rata-rata 0,08 dengan simpangan baku 1,15, dan RF lebih baik di 3 dari 5 *fold*, jadi tidak ada klaim bahwa salah satunya lebih baik. Angka ini nilai validasi, bukan kinerja akhir, dan skornya optimistis karena dipilih dari beberapa konfigurasi pada *fold* yang sama (eksperimen lama 22 Nov yang memuat RF juga pernah dilihat). Model dibekukan dulu, lalu data uji dibuka satu kali di Tahap 6. Rincian: `Laporan/Tabel Hasil Percobaan Tahap 5.md`.
 
 ### Tahap 6. Evaluasi dan diagnosis
 
