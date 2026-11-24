@@ -1,0 +1,4 @@
+Model,RMSE rata-rata,RMSE sd,MAE rata-rata,MAE sd,Perbaikan RMSE vs naive (%),Fold lebih baik dari naive
+Naive forecast,86.82,24.7,59.39,16.53,0.0,0 dari 5
+Ridge (alpha=1000),72.83,19.38,54.51,13.0,16.11,5 dari 5
+"Random forest (leaf=200, mf=0.33)",72.91,19.4,54.38,13.32,16.02,5 dari 5

@@ -16,4 +16,6 @@ Dua belas grafik dari *notebook* (`Notebook/Tahap 2 EDA dan Praproses.ipynb`), s
 | `t4_01_baseline_rmse_per_fold.png` | *Baseline* | RMSE *naive forecast* di tiap *fold* |
 | `t4_02_pemeriksaan_desain.png` | Uji kebocoran | Ringkasan enam pemeriksaan desain 9/3 |
 | `t5_01_ridge_per_fold.png` | Model lanjutan | RMSE tiap *fold* untuk *naive* dan Ridge |
+| `t5_04_tuning_rf.png` | *Tuning random forest* | Rata-rata RMSE validasi silang RF terhadap `min_samples_leaf` (skala log) untuk dua nilai `max_features`, dengan garis *naive* dan Ridge |
+| `t5_05_ridge_vs_rf_per_fold.png` | Pembanding | RMSE tiap *fold* untuk *naive*, Ridge, dan RF |
 | `t5_03_tuning_ridge.png` | *Tuning* Ridge | Rata-rata RMSE validasi silang Ridge terhadap `alpha` (skala log), dengan garis *naive* |

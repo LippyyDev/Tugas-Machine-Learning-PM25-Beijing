@@ -196,7 +196,7 @@ Angka ini hasil pada data latih (9 stasiun), bukan data uji.
 
 ### Tahap 5. Model lanjutan dan *tuning*
 
-Model lanjutan, keputusan penulis (22 Nov 2026): **Ridge**, model linear dengan **29 fitur** yang dilatih pada 9 stasiun latih. Ridge memberi bobot pada tiap fitur dan menjaga semua bobot agar tidak terlalu besar (*alpha* adalah kekuatan "rem" itu), tetapi tidak ada bobot yang menjadi nol. Model pembanding belum ditetapkan.
+Model lanjutan, keputusan penulis (22 Nov 2026): **Ridge**, model linear dengan **29 fitur** yang dilatih pada 9 stasiun latih. Ridge memberi bobot pada tiap fitur dan menjaga semua bobot agar tidak terlalu besar (*alpha* adalah kekuatan "rem" itu), tetapi tidak ada bobot yang menjadi nol. Model pembanding (keputusan penulis, 23 Nov 2026): *random forest*, yang hasilnya tidak terbedakan dari Ridge pada validasi silang (rincian di `Laporan/Tabel Hasil Percobaan Tahap 5.md`).
 
 Mengapa model linear? Bobot tiap fitur bisa dibaca, jadi mudah dijelaskan dan dipertanggungjawabkan.
 

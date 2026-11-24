@@ -13,6 +13,12 @@ Beberapa tabel dibuat *notebook*: tiga dari EDA dan pemilihan stasiun uji (bagia
 | `t5_tabel_ridge_per_fold.csv` | RMSE tiap *fold* untuk *naive* dan Ridge (bagian 05.2) |
 | `t5_tabel_tuning_ridge.csv` | Ringkasan 5 nilai `alpha` *tuning* Ridge (bagian 05.1): RMSE dan MAE rata-rata dan sd, selisih berpasangan terhadap `alpha=1` |
 | `t5_tabel_tuning_ridge_per_fold.csv` | RMSE dan MAE tiap *fold* untuk 5 nilai `alpha` Ridge |
+| `t5_tabel_tuning_rf.csv` | Ringkasan 6 konfigurasi *tuning random forest* (bagian 05.3): RMSE dan MAE rata-rata dan sd |
+| `t5_tabel_tuning_rf_per_fold.csv` | RMSE dan MAE tiap *fold* untuk 6 konfigurasi RF |
+| `t5_tabel_rf_vs_ridge.csv` | *Naive*, Ridge, dan RF terpilih: RMSE dan MAE rata-rata dan sd, perbaikan terhadap *naive* (bagian 05.4) |
+| `t5_tabel_rf_vs_ridge_per_fold.csv` | RMSE tiap *fold* untuk *naive*, Ridge, RF, dan selisih RF dikurangi Ridge (bagian 05.4) |
+| `t5_tabel_rf_seed.csv` | RMSE RF terpilih dengan 4 *seed* (bagian 05.5) |
+| `t5_tabel_galat_rentang.csv` | Bias dan RMSE *naive*, Ridge, RF menurut rentang PM2.5 sebenarnya, data validasi (bagian 05.6) |
 | `t5_tabel_semua_eksperimen.csv` | 8 konfigurasi Tahap 5 dengan RMSE, MAE, sd, perbaikan terhadap *naive*, dan RMSE tiap *fold*. Sumber `Laporan/Tabel Hasil Percobaan Tahap 5.md` |
 
 Dibuat ulang setiap *notebook* tahap 2 dijalankan.

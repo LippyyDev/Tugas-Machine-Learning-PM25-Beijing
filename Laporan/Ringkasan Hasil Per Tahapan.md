@@ -8,7 +8,7 @@ Berisi inti hasil tiap tahap, diperbarui setiap satu tahap selesai. Rincian leng
 | 2. EDA dan praproses | Selesai, dijalankan penuh 21 Nov 2026 pada desain 9/3 (lokal dan Colab, angka sama). Angka di bawah memakai data latih 9 stasiun |
 | 3. Skema validasi | Desain 9/3 sudah diimplementasikan dan dijalankan 21 Nov 2026 (skema, pengecekan otomatis, alasan, dan keterbatasan ada di *notebook* bagian 03). Penjaga pembukaan data uji ada di bagian 03.3 dan protokol [Usulan, menunggu persetujuan] di `Protokol Evaluasi Data Uji.md`. Penjaga hanya mencegah pembukaan ganda yang tidak disengaja, dan baru teruji saat data uji dibuka. Literatur pendukung: lihat `Proposal/Catatan Verifikasi Referensi.md` (aturan `gap` sama dengan horizon belum punya sumber *peer review* yang terbaca) |
 | 4. *Baseline* | Selesai, hasil validasi 9 stasiun latih (dijalankan 21 Nov 2026) |
-| 5. Model lanjutan dan *tuning* | Selesai sebagian: model lanjutan Ridge `alpha=1000` (RMSE 72,83 ± 19,38 lawan *naive* 86,82), fitur F1, keputusan penulis 22 Nov 2026. Belum: penetapan model pembanding, pembekuan konfigurasi. Data uji belum dibuka |
+| 5. Model lanjutan dan *tuning* | Selesai sebagian: model lanjutan Ridge `alpha=1000` (RMSE 72,83 ± 19,38 lawan *naive* 86,82), fitur F1, keputusan penulis 22 Nov 2026. Pembanding *random forest* ditetapkan 23 Nov 2026 (RMSE 72,91 ± 19,40, tidak terbedakan dari Ridge). Belum: pembekuan konfigurasi. Data uji belum dibuka |
 | 6. Evaluasi dan diagnosis | Belum dikerjakan |
 | 7. Analisis kesalahan dan etika | Belum dikerjakan |
 
@@ -33,7 +33,7 @@ Keputusan penulis 16 Nov 2026 menggantikan skema "latih di Tiantan, uji di Dingl
 - **Rumusan masalah:** memprediksi PM2.5 pada 24 jam ke depan dari riwayat PM2.5, polutan lain, dan cuaca sampai jam prediksi, sebagai dasar keputusan warga membatasi paparan.
 - **Metrik utama:** RMSE, karena galat besar paling merugikan, terutama prediksi terlalu rendah saat konsentrasi tinggi. Pendamping: MAE.
 - **Validasi:** data diurutkan menurut waktu, 20% terakhir sebagai data uji (dibuka satu kali), `TimeSeriesSplit` pada 80% awal.
-- ***Baseline*:** *naive forecast*. Model lanjutan dan pembanding tambahan belum ditentukan.
+- ***Baseline*:** *naive forecast*. Model lanjutan: Ridge. Pembanding: *random forest* (23 Nov 2026).
 - **Tiga tantangan:** nilai hilang (imputasi kausal di dalam *pipeline*), validasi berurutan waktu (tanpa kebocoran), pergeseran distribusi (rencana awal: latih dan validasi di satu stasiun utama, uji di stasiun lain. Diganti 16 Nov 2026 menjadi 9 stasiun latih dan 3 stasiun uji, lihat bagian Revisi desain evaluasi).
 - **Keputusan yang sudah ditetapkan:** horizon 24 jam (alasan: waktu bagi warga untuk membatasi paparan), skema uji stasiun lain berupa latih di satu stasiun lalu uji di stasiun lain, nilai ekstrem 999 dipertahankan, stasiun utama Tiantan. Ditambah 15 Nov 2026: stasiun uji Dingling dan tanpa *forward fill* (dasar di tahap 2). Skema uji stasiun lain dan stasiun uji Dingling digantikan desain 9 stasiun latih dan 3 stasiun uji pada 16 Nov 2026.
 - **Referensi:** [1] Cui dkk. 2023; [2] Hewamalage dkk. 2023; [3] Hua dkk. 2024; [4] Kapoor dan Narayanan 2023; [5] Lones 2024 (detail dan status verifikasi ada di `Proposal/Catatan Verifikasi Referensi.md`).
@@ -80,7 +80,7 @@ Validasi 5 *fold* pada data latih 9 stasiun, tanpa menyentuh data uji. Baris val
 
 ## Tahap 5. Model lanjutan dan *tuning* (22 Nov 2026)
 
-Aturan evaluasi sama dengan Tahap 4: `TimeSeriesSplit(n_splits=5, gap=24)` pada jam unik data latih 9 stasiun, baris validasi yang sama dengan *naive*, imputer median dan *scaler* hanya belajar dari data latih tiap *fold*. **Data uji tidak dibuka.** Model lanjutan, keputusan penulis: **Ridge** dengan 29 fitur awal (F1). Model pembanding belum ditetapkan.
+Aturan evaluasi sama dengan Tahap 4: `TimeSeriesSplit(n_splits=5, gap=24)` pada jam unik data latih 9 stasiun, baris validasi yang sama dengan *naive*, imputer median dan *scaler* hanya belajar dari data latih tiap *fold*. **Data uji tidak dibuka.** Model lanjutan, keputusan penulis: **Ridge** dengan 29 fitur awal (F1). Model pembanding (keputusan penulis, 23 Nov 2026): *random forest*, dibahas di akhir bagian ini.
 
 *Tuning* memakai *grid* yang ditetapkan sebelum dijalankan: Ridge `alpha` 0,1; 1; 10; 100; 1000 (5 konfigurasi). Aturan pemilihan ditulis sebelum hasil dilihat: ambil `alpha` dengan RMSE terendah.
 
@@ -98,3 +98,5 @@ Aturan evaluasi sama dengan Tahap 4: `TimeSeriesSplit(n_splits=5, gap=24)` pada 
 ![RMSE validasi silang Ridge untuk berbagai nilai alpha](../Hasil/Gambar/t5_03_tuning_ridge.png)
 
 Keluaran: `Hasil/Tabel/t5_tabel_ridge.csv`, `t5_tabel_ridge_per_fold.csv`, `t5_tabel_tuning_ridge.csv`, `t5_tabel_tuning_ridge_per_fold.csv`, `t5_tabel_semua_eksperimen.csv`, dan grafik `Hasil/Gambar/t5_01_ridge_per_fold.png` serta `t5_03_tuning_ridge.png`. Tabel hasil percobaan (8 konfigurasi) ada di `Laporan/Tabel Hasil Percobaan Tahap 5.md`.
+
+**Pembanding *random forest* (23 Nov 2026).** Diperlakukan sama dengan Ridge (fitur F1, *fold* dan baris validasi yang sama, *grid* 6 konfigurasi ditetapkan sebelum dijalankan: `min_samples_leaf` 10; 50; 200 dan `max_features` 0,33; 0,6). Terpilih `min_samples_leaf=200`, `max_features=0,33`: RMSE 72,91 ± 19,39, MAE 54,38, dibanding Ridge 72,83 ± 19,38. Selisih berpasangan 0,08 (sd 1,15), RF lebih baik di 3 dari 5 *fold*, jadi keduanya tidak terbedakan. Optimum RF ada di tepi *grid*, dan eksperimen lama 22 Nov yang memuat RF pernah dilihat, sehingga skor optimistis. Data uji tidak dibuka. Rincian: `Laporan/Tabel Hasil Percobaan Tahap 5.md`.

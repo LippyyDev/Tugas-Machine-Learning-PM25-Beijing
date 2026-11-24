@@ -1,0 +1,7 @@
+Model,min_samples_leaf,max_features,RMSE rata-rata,RMSE sd,MAE rata-rata,MAE sd
+"Random forest (leaf=10, mf=0.33)",10,0.33,74.322,19.729,54.989,13.389
+"Random forest (leaf=10, mf=0.6)",10,0.6,75.787,19.782,55.912,13.504
+"Random forest (leaf=50, mf=0.33)",50,0.33,73.694,19.759,54.665,13.462
+"Random forest (leaf=50, mf=0.6)",50,0.6,75.214,19.857,55.518,13.547
+"Random forest (leaf=200, mf=0.33)",200,0.33,72.913,19.395,54.378,13.32
+"Random forest (leaf=200, mf=0.6)",200,0.6,73.968,19.458,54.981,13.355

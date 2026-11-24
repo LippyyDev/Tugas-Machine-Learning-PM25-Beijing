@@ -1,0 +1,6 @@
+,Naive forecast,Ridge (alpha=1000),"Random forest (leaf=200, mf=0.33)",RF minus Ridge
+Fold 1,101.71,84.31,85.52,1.21
+Fold 2,62.22,53.96,55.31,1.35
+Fold 3,103.6,82.44,82.21,-0.24
+Fold 4,57.72,50.28,49.08,-1.2
+Fold 5,108.84,93.17,92.44,-0.73

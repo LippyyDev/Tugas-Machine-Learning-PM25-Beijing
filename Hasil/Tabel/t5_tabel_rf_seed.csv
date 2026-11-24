@@ -1,0 +1,5 @@
+seed,RMSE rata-rata,Selisih vs Ridge,Fold lebih baik dari Ridge
+42,72.913,0.079,3 dari 5
+43,72.933,0.099,3 dari 5
+44,72.925,0.091,3 dari 5
+45,72.999,0.166,2 dari 5
