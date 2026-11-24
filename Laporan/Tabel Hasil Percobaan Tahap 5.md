@@ -1,6 +1,6 @@
 # Tabel Hasil Percobaan Tahap 5
 
-Hasil validasi silang `TimeSeriesSplit(n_splits=5, gap=24)` pada data latih 9 stasiun, dikelompokkan per model dan diurutkan dari RMSE rata-rata terendah di dalam tiap kelompok. Semua konfigurasi dilatih langsung pada 9 stasiun dengan *fold*, baris validasi, dan praproses per *fold* yang sama dengan *naive forecast*. **Data uji tidak dibuka.** Model lanjutan yang dipakai di Tahap 5 ditebalkan. Pembanding Ridge adalah *random forest* (keputusan penulis, 23 Nov 2026), dengan *grid* 6 konfigurasi yang ditetapkan sebelum dijalankan.
+Hasil validasi silang `TimeSeriesSplit(n_splits=5, gap=24)` pada data latih 9 stasiun, dikelompokkan per model dan diurutkan dari RMSE rata-rata terendah di dalam tiap kelompok. Semua konfigurasi dilatih langsung pada 9 stasiun dengan *fold*, baris validasi, dan praproses per *fold* yang sama dengan *naive forecast*. **Data uji tidak dibuka.** Model lanjutan yang dipakai di Tahap 5 ditebalkan. Pembanding Ridge adalah *random forest*, dengan *grid* 6 konfigurasi yang ditetapkan sebelum dijalankan.
 
 ## Tabel (14 konfigurasi)
 
