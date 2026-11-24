@@ -2,59 +2,9 @@
 
 Ringkasan versi mudah dibaca. Angka diambil dari hasil eksekusi *notebook* pada data latih. Data uji belum pernah dibuka.
 
-## 1. Topik dan tujuan
+Proyek ini memprediksi konsentrasi PM2.5 di Beijing 24 jam ke depan (regresi deret waktu) dengan dataset Beijing Multi-Site Air Quality dari UCI (12 stasiun, data per jam, Maret 2013 sampai Februari 2017). Model dilatih pada 9 stasiun dan diuji pada 20% periode terakhir, termasuk 3 stasiun yang tidak pernah dilihat saat pelatihan (Dingling, Wanliu, Shunyi). Metrik utama RMSE, dengan MAE sebagai pendamping. Tiga tantangan dari dosen: nilai hilang pada sensor, validasi berurutan waktu, dan uji di stasiun lain (pergeseran distribusi). Yang dinilai bukan skor tertinggi, melainkan evaluasi yang benar dan bebas kebocoran data. Alurnya tujuh tahap, dijelaskan di bawah.
 
-**Memprediksi konsentrasi PM2.5 di Beijing 24 jam ke depan** (regresi deret waktu). PM2.5 adalah partikel debu sangat halus (diameter 2,5 mikrometer atau kurang) yang masuk ke paru-paru, dan makin tinggi konsentrasinya makin berbahaya.
-
-*Skenario:* seorang warga pada pukul 10.00 perlu tahu apakah besok pukul 10.00 aman untuk beraktivitas di luar ruangan, supaya sempat menyiapkan masker atau mengubah rencana. Model karenanya menebak PM2.5 pada jam t+24 dari kondisi udara dan cuaca sampai jam t.
-
-Tujuan proyek:
-
-1. Membangun model prediksi yang dievaluasi dengan **benar dan bebas kebocoran data**. *Kebocoran data* berarti informasi dari data uji ikut terlihat oleh model saat belajar, sehingga skor tampak lebih bagus daripada kenyataannya.
-2. Mengukur seberapa jauh model lebih baik dari tebakan paling sederhana (*baseline*: PM2.5 besok dianggap sama dengan sekarang).
-3. Menguji apakah model tetap andal di stasiun lain, dan menganalisis kapan, mengapa, serta bagi siapa model salah.
-
-Yang dinilai dosen bukan skor tertinggi. Model sederhana yang dievaluasi dengan benar lebih berharga daripada model rumit yang skornya bagus karena bocor.
-
-## 2. Dataset dan pembagian data
-
-**Beijing Multi-Site Air Quality** dari UCI (https://archive.ics.uci.edu/dataset/501): 12 stasiun pemantau, satu baris per jam, 1 Maret 2013 sampai 28 Februari 2017, total 420.768 baris dan 18 kolom. Kolomnya berupa waktu dan stasiun, polutan (`PM2.5`, `PM10`, `SO2`, `NO2`, `CO`, `O3`), dan cuaca (`TEMP`, `PRES`, `DEWP`, `RAIN`, `WSPM`, `wd`). Nilai kosong ditandai `NA` (`PM2.5` kosong pada 2,08% baris). Target adalah `PM2.5` pada jam t+24. Fitur berasal dari polutan dan cuaca pada jam t, riwayat `PM2.5`, dan kalender.
-
-![Pembagian data: 9 stasiun latih, 3 stasiun uji, uji 20% periode terakhir](../Hasil/Gambar/t2_02_pembagian_data.png)
-
-* **9 stasiun latih, 3 stasiun uji** (Dingling, Wanliu, Shunyi). Model tidak pernah melihat 3 stasiun uji. Ketiganya dipilih dengan aturan jauh, sedang, dan dekat dari stasiun lain berdasarkan data periode latih saja.
-* **Waktu:** 80% awal (sebelum 2016-05-12 19:00) untuk latih, 20% akhir untuk uji, dengan batas yang sama di semua stasiun. Data awal 3 stasiun uji tidak dipakai.
-* **Uji akhir** dilaporkan terpisah untuk 9 stasiun latih (masa depan di stasiun yang dikenal) dan 3 stasiun uji (stasiun baru). Selisih galat keduanya menunjukkan pergeseran distribusi.
-* Pembagian murni per stasiun pada seluruh periode tidak dipakai karena PM2.5 antar stasiun berkorelasi pada jam yang sama (median 0,88), sehingga jawaban data uji ikut terlihat.
-* Desain ini ditetapkan pada 16 Nov 2026 dan belum dikonfirmasi dosen. Aturan dosen hanya menetapkan uji = 20% periode terakhir dan adanya uji di stasiun lain.
-
-## 3. Rumusan masalah dan tantangan
-
-> Model ini membantu warga dan otoritas kesehatan lingkungan memutuskan pembatasan paparan, dengan memprediksi PM2.5 24 jam ke depan dari riwayat PM2.5, polutan lain, dan cuaca sampai jam prediksi. Kesalahan yang paling merugikan adalah galat besar, terutama prediksi yang terlalu rendah saat polusi tinggi, sehingga metrik utama adalah RMSE.
-
-**RMSE** mengukur rata-rata seberapa jauh tebakan dari kenyataan dengan menghukum galat besar lebih berat, cocok karena meleset jauh saat polusi tinggi paling merugikan. MAE dipakai sebagai pendamping.
-
-Tiga tantangan wajib dari dosen: (1) **nilai hilang pada sensor**, yang tidak boleh diisi dengan nilai dari jam sesudahnya, (2) **validasi berurutan waktu**, karena model hanya boleh belajar dari masa lalu, dan (3) **uji di stasiun lain** untuk melihat penurunan kinerja akibat pergeseran distribusi.
-
-## 4. Alur dari tahap ke tahap
-
-```
-Tahap 1          Tahap 2           Tahap 3            Tahap 4
-Rumusan    →    Eksplorasi   →    Cara menguji  →    Baseline
-masalah         dan rapikan       model              (naive forecast)
-                data              (validasi)
-                                                         │
-                                          Pertemuan 13 (cek bersama dosen)
-                                                         │
-Tahap 5          Tahap 6           Tahap 7               ↓
-Model       →    Evaluasi     →    Analisis kesalahan
-lanjutan         akhir pada        dan etika
-dan tuning       data uji
-```
-
-Urutannya penting. Cara menguji model (tahap 3) ditetapkan **sebelum** model dibangun, supaya hasil model tidak bisa mengubah cara pengujiannya.
-
-### Tahap 1. Rumusan masalah dan metrik
+## Tahap 1. Rumusan masalah dan metrik
 
 Tahap 1 dikerjakan sebelum membuka data. Panduan meminta tiga pertanyaan dijawab tertulis (siapa pemakainya, keputusan apa yang diambil, kesalahan mana yang paling merugikan). Di sini ditambah dua baris: apa yang diprediksi dan bagaimana mengukurnya.
 
@@ -66,7 +16,7 @@ Tahap 1 dikerjakan sebelum membuka data. Panduan meminta tiga pertanyaan dijawab
 | Kesalahan mana yang paling merugikan? | Galat besar, terutama prediksi yang terlalu rendah saat polusi tinggi |
 | Bagaimana mengukurnya? | **RMSE** sebagai metrik utama, karena menghukum galat besar lebih berat. MAE sebagai pendamping |
 
-### Tahap 2. Eksplorasi dan praproses
+## Tahap 2. Eksplorasi dan praproses
 
 **Tujuan:** mengubah data mentah menjadi tabel latihan yang siap dibaca model. Setiap baris tabel berisi dua hal: **fitur** (yang sudah diketahui) dan **target** (yang harus ditebak).
 
@@ -88,7 +38,7 @@ Model belajar dari banyak baris seperti ini: dari fitur pada jam t, tebak target
 
 **Aturan terpenting: fitur tidak boleh memakai data sesudah jam t.** Saat prediksi dibuat di dunia nyata, data sesudah jam t memang belum ada. Jika sebuah fitur memakainya, skor model terlihat bagus tetapi model itu tidak bisa dipakai sungguhan. Hal ini disebut *kebocoran data*.
 
-#### Isi tabel: 29 fitur
+### Isi tabel: 29 fitur
 
 | Kelompok | Isi | Jumlah | Mengapa dipakai |
 |---|---|---|---|
@@ -100,7 +50,7 @@ Model belajar dari banyak baris seperti ini: dari fitur pada jam t, tebak target
 
 Fitur yang sama dibuat untuk tiap stasiun (9 stasiun latih dan 3 stasiun uji, lihat bagian 2), masing-masing dihitung hanya dari data stasiun itu sendiri.
 
-#### Langkah yang dikerjakan
+### Langkah yang dikerjakan
 
 1. **Mengenali data (EDA).** Temuan pada data latih 9 stasiun:
    - PM2.5 miring ke kanan: kebanyakan jam bernilai rendah (median 57), tetapi ada jam bernilai sangat tinggi yang menarik rata-rata ke 81. Jam sangat tinggi ini menghasilkan galat besar sehingga akan mendominasi RMSE.
@@ -128,7 +78,7 @@ Fitur yang sama dibuat untuk tiap stasiun (9 stasiun latih dan 3 stasiun uji, li
 
 **Hasil:** 246.798 baris latih (9 stasiun) dengan 29 fitur, dan 82.151 baris uji yang disimpan tanpa dibuka (61.686 dari stasiun latih dan 20.465 dari stasiun uji).
 
-### Tahap 3. Skema validasi
+## Tahap 3. Skema validasi
 
 Menetapkan cara menguji model supaya skornya tidak terlalu optimistis.
 - Data diurutkan menurut waktu. **20% terakhir disimpan sebagai data uji** (mulai 12 Mei 2016) dan hanya dibuka satu kali di akhir.
@@ -140,7 +90,7 @@ Menetapkan cara menguji model supaya skornya tidak terlalu optimistis.
 
 *Cara membaca:* tiap baris satu *fold*. Biru adalah data untuk belajar, oranye adalah data untuk menguji di *fold* itu, selalu lebih baru dari yang biru. Abu-abu adalah data uji akhir yang belum dibuka.
 
-### Tahap 4. *Baseline*
+## Tahap 4. *Baseline*
 
 Hasil *baseline*. Model lanjutan baru dianggap berguna jika RMSE-nya lebih kecil dari angka ini.
 
@@ -154,7 +104,7 @@ Angka ini hasil pada data latih (9 stasiun), bukan data uji.
 
 *Cara membaca:* makin pendek batang, makin kecil galatnya. *Fold* 1, 3, dan 5 (validasi mencakup musim dingin) galatnya sekitar 100, sedangkan *fold* 2 dan 4 (musim hangat) sekitar 60. Simpangan baku yang besar kemungkinan terutama mencerminkan beda musim, bukan model yang tidak stabil.
 
-### Tahap 5. Model lanjutan, pembanding, dan *tuning*
+## Tahap 5. Model lanjutan, pembanding, dan *tuning*
 
 **Dua model yang dipakai.** **Ridge** adalah model linear: ia memberi bobot pada tiap fitur lalu menjumlahkannya menjadi prediksi, sambil menahan agar nilai bobot tidak membengkak terlalu besar. Kekuatan penahan itu diatur oleh parameter *alpha*, sebagai "rem"-nya. ***Random forest*** adalah kumpulan pohon keputusan (100 pohon di proyek ini) yang masing-masing dilatih pada sampel data dan subset fitur yang diacak, lalu hasil prediksinya dirata-ratakan. Pohon keputusan mampu menangkap pola nonlinear yang rumit, tetapi prediksinya tidak bisa melampaui rentang nilai target yang pernah dilihat selama pelatihan.
 
@@ -189,10 +139,10 @@ Pengaturan RF lain dikunci: 100 pohon, kedalaman tidak dibatasi, tiap pohon mema
 
 *Cara membaca:* di setiap *fold*, Ridge dan RF sama-sama lebih rendah dari *naive*. RMSE turun sekitar 14 (sekitar 16%) dan MAE turun sekitar 5 (sekitar 8%). **Ridge dan RF tidak terbedakan:** selisih RMSE berpasangan (RF dikurangi Ridge) rata-rata 0,08 dengan simpangan baku 1,15, dan RF lebih baik di 3 dari 5 *fold*, jadi tidak ada klaim bahwa salah satunya lebih baik. Angka ini nilai validasi, bukan kinerja akhir, dan skornya optimistis karena dipilih dari beberapa konfigurasi pada *fold* yang sama (eksperimen lama 22 Nov yang memuat RF juga pernah dilihat). Model dibekukan dulu, lalu data uji dibuka satu kali di Tahap 6. Rincian: `Laporan/Tabel Hasil Percobaan Tahap 5.md`.
 
-### Tahap 6. Evaluasi dan diagnosis
+## Tahap 6. Evaluasi dan diagnosis
 
 Memeriksa apakah model terlalu sederhana (*underfitting*) atau terlalu menghafal (*overfitting*) dengan *learning curve*. Setelah model final dipilih, **data uji dibuka satu kali**, untuk 9 stasiun latih dan 3 stasiun uji. Jika skornya jauh lebih buruk dari validasi, model tidak disetel ulang. Selisihnya dilaporkan dan dianalisis.
 
-### Tahap 7. Analisis kesalahan dan etika
+## Tahap 7. Analisis kesalahan dan etika
 
 Mencari di mana model paling sering salah (jam, musim, stasiun, rentang konsentrasi), fitur mana yang paling berpengaruh, dan siapa yang dirugikan jika prediksi terlalu rendah. Model dipakai sebagai alat bantu peringatan, bukan pengambil keputusan otomatis.
