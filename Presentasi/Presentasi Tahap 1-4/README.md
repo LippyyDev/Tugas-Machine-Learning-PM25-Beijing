@@ -13,7 +13,7 @@ Buka `INDEX.html` (daftar slide dan pratinjau) atau langsung `SLIDE1.html`. Slid
 | `R` / `F` / `T` / `I` | Reset animasi / layar penuh / mode terang atau gelap / ke `INDEX.html` |
 | `?step=N` di akhir alamat | Langsung ke langkah N (mulai dari 0) |
 
-Maju di langkah terakhir pindah ke slide berikutnya, mundur di langkah pertama ke slide sebelumnya. Panggung tetap 1920 × 1080 dan diskalakan otomatis. Tema dan transisi tirai ada di `ASET/tema.css` dan `ASET/tema.js`. Aturan desain dan asal angka ada di `DESIGN.md`. PDF satu halaman per slide (langkah terakhir tiap slide): `Presentasi_Slide.pdf`.
+Maju di langkah terakhir pindah ke slide berikutnya, mundur di langkah pertama ke slide sebelumnya. Panggung tetap 1920 × 1080 dan diskalakan otomatis. Tema dan transisi tirai ada di `ASET/tema.css` dan `ASET/tema.js`. Aturan desain dan asal angka ada di `DESIGN.md`.
 
 ## Isi per slide
 
@@ -34,7 +34,7 @@ Total 11,5 menit.
 * Panduan dosen membatasi slide progres Pertemuan 13 hingga 5 slide. Presentasi ini 6 halaman karena memakai satu slide judul. Konfirmasikan apakah slide judul dihitung.
 * Desain 9 stasiun latih dan 3 stasiun uji adalah keputusan penulis (16 Nov 2026) dan belum dikonfirmasi dosen. Penanda "usulan penulis, belum dikonfirmasi dosen" di slide 4 dan 6 dihapus atas permintaan penulis (17 Nov 2026), jadi statusnya tidak lagi terlihat di slide dan perlu disampaikan lisan atau di laporan.
 * Slide ringkasan Tahap 1 sampai 4 sudah diganti slide Tahap 5 atas permintaan penulis (22 Nov 2026). Slide 6 tidak lagi merangkum Tahap 1 sampai 4 dan tidak memuat rencana tahap 6 dan 7. Pengakuan bahwa statistik ringkas periode uji pernah terlihat tetap ada di slide 4.
-* Slide 6 kini berisi 10 langkah (sebelumnya 7, sebelum *random forest* ditambahkan) dalam jatah 2,5 menit, jadi mungkin perlu dipangkas saat latihan. `Presentasi_Slide.pdf` belum dibuat ulang dan masih memuat Tahap 5 versi Ridge saja.
+* Slide 6 kini berisi 10 langkah (sebelumnya 7, sebelum *random forest* ditambahkan) dalam jatah 2,5 menit, jadi mungkin perlu dipangkas saat latihan. PDF presentasi dihapus dari repositori (25 Nov 2026) dan akan dibuat ulang setelah isi slide final.
 * Slide 6 menyajikan alasan memilih Ridge dan *random forest* sebagai dugaan yang diuji, bukan hasil terbukti, dan menyatakan keduanya tidak terbedakan. Model belum dibekukan dan belum final, dan aturan pemilihan di protokol masih menunggu persetujuan.
 * Nama folder `Presentasi Tahap 1-4` tidak diubah supaya tautan lama tetap berlaku, walaupun isinya sampai Tahap 5.
 * Nama dosen tidak dicantumkan karena belum tertulis di sumber.

@@ -21,7 +21,6 @@ Gaya mengikuti presentasi Tugas Besar Algoritma Komputasi (repo `LippyyDev/Tugas
 | `Skrip/bangun_data_slide.py` | Menghitung data yang ditampilkan, hanya dari data latih |
 | `Skrip/data_slide.json` | Keluaran skrip di atas (kurva contoh, sebaran, per bulan, per jam, porsi galat) |
 | `vercel.json` | Alamat pendek `/slide1` sampai `/slide6` bila di-*deploy* |
-| `Presentasi_Slide.pdf` | Satu halaman per slide, langkah terakhir |
 
 ## 3. Token dan makna warna
 
