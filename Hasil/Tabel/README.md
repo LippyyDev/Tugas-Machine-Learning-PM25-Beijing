@@ -19,7 +19,7 @@ Beberapa tabel dibuat *notebook*: tiga dari EDA dan pemilihan stasiun uji (bagia
 | `t5_tabel_rf_vs_ridge_per_fold.csv` | RMSE tiap *fold* untuk *naive*, Ridge, RF, dan selisih RF dikurangi Ridge (bagian 05.4) |
 | `t5_tabel_rf_seed.csv` | RMSE RF terpilih dengan 4 *seed* (bagian 05.5) |
 | `t5_tabel_galat_rentang.csv` | Bias dan RMSE *naive*, Ridge, RF menurut rentang PM2.5 sebenarnya, data validasi (bagian 05.6) |
-| `t5_tabel_semua_eksperimen.csv` | 8 konfigurasi Tahap 5 dengan RMSE, MAE, sd, perbaikan terhadap *naive*, dan RMSE tiap *fold*. Sumber `Laporan/Tabel Hasil Percobaan Tahap 5.md` |
+| `t5_tabel_semua_eksperimen.csv` | 7 konfigurasi Ridge (nilai `alpha` dan fitur) dan *naive forecast* dengan RMSE, MAE, sd, perbaikan terhadap *naive*, dan RMSE tiap *fold*. Konfigurasi *random forest* ada di `t5_tabel_tuning_rf.csv`. Tabel gabungan 13 konfigurasi dan *naive* ada di `Laporan/Tabel Hasil Percobaan Tahap 5.md` |
 
 Dibuat ulang setiap *notebook* tahap 2 dijalankan.
 
