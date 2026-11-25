@@ -24,7 +24,7 @@ Maju di langkah terakhir pindah ke slide berikutnya, mundur di langkah pertama k
 | 3 | Tahap 2: eksplorasi dan praproses | 2,5 | 6 | 12 × 35.064 = 420.768 baris, satu baris latihan dengan 29 fitur, aturan fitur (aman atau bocor), EDA, nilai hilang, alur praproses | Tahap 2 |
 | 4 | Tahap 3: skema validasi | 2,5 | 6 | Berurutan lawan acak, lima *fold*, *gap* 24 jam, praproses di dalam *pipeline*, 9 stasiun latih dan 3 stasiun uji, yang dicegah dan yang diakui | Tahap 3 |
 | 5 | Tahap 4: *baseline* | 1,5 | 4 | *Naive forecast*, RMSE 86,82 ± 24,70 per *fold*, RMSE dan MAE, cara membaca hasil model nanti | Tahap 4 |
-| 6 | Tahap 5: model lanjutan | 2,5 | 7 | Definisi Ridge dengan animasi otomatis (rem *alpha* diperkuat lalu dilepas; batang bobot hanya ilustrasi), apa itu *tuning* dengan animasi menguji nilai *alpha* memakai angka RMSE Ridge asli, nilai yang dicoba (5 nilai *alpha*), aturan uji sama dengan *naive* (satu perbedaan diakui), kurva RMSE terhadap *alpha* (hampir datar), RMSE per *fold* dan rata-rata (86,82 *naive*, 72,83 Ridge), total RMSE dan MAE dengan selisih terhadap *naive*. Model pembanding belum ditetapkan | Tahap 5, hasil eksekusi *notebook* bagian 05 |
+| 6 | Tahap 5: model lanjutan | 2,5 | 10 | Definisi Ridge dengan animasi otomatis, definisi *random forest* (ilustrasi 100 pohon dirata-ratakan, angka pohon bukan hasil model), alasan memilih keduanya (dugaan yang diuji), apa itu *tuning*, nilai yang dicoba (Ridge 5 nilai *alpha*, *random forest* 6 kombinasi, total 11 konfigurasi), aturan uji sama dengan *naive* (satu perbedaan diakui), kurva *tuning* Ridge (hampir datar) dan *random forest* (72,91 sampai 75,79), RMSE per *fold* dan rata-rata (86,82 *naive*, 72,83 Ridge, 72,91 *random forest*), total RMSE dan MAE dengan selisih terhadap *naive*, serta pernyataan Ridge dan *random forest* tidak terbedakan | Tahap 5, hasil eksekusi *notebook* bagian 05 |
 
 Total 11,5 menit.
 
@@ -34,7 +34,7 @@ Total 11,5 menit.
 * Panduan dosen membatasi slide progres Pertemuan 13 hingga 5 slide. Presentasi ini 6 halaman karena memakai satu slide judul. Konfirmasikan apakah slide judul dihitung.
 * Desain 9 stasiun latih dan 3 stasiun uji adalah keputusan penulis (16 Nov 2026) dan belum dikonfirmasi dosen. Penanda "usulan penulis, belum dikonfirmasi dosen" di slide 4 dan 6 dihapus atas permintaan penulis (17 Nov 2026), jadi statusnya tidak lagi terlihat di slide dan perlu disampaikan lisan atau di laporan.
 * Slide ringkasan Tahap 1 sampai 4 sudah diganti slide Tahap 5 atas permintaan penulis (22 Nov 2026). Slide 6 tidak lagi merangkum Tahap 1 sampai 4 dan tidak memuat rencana tahap 6 dan 7. Pengakuan bahwa statistik ringkas periode uji pernah terlihat tetap ada di slide 4.
-* Slide 6 berisi 7 langkah dalam jatah 2,5 menit. Total durasi kini 11 menit.
-* Slide 6 menyebut Ridge dipilih karena lebih sederhana. Model belum dibekukan dan belum final, dan aturan pemilihan di protokol masih menunggu persetujuan.
+* Slide 6 kini berisi 10 langkah (sebelumnya 7, sebelum *random forest* ditambahkan) dalam jatah 2,5 menit, jadi mungkin perlu dipangkas saat latihan. `Presentasi_Slide.pdf` belum dibuat ulang dan masih memuat Tahap 5 versi Ridge saja.
+* Slide 6 menyajikan alasan memilih Ridge dan *random forest* sebagai dugaan yang diuji, bukan hasil terbukti, dan menyatakan keduanya tidak terbedakan. Model belum dibekukan dan belum final, dan aturan pemilihan di protokol masih menunggu persetujuan.
 * Nama folder `Presentasi Tahap 1-4` tidak diubah supaya tautan lama tetap berlaku, walaupun isinya sampai Tahap 5.
 * Nama dosen tidak dicantumkan karena belum tertulis di sumber.

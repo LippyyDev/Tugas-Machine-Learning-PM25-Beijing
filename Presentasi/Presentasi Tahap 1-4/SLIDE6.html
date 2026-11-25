@@ -184,19 +184,25 @@ svg .fade{transition:opacity .45s ease}
   <div class="copy">
     <div class="blk" id="b1"><span class="lbl">01 · Ridge</span>
       <p><b>Ridge</b> adalah model linear yang <b>mengecilkan semua bobot</b> fitur, tetapi tidak ada yang jadi nol.</p></div>
-    <div class="blk" id="b2"><span class="lbl">02 · Apa Itu <em>Tuning</em></span>
+    <div class="blk" id="b2"><span class="lbl">02 · <em>Random Forest</em></span>
+      <p><b><em>Random forest</em></b> adalah kumpulan <b>100 pohon keputusan</b>. Tiap pohon dilatih pada sampel dan subset fitur yang diacak, lalu prediksinya <b>dirata-ratakan</b>.</p></div>
+    <div class="blk" id="b3"><span class="lbl">03 · Mengapa Dua Model</span>
+      <p><b>Ridge</b>: fitur <em>lag</em> saling berkorelasi kuat dan hubungannya ke jam t+24 diduga dekat linear. <b><em>Random forest</em></b>: proses fisik PM2.5 tidak linear (ada ambang angin dan interaksi). Keduanya <b>dugaan yang diuji</b>, bukan hasil terbukti.</p></div>
+    <div class="blk" id="b4"><span class="lbl">04 · Apa Itu <em>Tuning</em></span>
       <p><b><em>Tuning</em></b> adalah mencoba beberapa nilai pengaturan (<b>hiperparameter</b>) model, lalu memilih yang RMSE-nya paling rendah.</p>
-      <p style="margin-top:12px">Ridge punya satu pengaturan: <em>alpha</em>.</p></div>
-    <div class="blk" id="b3"><span class="lbl">03 · Nilai yang Dicoba</span>
-      <p>Daftar nilai <em>alpha</em> ditetapkan <b>sebelum</b> dijalankan: <b>5 nilai</b>. Tiap nilai diuji di 5 <em>fold</em>, dan dipilih yang RMSE rata-ratanya paling rendah.</p></div>
-    <div class="blk" id="b4"><span class="lbl">04 · Diuji Sama Seperti <em>Naive</em></span>
-      <p>Lima <em>fold</em>, baris yang dinilai, dan praproses sama dengan <em>naive forecast</em>, jadi angkanya bisa dibandingkan langsung. <b>Data uji tidak dibuka.</b> Bedanya, model dilatih dan <em>alpha</em>-nya dipilih di <em>fold</em> yang sama, sehingga skornya sedikit optimistis.</p></div>
-    <div class="blk" id="b5"><span class="lbl">05 · Hasil <em>Tuning</em></span>
+      <p style="margin-top:12px">Ridge punya satu pengaturan: <em>alpha</em>. <em>Random forest</em> punya dua: <em>min_samples_leaf</em> dan <em>max_features</em>.</p></div>
+    <div class="blk" id="b5"><span class="lbl">05 · Nilai yang Dicoba</span>
+      <p>Daftar nilai ditetapkan <b>sebelum</b> dijalankan: Ridge <b>5 nilai</b> <em>alpha</em>, <em>random forest</em> <b>6 kombinasi</b>. Tiap konfigurasi diuji di 5 <em>fold</em>, dan dipilih yang RMSE rata-ratanya paling rendah.</p></div>
+    <div class="blk" id="b6"><span class="lbl">06 · Diuji Sama Seperti <em>Naive</em></span>
+      <p>Fitur, lima <em>fold</em>, baris yang dinilai, dan praproses sama dengan <em>naive forecast</em> dan sama untuk kedua model, jadi angkanya bisa dibandingkan langsung. <b>Data uji tidak dibuka.</b> Bedanya, model dilatih dan setelannya dipilih di <em>fold</em> yang sama, sehingga skornya sedikit optimistis.</p></div>
+    <div class="blk" id="b7"><span class="lbl">07 · Hasil <em>Tuning</em> Ridge</span>
       <p>Kurvanya <b>hampir datar</b>: RMSE hanya bergeser 72,94 sampai 72,83 untuk <em>alpha</em> 0,1 sampai 1000, jadi hasil tidak bergantung pada angka <em>alpha</em>. Terpilih <em>alpha</em> 1000, yang berada di tepi daftar (keterbatasan).</p></div>
-    <div class="blk" id="b6"><span class="lbl">06 · RMSE di Lima <em>Fold</em></span>
-      <p>Di <b>setiap <em>fold</em></b>, Ridge lebih rendah dari <em>naive</em>. Rata-rata lima <em>fold</em>: <em>naive</em> <b>86,82</b>, Ridge <b>72,83</b>.</p></div>
-    <div class="blk" id="b7"><span class="lbl">07 · Total RMSE, MAE, dan Selisihnya</span>
-      <p>Dibanding <em>naive</em>, RMSE turun <b>13,99</b> (sekitar <b>16%</b>) dan MAE turun <b>4,88</b> (sekitar <b>8%</b>). Persentasenya berbeda karena RMSE lebih peka pada galat besar daripada MAE. Ini nilai validasi: model dibekukan dulu, lalu <b>data uji dibuka satu kali di Tahap 6</b>.</p></div>
+    <div class="blk" id="b8"><span class="lbl">08 · Hasil <em>Tuning Random Forest</em></span>
+      <p>RMSE berkisar <b>72,91 sampai 75,79</b>. Turun saat <em>min_samples_leaf</em> membesar dan <em>max_features</em> mengecil. Terpilih <em>min_samples_leaf</em> 200 dan <em>max_features</em> 0,33, keduanya di tepi daftar (keterbatasan).</p></div>
+    <div class="blk" id="b9"><span class="lbl">09 · RMSE di Lima <em>Fold</em></span>
+      <p>Di <b>setiap <em>fold</em></b>, kedua model lebih rendah dari <em>naive</em>. Rata-rata lima <em>fold</em>: <em>naive</em> <b>86,82</b>, Ridge <b>72,83</b>, <em>random forest</em> <b>72,91</b>. <em>Random forest</em> lebih baik di 3 dari 5 <em>fold</em>.</p></div>
+    <div class="blk" id="b10"><span class="lbl">10 · Total RMSE, MAE, dan Selisihnya</span>
+      <p>Dibanding <em>naive</em>, RMSE turun sekitar <b>16%</b> dan MAE sekitar <b>8%</b> pada kedua model. Ridge dan <em>random forest</em> <b>tidak terbedakan</b>: selisih RMSE berpasangan rata-rata 0,08 (sd 1,15). Ini nilai validasi: model dibekukan dulu, lalu <b>data uji dibuka satu kali di Tahap 6</b>.</p></div>
   </div>
 
   <div class="panel">
@@ -207,10 +213,13 @@ svg .fade{transition:opacity .45s ease}
     </div>
     <div class="vwrap">
       <div class="view" id="v-model"><svg class="vz" id="svg-model" viewBox="0 0 942 526"></svg></div>
+      <div class="view" id="v-rf"><svg class="vz" id="svg-rf" viewBox="0 0 942 526"></svg></div>
+      <div class="view" id="v-alasan"><svg class="vz" id="svg-alasan" viewBox="0 0 942 526"></svg></div>
       <div class="view" id="v-konsep"><svg class="vz" id="svg-konsep" viewBox="0 0 942 526"></svg></div>
-      <div class="view" id="v-aturan"><svg class="vz" id="svg-aturan" viewBox="0 0 942 526"></svg></div>
       <div class="view" id="v-grid"><svg class="vz" id="svg-grid" viewBox="0 0 942 526"></svg></div>
+      <div class="view" id="v-aturan"><svg class="vz" id="svg-aturan" viewBox="0 0 942 526"></svg></div>
       <div class="view" id="v-tuning"><svg class="vz" id="svg-tuning" viewBox="0 0 942 526"></svg></div>
+      <div class="view" id="v-tunrf"><svg class="vz" id="svg-tunrf" viewBox="0 0 942 526"></svg></div>
       <div class="view" id="v-hasil"><svg class="vz" id="svg-hasil" viewBox="0 0 942 526"></svg></div>
       <div class="view" id="v-total"><svg class="vz" id="svg-total" viewBox="0 0 942 526"></svg></div>
     </div>
@@ -268,6 +277,7 @@ const fd2=v=>fd(v,2), fd1=v=>fd(v,1);
 const LIGHT='#c4dcff';
 const NAIVE_F=[101.71,62.22,103.6,57.72,108.84], RIDGE_F=[84.31,53.96,82.44,50.28,93.17];
 const NAIVE_M=86.82, RIDGE_M=72.83;
+const RF_F=[85.52,55.31,82.21,49.08,92.44], RF_M=72.91;
 const play=(items,gap=150)=>{ items.forEach((g,k)=>{ g.style.opacity=0; }); items.forEach((g,k)=>later(()=>{g.style.opacity=1;},120+k*gap)); };
 const fade=(parent)=>mk('g',{class:'fade'},parent);
 
@@ -324,6 +334,7 @@ const gk1=fade(sk); G8.push(gk1);
 mk('rect',{x:24,y:92,width:894,height:96,fill:'#07080b',stroke:'rgba(125,180,255,.45)'},gk1);
 tx(gk1,'Ridge',[44,134],28,'#f1f2f6',{'font-family':SANS,'font-weight':600}); tx(gk1,'1 pengaturan',[898,126],14,BLUE,{'text-anchor':'end'});
 tx(gk1,'alpha',[44,170],20,BLUE,{'font-weight':600}); tx(gk1,'kekuatan "rem" pada bobot',[134,170],18,'#c4c7d4',{'font-family':SANS});
+tx(gk1,'Random forest: 2 pengaturan (min_samples_leaf, max_features)',[898,170],13,GREY,{'text-anchor':'end'});
 const gk2=fade(sk); G8.push(gk2);
 tx(gk2,'CONTOH: MENYETEL ALPHA PADA RIDGE (RMSE RATA-RATA 5 FOLD, ANGKA ASLI)',[24,236],12,GREY,{'letter-spacing':'.1em'});
 const TC=[['0,1','72,94'],['1','72,94'],['10','72,94'],['100','72,93'],['1000','72,83']];
@@ -347,25 +358,78 @@ function drawTune(ms){ const u=(Math.max(0,ms)/1000)%9.4, per=1.1;
   kSt.textContent=done?'RMSE paling rendah di alpha 1000, maka alpha 1000 dipilih (selisihnya sangat kecil)':(act<5?'menguji alpha = '+TC[act][0]+' di 5 fold…':''); }
 function startTune(){ const my=runId,t0=performance.now(); const loop=n=>{ if(my!==runId)return; drawTune(n-t0); requestAnimationFrame(loop); }; drawTune(0); requestAnimationFrame(loop); }
 
+/* ═════════ V-rf: apa itu random forest (ilustrasi) ═════════ */
+const sr=$('#svg-rf'); const GR=[];
+const gr0=fade(sr); GR.push(gr0);
+mk('rect',{x:24,y:16,width:894,height:52,fill:'#07080b',stroke:'rgba(255,255,255,.14)'},gr0);
+tx(gr0,'ramalan = rata-rata prediksi dari 100 pohon',[471,49],20,'#f1f2f6',{'text-anchor':'middle','font-family':SANS,'font-weight':500});
+const gr1=fade(sr); GR.push(gr1);
+mk('rect',{x:24,y:84,width:894,height:326,fill:'#07080b',stroke:'rgba(125,180,255,.55)','stroke-width':2},gr1);
+tx(gr1,'KUMPULAN POHON KEPUTUSAN',[46,112],13,BLUE,{'letter-spacing':'.14em'});
+tx(gr1,'Random forest',[46,150],30,'#f1f2f6',{'font-family':SANS,'font-weight':600});
+tx(gr1,'tiap pohon: sampel acak + subset fitur acak',[896,112],14,GREY,{'text-anchor':'end'});
+const TREEV=[61,84,70,92,68];
+TREEV.forEach((v,i)=>{ const g=fade(sr); GR.push(g); const cx=110+i*118, y0=196;
+  const nd=(x,y,r=9)=>mk('circle',{cx:x,cy:y,r:r,fill:'#0a0b10',stroke:BLUE,'stroke-width':2},g);
+  [[cx-28,y0+44],[cx+28,y0+44]].forEach(c=>mk('line',{x1:cx,y1:y0,x2:c[0],y2:c[1],stroke:'rgba(125,180,255,.6)','stroke-width':2},g));
+  [[cx-44,y0+88],[cx-12,y0+88],[cx+12,y0+88],[cx+44,y0+88]].forEach((c,k)=>mk('line',{x1:k<2?cx-28:cx+28,y1:y0+44,x2:c[0],y2:c[1],stroke:'rgba(125,180,255,.6)','stroke-width':2},g));
+  nd(cx,y0); nd(cx-28,y0+44); nd(cx+28,y0+44);
+  [cx-44,cx-12,cx+12,cx+44].forEach(x=>mk('rect',{x:x-7,y:y0+88,width:14,height:14,fill:BLUE,'fill-opacity':.8},g));
+  tx(g,'pohon '+(i+1),[cx,y0+128],13,GREY,{'text-anchor':'middle'});
+  tx(g,String(v),[cx,y0+162],28,'#f1f2f6',{'text-anchor':'middle','font-weight':500}); });
+const gr2=fade(sr); GR.push(gr2);
+tx(gr2,'…',[686,356],30,GREY,{'text-anchor':'middle'});
+tx(gr2,'×100',[686,380],13,GREY,{'text-anchor':'middle'});
+mk('rect',{x:728,y:230,width:166,height:130,fill:'rgba(255,194,102,.08)',stroke:AMB,'stroke-width':2},gr2);
+tx(gr2,'RATA-RATA',[811,262],13,AMB,{'text-anchor':'middle','letter-spacing':'.14em'});
+tx(gr2,'75',[811,320],52,'#f1f2f6',{'text-anchor':'middle','font-weight':500});
+tx(gr2,'jadi ramalan akhir',[811,346],14,'#c4c7d4',{'text-anchor':'middle','font-family':SANS});
+const gr3=fade(sr); GR.push(gr3);
+tx(gr3,'Pohon menangkap ambang dan interaksi tanpa direkayasa lebih dulu.',[24,444],19,'#c4c7d4',{'font-family':SANS});
+tx(gr3,'Prediksinya tidak bisa melampaui rentang nilai target di data latih.',[24,474],19,'#c4c7d4',{'font-family':SANS});
+tx(gr3,'ilustrasi cara kerja, angka pohon bukan hasil model',[471,508],13,AMB,{'text-anchor':'middle'});
+
+/* ═════════ V-alasan: mengapa dua model ═════════ */
+const sa=$('#svg-alasan'); const GA=[];
+const card=(g,x,title,col,lines)=>{ mk('rect',{x:x,y:16,width:439,height:352,fill:'#07080b',stroke:col==='b'?'rgba(125,180,255,.55)':'rgba(255,255,255,.2)','stroke-width':2},g);
+  tx(g,title,[x+22,62],30,'#f1f2f6',{'font-family':SANS,'font-weight':600});
+  lines.forEach((l,i)=>tx(g,l,[x+22,106+i*34],17,i===lines.length-1?'#e4e6ee':'#c4c7d4',{'font-family':SANS})); };
+const ga0=fade(sa); GA.push(ga0);
+card(ga0,24,'Ridge','b',['Fitur lag saling berkorelasi kuat','(lag 1, 2, 3, rata-rata 6 dan 24 jam).','Penalti L2 menstabilkan koefisien','pada kondisi ini.','Hubungan ke t+24 diduga dekat linear.','','Model terlatih yang paling relevan','dengan struktur fitur proyek ini.']);
+const ga1=fade(sa); GA.push(ga1);
+card(ga1,479,'Random forest','b',['Proses fisik PM2.5 tidak linear:','angin kencang membersihkan polutan','hanya di atas ambang tertentu.','Pohon menangkap ambang dan interaksi','tanpa direkayasa lebih dulu.','Prediksi dibatasi rentang target latih,','relevan untuk pergeseran distribusi.','Bisa berperilaku beda di stasiun uji.']);
+const ga2=fade(sa); GA.push(ga2);
+mk('rect',{x:24,y:388,width:894,height:122,fill:'rgba(255,194,102,.06)',stroke:'rgba(255,194,102,.5)'},ga2);
+tx(ga2,'YANG DIBANDINGKAN',[46,418],13,AMB,{'letter-spacing':'.14em'});
+tx(ga2,'Apakah hubungan nonlinear memberi keuntungan dibanding model linear',[46,452],20,'#f1f2f6',{'font-family':SANS,'font-weight':500});
+tx(ga2,'pada horizon 24 jam. RF tidak harus lebih baik. Alasan di atas dugaan yang diuji.',[46,482],20,'#f1f2f6',{'font-family':SANS,'font-weight':500});
+
 /* ═════════ V2: nilai yang dicoba ═════════ */
 const sg=$('#svg-grid'); const G2=[];
-const chip=(g,x,y,t,sel,w=110)=>{ mk('rect',{x:x,y:y,width:w,height:46,fill:sel?'rgba(255,194,102,.12)':'#0b0c11',stroke:sel?AMB:'rgba(255,255,255,.22)','stroke-width':sel?2:1},g); tx(g,t,[x+w/2,y+31],21,sel?'#f1f2f6':'#c4c7d4',{'text-anchor':'middle'}); };
-const gh=fade(sg); G2.push(gh); tx(gh,'NILAI YANG DICOBA (DITETAPKAN SEBELUM DIJALANKAN)',[24,28],13,GREY,{'letter-spacing':'.12em'});
+const chip=(g,x,y,t,sel,w=110)=>{ mk('rect',{x:x,y:y,width:w,height:42,fill:sel?'rgba(255,194,102,.12)':'#0b0c11',stroke:sel?AMB:'rgba(255,255,255,.22)','stroke-width':sel?2:1},g); tx(g,t,[x+w/2,y+28],20,sel?'#f1f2f6':'#c4c7d4',{'text-anchor':'middle'}); };
+const gh=fade(sg); G2.push(gh); tx(gh,'NILAI YANG DICOBA (DITETAPKAN SEBELUM DIJALANKAN)',[24,24],13,GREY,{'letter-spacing':'.12em'});
 const gR=fade(sg); G2.push(gR);
-mk('rect',{x:24,y:46,width:894,height:130,fill:'#07080b',stroke:'rgba(125,180,255,.45)'},gR);
-tx(gR,'Ridge',[46,96],30,'#f1f2f6',{'font-family':SANS,'font-weight':600}); tx(gR,'5 nilai',[46,128],15,BLUE,{});
-tx(gR,'alpha',[190,118],17,GREY,{});
-['0,1','1','10','100','1000'].forEach((t,i)=>chip(gR,270+i*128,94,t,t==='1000'));
+mk('rect',{x:24,y:36,width:894,height:76,fill:'#07080b',stroke:'rgba(125,180,255,.45)'},gR);
+tx(gR,'Ridge',[46,70],26,'#f1f2f6',{'font-family':SANS,'font-weight':600}); tx(gR,'5 nilai',[46,98],14,BLUE,{});
+tx(gR,'alpha',[190,80],16,GREY,{});
+['0,1','1','10','100','1000'].forEach((t,i)=>chip(gR,270+i*128,54,t,t==='1000'));
+const gF2=fade(sg); G2.push(gF2);
+mk('rect',{x:24,y:124,width:894,height:132,fill:'#07080b',stroke:'rgba(125,180,255,.45)'},gF2);
+tx(gF2,'Random forest',[46,158],26,'#f1f2f6',{'font-family':SANS,'font-weight':600}); tx(gF2,'3 × 2 = 6 kombinasi',[46,186],14,BLUE,{});
+tx(gF2,'min_samples_leaf',[250,166],16,GREY,{}); tx(gF2,'max_features',[250,218],16,GREY,{});
+['10','50','200'].forEach((t,i)=>chip(gF2,470+i*128,136,t,t==='200'));
+['0,33','0,6'].forEach((t,i)=>chip(gF2,470+i*128,188,t,t==='0,33'));
 const gC2=fade(sg); G2.push(gC2);
-[['5','nilai alpha'],['5','fold'],['25','kali dilatih']].forEach((p,i)=>{
-  const x=24+i*296; mk('rect',{x:x,y:204,width:236,height:74,fill:'#0b0c11',stroke:'rgba(255,255,255,.2)'},gC2);
-  tx(gC2,p[0],[x+22,255],40,'#f1f2f6',{'font-weight':500}); tx(gC2,p[1],[x+22+p[0].length*24+14,254],17,'#c4c7d4',{'font-family':SANS});
-  if(i<2) tx(gC2,i===0?'×':'=',[x+266,254],34,GREY,{'text-anchor':'middle'}); });
-tx(gC2,'Tiap nilai diuji di 5 fold, lalu RMSE-nya dirata-rata.',[24,326],18,'#c4c7d4',{'font-family':SANS});
+[['11','konfigurasi'],['5','fold'],['55','kali dilatih']].forEach((p,i)=>{
+  const x=24+i*296; mk('rect',{x:x,y:270,width:236,height:66,fill:'#0b0c11',stroke:'rgba(255,255,255,.2)'},gC2);
+  tx(gC2,p[0],[x+22,314],38,'#f1f2f6',{'font-weight':500}); tx(gC2,p[1],[x+22+p[0].length*23+14,313],17,'#c4c7d4',{'font-family':SANS});
+  if(i<2) tx(gC2,i===0?'×':'=',[x+266,313],32,GREY,{'text-anchor':'middle'}); });
 const gP=fade(sg); G2.push(gP);
-tx(gP,'YANG DIPILIH (RMSE RATA-RATA TERENDAH)',[24,382],13,GREY,{'letter-spacing':'.12em'});
-mk('rect',{x:24,y:396,width:894,height:88,fill:'rgba(255,194,102,.06)',stroke:AMB},gP);
-tx(gP,'Ridge, alpha 1000',[46,438],26,'#f1f2f6',{'font-family':SANS,'font-weight':600}); tx(gP,'RMSE rata-rata 72,83 · berada di tepi daftar nilai (keterbatasan)',[46,466],16,BLUE,{});
+tx(gP,'YANG DIPILIH (RMSE RATA-RATA 5 FOLD TERENDAH)',[24,368],13,GREY,{'letter-spacing':'.12em'});
+mk('rect',{x:24,y:380,width:894,height:132,fill:'rgba(255,194,102,.06)',stroke:AMB},gP);
+tx(gP,'Ridge, alpha 1000',[46,418],20,'#f1f2f6',{'font-family':SANS,'font-weight':600}); tx(gP,'RMSE rata-rata 72,83',[896,418],16,BLUE,{'text-anchor':'end'});
+tx(gP,'Random forest, min_samples_leaf 200, max_features 0,33',[46,458],20,'#f1f2f6',{'font-family':SANS,'font-weight':600}); tx(gP,'RMSE rata-rata 72,91',[896,458],16,BLUE,{'text-anchor':'end'});
+tx(gP,'keduanya berada di tepi daftar nilai (keterbatasan)',[46,492],15,AMB,{});
 
 /* ═════════ V1: aturan sama dengan naive ═════════ */
 const s1=$('#svg-aturan'); const G1=[];
@@ -373,9 +437,9 @@ const ROWS=[
  ['Data latih yang sama','9 stasiun digabung, periode latih saja',0],
  ['Lima fold berurutan waktu','jeda 24 jam antara latih dan validasi',0],
  ['Baris yang dinilai sama persis','hanya baris dengan PM2.5 jam t terisi',0],
- ['Praproses di dalam fold','pengisi nilai kosong dan penyama skala belajar hanya dari data latih fold itu',0],
+ ['Fitur dan praproses sama untuk Ridge dan RF','29 fitur; pengisi nilai kosong dan penyama skala belajar hanya dari data latih fold itu',0],
  ['Data uji tidak dibuka','baru dibuka satu kali di Tahap 6',0],
- ['Yang berbeda dari naive','model dilatih dan alpha dipilih di fold yang sama, jadi skor sedikit optimistis',1]
+ ['Yang berbeda dari naive','model dilatih dan setelannya dipilih di fold yang sama, jadi skor sedikit optimistis',1]
 ];
 ROWS.forEach((r,i)=>{
   const g=fade(s1); G1.push(g); const y=28+i*78, warn=r[2]===1, col=warn?AMB:BLUE;
@@ -417,22 +481,51 @@ mk('line',{x1:96,x2:126,y1:456,y2:456,stroke:BLUE,'stroke-width':3},gLeg); tx(gL
 mk('circle',{cx:260,cy:456,r:9,fill:'none',stroke:AMB,'stroke-width':2.2},gLeg); tx(gLeg,'dipilih',[276,461],15,'#c4c7d4',{'font-family':SANS});
 tx(gLeg,'5 nilai alpha, rata-rata 5 fold',[872,461],13,GREY,{'text-anchor':'end'});
 
+/* ═════════ V-tunrf: tuning random forest ═════════ */
+const sT=$('#svg-tunrf'); const GT=[];
+const RX0=96, RX1=872, RY0=52, RY1=372, RLO=60, RHI=90, ry=v=>RY1-(v-RLO)/(RHI-RLO)*(RY1-RY0), rx=i=>RX0+(i+.5)/3*(RX1-RX0);
+const gTa=fade(sT); GT.push(gTa);
+[60,70,80,90].forEach(v=>{ mk('line',{x1:RX0,x2:RX1,y1:ry(v),y2:ry(v),stroke:v===60?'rgba(255,255,255,.28)':'rgba(255,255,255,.07)'},gTa); tx(gTa,v,[RX0-12,ry(v)+1],14,GREY,{'text-anchor':'end','dominant-baseline':'central'}); });
+tx(gTa,'RMSE (µg/m³)',[RX0-12,RY0-24],13,GREY,{'text-anchor':'start','letter-spacing':'.1em'});
+['10','50','200'].forEach((l,i)=>{ mk('line',{x1:rx(i),x2:rx(i),y1:RY1,y2:RY1+6,stroke:'rgba(255,255,255,.3)'},gTa); tx(gTa,l,[rx(i),RY1+26],14,'#c4c7d4',{'text-anchor':'middle'}); });
+tx(gTa,'min_samples_leaf (daun makin besar, pohon makin sederhana)',[(RX0+RX1)/2,RY1+54],14,'#c4c7d4',{'text-anchor':'middle'});
+mk('line',{x1:RX0,x2:RX1,y1:ry(NAIVE_M),y2:ry(NAIVE_M),stroke:'#f1f2f6','stroke-width':1.6,'stroke-dasharray':'6 5'},gTa);
+tx(gTa,'RATA-RATA NAIVE 86,82',[RX1,ry(NAIVE_M)-10],13,'#f1f2f6',{'text-anchor':'end','letter-spacing':'.08em'});
+mk('line',{x1:RX0,x2:RX1,y1:ry(RIDGE_M),y2:ry(RIDGE_M),stroke:AMB,'stroke-width':1.2,'stroke-dasharray':'3 5',opacity:.8},gTa);
+tx(gTa,'RIDGE TERBAIK 72,83',[262,ry(RIDGE_M)+19],12,AMB,{'letter-spacing':'.08em'});
+tx(gTa,'sumbu vertikal dimulai dari 60',[RX1,RY0-24],12,AMB,{'text-anchor':'end','letter-spacing':'.04em'});
+const RFS=[{nm:'max_features 0,33',col:BLUE,v:[74.32,73.69,72.91],up:false},{nm:'max_features 0,6',col:'#c4c7d4',v:[75.79,75.21,73.97],up:true}];
+RFS.forEach(S=>{ const g=fade(sT); GT.push(g);
+  mk('path',{d:S.v.map((v,i)=>(i?'L':'M')+rx(i).toFixed(1)+' '+ry(v).toFixed(1)).join(''),fill:'none',stroke:S.col,'stroke-width':3,'stroke-linejoin':'round'},g);
+  S.v.forEach((v,i)=>{ const sel=(S.v===RFS[0].v&&i===2);
+    if(sel) mk('circle',{cx:rx(i),cy:ry(v),r:13,fill:'none',stroke:AMB,'stroke-width':2.4},g);
+    mk('circle',{cx:rx(i),cy:ry(v),r:5.5,fill:'#0a0b10',stroke:S.col,'stroke-width':2.4},g);
+    tx(g,fd2(v),[rx(i),ry(v)+(S.up?-16:26)],13,'#f1f2f6',{'text-anchor':'middle'});
+    const hr=mk('circle',{cx:rx(i),cy:ry(v),r:13,fill:'transparent',class:'hov'},g);
+    hr.addEventListener('mousemove',ev=>tip('<small>RF · leaf '+['10','50','200'][i]+' · '+S.nm+'</small>RMSE '+fd2(v)+(sel?'<br><span class="hs">Dipilih</span>':''),ev));
+    hr.addEventListener('mouseleave',tipOff); }); });
+const gTL=fade(sT); GT.push(gTL);
+mk('line',{x1:96,x2:126,y1:456,y2:456,stroke:BLUE,'stroke-width':3},gTL); tx(gTL,'max_features 0,33',[136,461],15,'#c4c7d4',{'font-family':SANS});
+mk('line',{x1:330,x2:360,y1:456,y2:456,stroke:'#c4c7d4','stroke-width':3},gTL); tx(gTL,'max_features 0,6',[370,461],15,'#c4c7d4',{'font-family':SANS});
+mk('circle',{cx:560,cy:456,r:9,fill:'none',stroke:AMB,'stroke-width':2.2},gTL); tx(gTL,'dipilih',[576,461],15,'#c4c7d4',{'font-family':SANS});
+tx(gTL,'6 konfigurasi, rata-rata 5 fold',[872,461],13,GREY,{'text-anchor':'end'});
+
 /* ═════════ V4: RMSE per fold dan rata-rata ═════════ */
 const s3=$('#svg-hasil'); const G4=[];
-const HX0=74, HX1=872, HY0=70, HY1=376, HYM=120, hy=v=>HY1-v/HYM*(HY1-HY0), HSLOT=(HX1-HX0)/6, HBW=50;
+const HX0=74, HX1=872, HY0=70, HY1=376, HYM=120, hy=v=>HY1-v/HYM*(HY1-HY0), HSLOT=(HX1-HX0)/6, HBW=36, HGAP=4;
 const gH=fade(s3); G4.push(gH);
 [0,40,80,120].forEach(v=>{ mk('line',{x1:HX0,x2:HX1,y1:hy(v),y2:hy(v),stroke:v===0?'rgba(255,255,255,.28)':'rgba(255,255,255,.07)'},gH); tx(gH,v,[HX0-12,hy(v)+1],14,GREY,{'text-anchor':'end','dominant-baseline':'central'}); });
 tx(gH,'RMSE (µg/m³)',[HX1,HY0-26],13,GREY,{'text-anchor':'end','letter-spacing':'.1em'});
-const SERH=[['Naive',NAIVE_F,GREY,NAIVE_M],['Ridge',RIDGE_F,BLUE,RIDGE_M]];
+const SERH=[['Naive',NAIVE_F,GREY,NAIVE_M],['Ridge',RIDGE_F,BLUE,RIDGE_M],['Random forest',RF_F,AMB,RF_M]];
 for(let i=0;i<6;i++){
-  const g=fade(s3); G4.push(g); const mean=(i===5), gx=HX0+i*HSLOT+(HSLOT-(2*HBW+6))/2;
+  const g=fade(s3); G4.push(g); const mean=(i===5), gx=HX0+i*HSLOT+(HSLOT-(3*HBW+2*HGAP))/2;
   if(mean){ mk('rect',{x:HX0+i*HSLOT+2,y:HY0-16,width:HSLOT-2,height:HY1-HY0+16,fill:'rgba(125,180,255,.06)',stroke:'rgba(125,180,255,.35)'},g); }
-  SERH.forEach(([nm,arr,col,mu],k)=>{ const v=mean?mu:arr[i], x=gx+k*(HBW+6);
+  SERH.forEach(([nm,arr,col,mu],k)=>{ const v=mean?mu:arr[i], x=gx+k*(HBW+HGAP);
     mk('rect',{x:x,y:hy(v),width:HBW,height:HY1-hy(v),fill:col,'fill-opacity':k===0?.55:.85},g);
-    tx(g,mean?fd2(v):fd1(v),[x+HBW/2,hy(v)-8],mean?15:14,'#f1f2f6',{'text-anchor':'middle','font-weight':mean?600:400}); });
+    tx(g,mean?fd2(v):fd1(v),[x+HBW/2,hy(v)-(mean&&k===2?26:8)],mean?13:12,'#f1f2f6',{'text-anchor':'middle','font-weight':mean?600:400}); });
   tx(g,mean?'Rata-rata':'Fold '+(i+1),[HX0+i*HSLOT+HSLOT/2,HY1+26],mean?16:15,mean?'#c4dcff':'#c4c7d4',{'text-anchor':'middle','font-weight':mean?600:400});
   const hr=mk('rect',{x:HX0+i*HSLOT,y:HY0-16,width:HSLOT,height:HY1-HY0+16,fill:'transparent',class:'hov'},g);
-  hr.addEventListener('mousemove',ev=>tip(mean?'<small>Rata-rata 5 fold</small>Naive '+fd2(NAIVE_M)+'<br>Ridge '+fd2(RIDGE_M):'<small>Fold '+(i+1)+'</small>Naive '+fd1(NAIVE_F[i])+'<br>Ridge '+fd1(RIDGE_F[i])+'<br><span class="hs">Ridge lebih rendah dari naive</span>',ev));
+  hr.addEventListener('mousemove',ev=>tip(mean?'<small>Rata-rata 5 fold</small>Naive '+fd2(NAIVE_M)+'<br>Ridge '+fd2(RIDGE_M)+'<br>Random forest '+fd2(RF_M):'<small>Fold '+(i+1)+'</small>Naive '+fd1(NAIVE_F[i])+'<br>Ridge '+fd1(RIDGE_F[i])+'<br>Random forest '+fd1(RF_F[i])+'<br><span class="hs">'+(RF_F[i]<RIDGE_F[i]?'Random forest lebih rendah dari Ridge':'Ridge lebih rendah dari random forest')+'</span>',ev));
   hr.addEventListener('mouseleave',tipOff);
 }
 const gHL=fade(s3); G4.push(gHL);
@@ -442,39 +535,44 @@ tx(gHL,'Naive sama dengan slide 5. Hasil validasi, bukan data uji.',[74,486],13,
 /* ═════════ V5: total RMSE, MAE, dan selisih dengan naive ═════════ */
 const s5v=$('#svg-total'); const G5=[];
 const TOT=[
- {nm:'RMSE',y:34,rows:[['Naive forecast',86.82,GREY,null,null],['Ridge',72.83,BLUE,13.99,16.1]]},
- {nm:'MAE',y:276,rows:[['Naive forecast',59.39,GREY,null,null],['Ridge',54.51,BLUE,4.88,8.2]]}
+ {nm:'RMSE',y:10,rows:[['Naive forecast',86.82,GREY,null,null],['Ridge',72.83,BLUE,13.99,16.1],['Random forest',72.91,AMB,13.91,16.0]]},
+ {nm:'MAE',y:244,rows:[['Naive forecast',59.39,GREY,null,null],['Ridge',54.51,BLUE,4.88,8.2],['Random forest',54.38,AMB,5.01,8.4]]}
 ];
 const BX=206, BSC=520/90;
 TOT.forEach((T,ti)=>{
   const g=fade(s5v); G5.push(g);
-  mk('rect',{x:24,y:T.y,width:894,height:214,fill:'#07080b',stroke:'rgba(255,255,255,.12)'},g);
+  mk('rect',{x:24,y:T.y,width:894,height:226,fill:'#07080b',stroke:'rgba(255,255,255,.12)'},g);
   tx(g,T.nm,[44,T.y+34],26,'#f1f2f6',{'font-family':SANS,'font-weight':700});
   tx(g,'µg/m³, rata-rata 5 fold',[T.nm==='RMSE'?130:114,T.y+33],12,GREY,{});
-  T.rows.forEach((r,i)=>{ const y=T.y+60+i*68, w=r[1]*BSC;
-    tx(g,r[0],[BX-12,y+30],17,'#c4c7d4',{'text-anchor':'end','font-family':SANS});
-    mk('rect',{x:BX,y:y,width:w,height:42,fill:r[2],'fill-opacity':i===0?.55:.88},g);
-    tx(g,fd2(r[1]),[BX+w+12,y+30],22,'#f1f2f6',{'font-weight':500});
-    if(r[3]!==null){ tx(g,'−'+fd2(r[3])+'  ('+'−'+fd1(r[4])+'%)',[BX+w+92,y+30],19,AMB,{'font-weight':500});
-      const hr=mk('rect',{x:BX,y:y-4,width:700,height:50,fill:'transparent',class:'hov'},g);
+  T.rows.forEach((r,i)=>{ const y=T.y+52+i*56, w=r[1]*BSC;
+    tx(g,r[0],[BX-12,y+27],17,'#c4c7d4',{'text-anchor':'end','font-family':SANS});
+    mk('rect',{x:BX,y:y,width:w,height:40,fill:r[2],'fill-opacity':i===0?.55:.88},g);
+    tx(g,fd2(r[1]),[BX+w+12,y+28],22,'#f1f2f6',{'font-weight':500});
+    if(r[3]!==null){ tx(g,'−'+fd2(r[3])+'  ('+'−'+fd1(r[4])+'%)',[BX+w+92,y+28],19,AMB,{'font-weight':500});
+      const hr=mk('rect',{x:BX,y:y-4,width:700,height:48,fill:'transparent',class:'hov'},g);
       hr.addEventListener('mousemove',ev=>tip('<small>'+r[0]+' · '+T.nm+'</small>Naive '+fd2(T.rows[0][1])+' → '+fd2(r[1])+'<br><span class="hs">Turun '+fd2(r[3])+' µg/m³ ('+fd1(r[4])+'%) dari naive</span>',ev)); hr.addEventListener('mouseleave',tipOff); } });
 });
 const gN=fade(s5v); G5.push(gN);
-tx(gN,'Selisih dan persen dihitung dari angka yang tampil. Kuning = penurunan dari naive.',[24,516],13,GREY,{});
+tx(gN,'Selisih dan persen dihitung dari angka yang tampil. Kuning pada angka = penurunan dari naive.',[24,488],13,GREY,{});
+tx(gN,'Ridge dan random forest tidak terbedakan: selisih RMSE berpasangan rata-rata 0,08 (sd 1,15).',[24,508],13,AMB,{});
 
 /* ═════════ Langkah ═════════ */
-const FIG=['Gambar 22 · Ridge','Gambar 23 · Apa itu tuning','Gambar 24 · Nilai yang dicoba','Gambar 25 · Aturan uji sama dengan naive','Gambar 26 · Hasil tuning','Gambar 27 · RMSE tiap fold dan rata-rata','Gambar 28 · Total RMSE, MAE, dan selisih'];
-const VIEWS=['v-model','v-konsep','v-grid','v-aturan','v-tuning','v-hasil','v-total'];
-const GRP=[G0,G8,G2,G1,G3,G4,G5];
-function setView(i){ $$('.view').forEach(v=>v.classList.toggle('on',v.id===VIEWS[i])); $('#fig').innerHTML=FIG[i].replace(/^(Gambar \d+)/,'<b>$1</b>'); tipOff(); play(GRP[i], [150,230,170,170,160,90,260][i]); }
+const FIG=['Gambar 22 · Ridge','Gambar 23 · Random forest','Gambar 24 · Mengapa dua model','Gambar 25 · Apa itu tuning','Gambar 26 · Nilai yang dicoba','Gambar 27 · Aturan uji sama dengan naive','Gambar 28 · Hasil tuning Ridge','Gambar 29 · Hasil tuning random forest','Gambar 30 · RMSE tiap fold dan rata-rata','Gambar 31 · Total RMSE, MAE, dan selisih'];
+const VIEWS=['v-model','v-rf','v-alasan','v-konsep','v-grid','v-aturan','v-tuning','v-tunrf','v-hasil','v-total'];
+const GRP=[G0,GR,GA,G8,G2,G1,G3,GT,G4,G5];
+const GAPS=[150,230,300,170,300,170,160,200,90,260];
+function setView(i){ $$('.view').forEach(v=>v.classList.toggle('on',v.id===VIEWS[i])); $('#fig').innerHTML=FIG[i].replace(/^(Gambar \d+)/,'<b>$1</b>'); tipOff(); play(GRP[i], GAPS[i]); }
 const STEPS=[
-  ()=>{ blocks(0); setView(0); startAnim(); readoutNow('Model lanjutan','Ridge'); caption('Saat &ldquo;rem&rdquo; makin kuat, <b>Ridge</b> mengecilkan semua bobot, tetapi tidak ada yang menjadi nol.'); },
-  ()=>{ blocks(1); setView(1); startTune(); readoutNow('Tuning','coba lalu <span class="u">pilih</span>'); caption('<b>Tuning</b>: tiap nilai diuji di 5 <em>fold</em>, lalu dipilih yang RMSE-nya paling rendah. Animasi memakai angka RMSE Ridge yang asli.'); },
-  ()=>{ blocks(2); setView(2); readoutNow('Pengaturan','5 <span class="u">nilai</span>'); caption('Nilai yang dicoba ditetapkan <b>sebelum</b> dijalankan. Kuning = yang akhirnya terpilih karena RMSE rata-rata 5 <em>fold</em>-nya paling rendah.'); },
-  ()=>{ blocks(3); setView(3); readoutNow('Aturan uji','sama <span class="u">dgn naive</span>'); caption('Syarat perbandingan yang adil. Satu perbedaan perlu diakui: <em>alpha</em> dipilih di <em>fold</em> yang sama dengan yang dilaporkan.'); },
-  ()=>{ blocks(4); setView(4); readoutNow('RMSE terbaik','72,83 <span class="u">µg/m³</span>'); caption('Semua titik jauh di bawah garis <em>naive</em> dan hampir datar, jadi hasil tidak bergantung pada angka <em>alpha</em>.'); },
-  ()=>{ blocks(5); setView(5); readoutNow('Rata-rata 5 fold','86,82 · 72,83'); caption('Di <b>setiap</b> <em>fold</em>, Ridge lebih rendah dari <em>naive</em>. Kolom terakhir adalah rata-rata lima <em>fold</em>.'); },
-  ()=>{ blocks(6); setView(6); readoutNow('RMSE turun','13,99 <span class="u">µg/m³</span>'); caption('Panjang batang = nilai rata-rata. Angka kuning = berapa turun dari <em>naive</em>. Perbaikan RMSE sekitar <b>16%</b>, MAE sekitar <b>8%</b>.'); }
+  ()=>{ blocks(0); setView(0); startAnim(); readoutNow('Model pertama','Ridge'); caption('Saat &ldquo;rem&rdquo; makin kuat, <b>Ridge</b> mengecilkan semua bobot, tetapi tidak ada yang menjadi nol.'); },
+  ()=>{ blocks(1); setView(1); readoutNow('Model kedua','100 <span class="u">pohon</span>'); caption('<b><em>Random forest</em></b> merata-ratakan prediksi banyak pohon. Gambar ini ilustrasi cara kerja, angka tiap pohon bukan hasil model.'); },
+  ()=>{ blocks(2); setView(2); readoutNow('Dibandingkan','linear <span class="u">vs</span> nonlinear'); caption('Alasan memilih keduanya adalah <b>dugaan yang diuji</b> oleh perbandingan berikutnya. <em>Random forest</em> tidak harus lebih baik.'); },
+  ()=>{ blocks(3); setView(3); startTune(); readoutNow('Tuning','coba lalu <span class="u">pilih</span>'); caption('<b>Tuning</b>: tiap nilai diuji di 5 <em>fold</em>, lalu dipilih yang RMSE-nya paling rendah. Animasi memakai angka RMSE Ridge yang asli.'); },
+  ()=>{ blocks(4); setView(4); readoutNow('Pengaturan','11 <span class="u">konfigurasi</span>'); caption('Nilai yang dicoba ditetapkan <b>sebelum</b> dijalankan. Kuning = yang akhirnya terpilih karena RMSE rata-rata 5 <em>fold</em>-nya paling rendah.'); },
+  ()=>{ blocks(5); setView(5); readoutNow('Aturan uji','sama <span class="u">dgn naive</span>'); caption('Syarat perbandingan yang adil. Satu perbedaan perlu diakui: setelan dipilih di <em>fold</em> yang sama dengan yang dilaporkan.'); },
+  ()=>{ blocks(6); setView(6); readoutNow('Ridge, RMSE terbaik','72,83 <span class="u">µg/m³</span>'); caption('Semua titik jauh di bawah garis <em>naive</em> dan hampir datar, jadi hasil tidak bergantung pada angka <em>alpha</em>.'); },
+  ()=>{ blocks(7); setView(7); readoutNow('RF, RMSE terbaik','72,91 <span class="u">µg/m³</span>'); caption('Kurva turun ke arah daun besar dan fitur sedikit, dan terpilih di tepi daftar. Garis kuning = Ridge terbaik, hampir sama dengan RF terbaik.'); },
+  ()=>{ blocks(8); setView(8); readoutNow('Rata-rata 5 fold','86,82 · 72,83 · 72,91'); caption('Di <b>setiap</b> <em>fold</em>, kedua model lebih rendah dari <em>naive</em>. <em>Random forest</em> lebih rendah dari Ridge di fold 3, 4, dan 5.'); },
+  ()=>{ blocks(9); setView(9); readoutNow('RMSE turun','13,99 · 13,91 <span class="u">µg/m³</span>'); caption('Angka kuning = turun dari <em>naive</em>: RMSE sekitar <b>16%</b>, MAE sekitar <b>8%</b>. Ridge dan RF <b>tidak terbedakan</b>.'); }
 ];
 function RESET_HOOK(){ $$('.copy .blk').forEach(b=>b.classList.remove('show','active','seen','old')); $$('.view').forEach(v=>v.classList.remove('on')); }
 
